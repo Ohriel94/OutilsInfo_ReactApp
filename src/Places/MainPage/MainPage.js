@@ -1,5 +1,6 @@
 import Usagers from "./Usagers";
-import AddQuest from "./AddQuest";
+import Appareils from "./Appareils";
+import Historique from "./Historique";
 import axios from "axios";
 import * as React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -96,6 +97,8 @@ const MainPage = (props) => {
       <Box component="main">
         <Routes sx={{ flexGrow: 1, p: 3, marginTop: "64px" }}>
           <Route path="/usagers" element={<Usagers />} />
+          <Route path="/appareils" element={<Appareils />} />
+          <Route path="/historique" element={<Historique />} />
         </Routes>
       </Box>
     </Box>

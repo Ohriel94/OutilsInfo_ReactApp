@@ -5,31 +5,31 @@ import Box from "@mui/material/Box";
 import axios from "axios";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import UsagerAccordeon from "../../Components/UsagerAccordeon";
+import AppareilAccordeon from "../../Components/AppareilAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 
-const Usagers = (props) => {
-  const [appareils, setAppareils] = React.useState([]);
-  const [usagers, setUsagers] = React.useState([]);
+const Appareils = (props) => {
+  const [ordinateurs, setOrdinateurs] = React.useState([]);
   const { token, niveau, setNiveau } = props;
 
   React.useEffect(() => {
-    getUsers();
+    getOrdinateurs();
   }, []);
 
-  const getUsers = () => {
+  const getOrdinateurs = () => {
     const f = async () => {
       try {
-        const getUsersRequest = await axios({
+        const getOrdinateursRequest = await axios({
           method: "get",
-          url: "http://localhost:3001/usagers",
+          url: "http://localhost:3001/appareils",
         });
-        setUsagers(getUsersRequest.data);
+        setOrdinateurs(getOrdinateursRequest.data[0].ordinateurs);
       } catch (e) {
         console.log("Failed to connect " + e);
       }
     };
     f();
+    console.log(ordinateurs[0]);
   };
 
   return (
@@ -40,14 +40,15 @@ const Usagers = (props) => {
           heigth: "400px",
           margin: "10px",
           marginTop: "100px",
+          width: "auto",
         }}
       >
-        {usagers.map((usager, usagerKey) => (
-          <UsagerAccordeon usager={usager} key={usagerKey} />
+        {ordinateurs.map((ordinateur, ordinateurKey) => (
+          <AppareilAccordeon appareil={ordinateur} key={ordinateurKey} />
         ))}
       </Box>
     </React.Fragment>
   );
 };
 
-export default Usagers;
+export default Appareils;

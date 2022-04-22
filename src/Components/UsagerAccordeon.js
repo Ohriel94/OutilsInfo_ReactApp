@@ -22,7 +22,6 @@ const UsagerAccordeon = (props) => {
         <Box>
           <Typography variant="h5">Appareils assignés</Typography>
         </Box>
-        <hr />
         <Box>
           <Typography variant="h5">Appareils révoqué</Typography>
         </Box>

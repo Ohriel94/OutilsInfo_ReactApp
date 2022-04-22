@@ -3,6 +3,7 @@ import CSS from "./App.css";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import MainPage from "./Places/MainPage/MainPage";
 import Usagers from "./Places/MainPage/Usagers";
+import Appareils from "./Places/MainPage/Appareils";
 
 const App = () => {
   const navigate = useNavigate();
@@ -14,7 +15,6 @@ const App = () => {
     <Fragment>
       <Routes>
         <Route path="/*" element={<MainPage />}></Route>
-        <Route path="/usagers" element={<Usagers />}></Route>
       </Routes>
     </Fragment>
   );

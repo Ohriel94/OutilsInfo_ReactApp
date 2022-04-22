@@ -9,22 +9,21 @@ import UsagerAccordeon from "../../Components/UsagerAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 
 const Usagers = (props) => {
-  const [appareils, setAppareils] = React.useState([]);
-  const [usagers, setUsagers] = React.useState([]);
+  const [historique, setHistorique] = React.useState([]);
   const { token, niveau, setNiveau } = props;
 
   React.useEffect(() => {
-    getUsers();
+    getHistorique();
   }, []);
 
-  const getUsers = () => {
+  const getHistorique = () => {
     const f = async () => {
       try {
-        const getUsersRequest = await axios({
+        const getHistoriqueRequest = await axios({
           method: "get",
-          url: "http://localhost:3001/usagers",
+          url: "http://localhost:3001/historique",
         });
-        setUsagers(getUsersRequest.data);
+        setHistorique(getHistoriqueRequest.data);
       } catch (e) {
         console.log("Failed to connect " + e);
       }
@@ -42,8 +41,8 @@ const Usagers = (props) => {
           marginTop: "100px",
         }}
       >
-        {usagers.map((usager, usagerKey) => (
-          <UsagerAccordeon usager={usager} key={usagerKey} />
+        {historique.map((affectation, affectationKey) => (
+          <UsagerAccordeon affectation={affectation} key={affectationKey} />
         ))}
       </Box>
     </React.Fragment>

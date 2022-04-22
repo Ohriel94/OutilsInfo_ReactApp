@@ -1,4 +1,8 @@
+import Usagers from "./Usagers";
+import AddQuest from "./AddQuest";
+import axios from "axios";
 import * as React from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,40 +14,25 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Quests from "./Quests";
-import AddQuest from "./AddQuest";
+import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
+import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
+import DevicesTwoToneIcon from "@mui/icons-material/DevicesTwoTone";
+import GroupsTwoToneIcon from "@mui/icons-material/GroupsTwoTone";
+import GroupAddTwoToneIcon from "@mui/icons-material/GroupAddTwoTone";
+import GroupRemoveTwoToneIcon from "@mui/icons-material/GroupRemoveTwoTone";
+import BuildCircleTwoToneIcon from "@mui/icons-material/BuildCircleTwoTone";
+import CreateTwoToneIcon from "@mui/icons-material/CreateTwoTone";
 
 const drawerWidth = 250;
 
 const MainPage = (props) => {
   const navigate = useNavigate();
-  const { token } = props;
-  const [adventurer, setAdventurer] = React.useState();
-  const [niveau, setNiveau] = React.useState();
-
-  React.useEffect(() => {
-    const { token } = props;
-    const f = async () => {
-      try {
-        const adventurerRequest = await axios({
-          method: "get",
-          url: "http://localhost:3001/me",
-          headers: {
-            Authorization: "BEARER " + token,
-          },
-        });
-        setAdventurer(adventurerRequest.data);
-        setNiveau(Math.floor(adventurerRequest.data.xp / 100));
-      } catch (e) {
-        console.log("Failed to connect " + e);
-      }
-    };
-    f();
-  }, []);
+  const [technicien, setTechnicien] = React.useState({
+    pseudo: "GDERIV",
+    prenom: "Geralt",
+    nom: "DeRiv",
+  });
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -58,7 +47,7 @@ const MainPage = (props) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Main Page
           </Typography>
-          <Typography>Level {niveau}</Typography>
+          <Typography>Connecté en tant que {technicien.pseudo}</Typography>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -76,39 +65,37 @@ const MainPage = (props) => {
         <Toolbar />
         <Divider />
         <List>
-          <ListItem button key={"Quests"} onClick={() => navigate("/complete")}>
+          <ListItem
+            button
+            key={"Devices"}
+            onClick={() => navigate("appareils")}
+          >
             <ListItemIcon>
-              <LibraryBooksIcon />
+              <DevicesTwoToneIcon />
             </ListItemIcon>
-            <ListItemText primary={"Quests"} />
+            <ListItemText primary={"Liste des appareils"} />
           </ListItem>
-          <ListItem button key={"AddQuest"} onClick={() => navigate("/quests")}>
+          <ListItem button key={"Users"} onClick={() => navigate("usagers")}>
             <ListItemIcon>
-              <AddCircleIcon />
+              <GroupsTwoToneIcon />
             </ListItemIcon>
-            <ListItemText primary={"Add a Quest"} />
+            <ListItemText primary={"Liste des usagers"} />
+          </ListItem>{" "}
+          <ListItem
+            button
+            key={"AddDevices"}
+            onClick={() => navigate("usagers")}
+          >
+            <ListItemIcon>
+              <AddCircleTwoToneIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Ajouter des appareils au parc"} />
           </ListItem>
         </List>
       </Drawer>
       <Box component="main">
         <Routes sx={{ flexGrow: 1, p: 3, marginTop: "64px" }}>
-          <Route
-            path="/complete"
-            element={
-              <Quests
-                token={token}
-                adventurer={adventurer}
-                niveau={niveau}
-                setNiveau={setNiveau}
-              />
-            }
-          />
-          <Route
-            path="/quests"
-            element={
-              <AddQuest token={token} adventurer={adventurer} niveau={niveau} />
-            }
-          />
+          <Route path="/usagers" element={<Usagers />} />
         </Routes>
       </Box>
     </Box>

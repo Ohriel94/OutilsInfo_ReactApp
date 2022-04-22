@@ -47,9 +47,6 @@ const AppareilAccordeon = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={4} padding={1}>
-          <Typography variant="h5">Assigner à :</Typography>
-        </Grid>
         <Box>
           <Accordion>
             <AccordionSummary
@@ -61,15 +58,18 @@ const AppareilAccordeon = (props) => {
             </AccordionSummary>
             <AccordionDetails>
               <Box>
+                <Grid item xs={4} padding={1}>
+                  <Typography variant="h5">Assigner à :</Typography>
+                </Grid>
                 <Grid container padding={1} alignItems={"center"} width="100%">
-                  <Grid item xs={4}>
+                  <Grid item xs={2}>
                     <Typography variant="h6">Detenteur 1</Typography>
                   </Grid>
                   <Grid item xs={2} textAlign={"right"}>
                     <Typography variant="subtitle2">Début du prêt :</Typography>
                     <Typography variant="subtitle2">Fin du prêt :</Typography>
                   </Grid>
-                  <Grid item xs={6} textAlign={"center"}>
+                  <Grid item xs={8} textAlign={"center"}>
                     <Typography variant="subtitle2">00/00/00</Typography>
                     <Typography variant="subtitle2">99/99/99</Typography>
                   </Grid>

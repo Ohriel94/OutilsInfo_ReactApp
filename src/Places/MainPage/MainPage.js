@@ -1,6 +1,7 @@
 import Usagers from "./Usagers";
 import Appareils from "./Appareils";
 import Historique from "./Historique";
+import Affectation from "./Affectation";
 import axios from "axios";
 import * as React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -81,16 +82,16 @@ const MainPage = (props) => {
               <GroupsTwoToneIcon />
             </ListItemIcon>
             <ListItemText primary={"Liste des usagers"} />
-          </ListItem>{" "}
+          </ListItem>
           <ListItem
             button
             key={"AddDevices"}
-            onClick={() => navigate("usagers")}
+            onClick={() => navigate("affectation")}
           >
             <ListItemIcon>
               <AddCircleTwoToneIcon />
             </ListItemIcon>
-            <ListItemText primary={"Ajouter des appareils au parc"} />
+            <ListItemText primary={"Affecter un appareil"} />
           </ListItem>
         </List>
       </Drawer>
@@ -99,6 +100,7 @@ const MainPage = (props) => {
           <Route path="/usagers" element={<Usagers />} />
           <Route path="/appareils" element={<Appareils />} />
           <Route path="/historique" element={<Historique />} />
+          <Route path="/historique" element={<Affectation />} />
         </Routes>
       </Box>
     </Box>

@@ -11,12 +11,12 @@ import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 const Affectation = (props) => {
   const [ordinateurs, setOrdinateurs] = useState([]);
   const [usagers, setUsagers] = useState([]);
-  const [appareils, setAppareils] = React.useState([]);
-  const { token, niveau, setNiveau } = props;
+  const [etat, setEtat] = React.useState([]);
 
   React.useEffect(() => {
     getUsers();
     getOrdinateurs();
+    creerEtatPourDND();
   }, []);
 
   const getUsers = () => {
@@ -32,10 +32,11 @@ const Affectation = (props) => {
       }
     };
     f();
+    console.log(usagers);
   };
 
   const getOrdinateurs = () => {
-    const f = async () => {
+    const g = async () => {
       try {
         const getOrdinateursRequest = await axios({
           method: "get",
@@ -46,8 +47,14 @@ const Affectation = (props) => {
         console.log("Failed to connect " + e);
       }
     };
-    f();
-    console.log(ordinateurs[0]);
+    g();
+    console.log(ordinateurs);
+  };
+
+  const creerEtatPourDND = () => {
+    setEtat(usagers);
+    console.log("etat -------------------");
+    console.log(etat);
   };
 
   return (

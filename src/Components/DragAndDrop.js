@@ -16,15 +16,13 @@ const DragAndDrop = (props) => {
 
   useEffect(() => {}, []);
 
-  const grid = 8;
+  const grid = 10;
 
   const commonStyles = {
     bgcolor: "background.paper",
     borderColor: "text.primary",
     background: "#0C7DF2",
     border: 0,
-    width: "8rem",
-    height: "2rem",
   };
 
   const getItemStyle = (isDragging, draggableStyle) => ({
@@ -45,20 +43,42 @@ const DragAndDrop = (props) => {
     padding: grid,
   });
 
-  const formaterJeuxPossibles = (partie) => {
-    // partie.map((tour, indTour) => {
-    //   tour.map((jeu, indJeu) => {
-    //     let jeuFormater = {
-    //       id: `jeu-${Math.floor(Math.random() * 900000000)}`,
-    //       nom: jeu.nom,
-    //     };
-    //     partie[indTour].splice(indJeu, 1, jeuFormater);
-    //   });
-    // });
-    // return partie;
+  const formaterEtat = (usagers, ordinateurs) => {
+    var newEtat = [[], []];
+    usagers.map((usager, indUsager) => {
+      let usagerFormater = {
+        id: `item-${Math.floor(Math.random() * 900000000)}`,
+        title: `${usager.prenom} ${usager.nom}`,
+        prenom: usager.prenom,
+        nom: usager.nom,
+        _id: usager._id,
+      };
+      newEtat[0].push(usagerFormater);
+    });
+    ordinateurs.map((ordinateur, indOrdinateur) => {
+      let ordinateurFormater = {
+        id: `item-${Math.floor(Math.random() * 900000000)}`,
+        title: `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`,
+        serialNumber: ordinateur.serialNumber,
+        marque: ordinateur.marque,
+        modele: ordinateur.modele,
+        systeme: ordinateur.systeme,
+        processeur: ordinateur.processeur,
+        memoire: ordinateur.memoire,
+        disque: ordinateur.disque,
+        dateAcquisition: ordinateur.dateAcquisition,
+        etat: ordinateur.etat,
+        _id: ordinateur._id,
+      };
+      newEtat[1].push(ordinateurFormater);
+    });
+    console.log("newEtat -------------------");
+    console.log(newEtat);
+
+    return newEtat;
   };
 
-  const [etatPartie, setEtatPartie] = useState(formaterJeuxPossibles());
+  const [etat, setEtat] = useState(formaterEtat(usagers, ordinateurs));
 
   const reorder = (liste, startIndex, endIndex) => {
     const result = [...liste];
@@ -69,77 +89,80 @@ const DragAndDrop = (props) => {
   };
 
   const move = (listeSource, listeDest, itemSource, itemDest, idSource) => {
-    // const sourceClone = Array.from(listeSource);
-    // const destClone = Array.from(listeDest);
-    // if (idSource === 0) {
-    //   const newItem = {
-    //     id: `jeu-${Math.floor(Math.random() * 900000000)}`,
-    //     nom: listeSource[itemSource.index].nom,
-    //   };
-    //   destClone.splice(itemDest.index, 0, newItem);
-    // } else {
-    //   const [removed] = sourceClone.splice(itemSource.index, 1);
-    //   destClone.splice(itemDest.index, 0, removed);
-    // }
-    // const result = [];
-    // result[itemSource.droppableId] = sourceClone;
-    // result[itemDest.droppableId] = destClone;
-    // result.map((tour) => {
-    //   if (tour === {}) result.splice(indJeu, 1);
-    // });
-    // return result;
+    const sourceClone = Array.from(listeSource);
+    const destClone = Array.from(listeDest);
+    if (idSource === 0) {
+      const newItem = {
+        id: `item-${Math.floor(Math.random() * 900000000)}`,
+        title: `${itemSource.prenom} ${itemSource.nom}`,
+        prenom: itemSource.prenom,
+        nom: itemSource.nom,
+        _id: itemSource._id,
+      };
+      destClone.splice(itemDest.index, 0, newItem);
+    } else {
+      const [removed] = sourceClone.splice(itemSource.index, 1);
+      destClone.splice(itemDest.index, 0, removed);
+    }
+    const result = [];
+    result[itemSource.droppableId] = sourceClone;
+    result[itemDest.droppableId] = destClone;
+    result.map((tour, indItem) => {
+      if (tour === {}) result.splice(indItem, 1);
+    });
+    return result;
   };
 
   function onDragEnd(result) {
-    // const { source, destination } = result;
-    // // dropped outside the list
-    // if (!destination) {
-    //   return;
-    // }
-    // const sInd = +source.droppableId;
-    // const dInd = +destination.droppableId;
-    // if (dInd != 0) {
-    //   if (sInd === dInd) {
-    //     const items = reorder(
-    //       etatPartie[sInd],
-    //       source.index,
-    //       destination.index
-    //     );
-    //     const newEtatPartie = [...etatPartie];
-    //     etatPartie.map((tour, indTour) => {
-    //       if (indTour < 0) {
-    //         tour.map((jeu, indJeu) => {
-    //           newEtatPartie[indTour].push({ id: indJeu, nom: jeu });
-    //         });
-    //       }
-    //     });
-    //     newEtatPartie[dInd] = items;
-    //     setEtatPartie(newEtatPartie);
-    //   } else {
-    //     const result = move(
-    //       etatPartie[sInd],
-    //       etatPartie[dInd],
-    //       source,
-    //       destination,
-    //       sInd
-    //     );
-    //     const newEtatPartie = [...etatPartie];
-    //     newEtatPartie[sInd] = result[sInd];
-    //     newEtatPartie[dInd] = result[dInd];
-    //     newEtatPartie[dInd].map((jeu, indJeu) => {
-    //       if (Object.keys(jeu).length === 0) {
-    //         newEtatPartie[dInd].splice(indJeu, 1);
-    //       }
-    //     });
-    //     setEtatPartie(newEtatPartie);
-    //   }
-    // }
+    const { source, destination } = result;
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
+    if (dInd != 0) {
+      if (sInd === dInd) {
+        const items = reorder(etat[sInd], source.index, destination.index);
+        const newEtat = [...etat];
+        etat.map((tour, indTour) => {
+          if (indTour < 0) {
+            tour.map((item, indItem) => {
+              newEtat[indTour].push({ id: indItem, nom: item });
+            });
+          }
+        });
+        newEtat[dInd] = items;
+        setEtat(newEtat);
+      } else {
+        const result = move(etat[sInd], etat[dInd], source, destination, sInd);
+        const newEtat = [...etat];
+        newEtat[sInd] = result[sInd];
+        newEtat[dInd] = result[dInd];
+        newEtat[dInd].map((item, indItem) => {
+          if (Object.keys(item).length === 0) {
+            newEtat[dInd].splice(indItem, 1);
+          }
+        });
+        setEtat(newEtat);
+      }
+    }
   }
 
   const nomColonne = (index) => {
-    // let nom = "Empty";
-    // index === 0 ? (nom = "Listes des Jeux") : (nom = "Tour " + index);
-    // return nom;
+    let nom = "Empty";
+    switch (index) {
+      default:
+        nom = "Listes des usagers";
+        break;
+      case 1:
+        nom = "Ordinateurs";
+        break;
+      case 2:
+        nom = "Telephones";
+        break;
+    }
+    return nom;
   };
 
   const notifySaveSuccess = () =>
@@ -156,8 +179,8 @@ const DragAndDrop = (props) => {
     });
 
   const sauvegarderSoirée = async () => {
-    // let soireeASauvegader = { tours: [] };
-    // etatPartie.map((tour, colonne) => {
+    let soireeASauvegader = { tours: [] };
+    // etat.map((tour, colonne) => {
     //   let listeJeux = [];
     //   if (colonne > 0) {
     //     tour.map((jeu) => {
@@ -180,8 +203,8 @@ const DragAndDrop = (props) => {
     //     });
     //   });
     // }
-    // setPartie(formaterJeuxPossibles(anciennePartie));
-    // notifySaveSuccess();
+    // setPartie(formaterEtat(anciennePartie));
+    notifySaveSuccess();
   };
 
   return (
@@ -198,41 +221,20 @@ const DragAndDrop = (props) => {
           type="button"
           variant="contained"
           sx={{ margin: "1vh" }}
-          onClick={() => {
-            setEtatPartie([...etatPartie, []]);
-          }}
-        >
-          Ajouter un nouveau tour
-        </Button>
-        <Button
-          type="button"
-          variant="contained"
-          sx={{ margin: "1vh" }}
-          disabled={etatPartie.length < 2}
-          onClick={() => {
-            let newEtatPartie = [...etatPartie];
-            newEtatPartie.pop();
-            setEtatPartie([...newEtatPartie]);
-          }}
-        >
-          Retirer le dernier tour
-        </Button>
-        <Button
-          type="button"
-          variant="contained"
-          sx={{ margin: "1vh" }}
-          onClick={() => sauvegarderSoirée(etatPartie)}
-          disabled={etatPartie.length < 2 || etatPartie[1].length < 1}
+          onClick={() => sauvegarderSoirée(etat)}
+          disabled={etat.length < 2 || etat[1].length < 1}
         >
           Sauvegarder la soirée
         </Button>
       </div>
       <br />
-      <br />
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
-          {/* {etatPartie.map((tour, indTour) => (
-            <Droppable key={nomColonne(indTour)} droppableId={`${indTour}`}>
+          {etat.map((colonne, indColonne) => (
+            <Droppable
+              key={nomColonne(indColonne)}
+              droppableId={`${indColonne}`}
+            >
               {(provided, snapshot) => (
                 <Box
                   sx={{ borderRadius: 2 }}
@@ -240,16 +242,19 @@ const DragAndDrop = (props) => {
                   style={getListStyle(snapshot.isDraggingOver)}
                   {...provided.droppableProps}
                 >
-                  <Typography variant="h6" textAlign="center" key={indTour}>
-                    {nomColonne(indTour)}
+                  <Typography variant="h6" textAlign="center" key={indColonne}>
+                    {nomColonne(indColonne)}
                   </Typography>
-                  {tour.map((jeu, indJeu) => (
-                    <Draggable key={jeu.id} draggableId={jeu.id} index={indJeu}>
+                  {colonne.map((item, indItem) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={item.id}
+                      index={indItem}
+                    >
                       {(provided, snapshot) => (
                         <Paper
                           onContextMenu={() => {
-                            setBoutonCourant([indTour, indJeu]);
-                            handleContextMenu();
+                            setBoutonCourant([indColonne, indItem]);
                           }}
                           elevation={9}
                           sx={{ ...commonStyles, borderRadius: 2 }}
@@ -272,9 +277,9 @@ const DragAndDrop = (props) => {
                           >
                             <Typography
                               textAlign="center"
-                              key={indJeu + jeu.id}
+                              key={indItem + item.id}
                             >
-                              {jeu.nom}
+                              {item.title}
                             </Typography>
                           </div>
                         </Paper>
@@ -285,7 +290,7 @@ const DragAndDrop = (props) => {
                 </Box>
               )}
             </Droppable>
-          ))} */}
+          ))}
         </DragDropContext>
       </div>
     </div>

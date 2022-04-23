@@ -100,7 +100,7 @@ const MainPage = (props) => {
           <Route path="/usagers" element={<Usagers />} />
           <Route path="/appareils" element={<Appareils />} />
           <Route path="/historique" element={<Historique />} />
-          <Route path="/historique" element={<Affectation />} />
+          <Route path="/affectation" element={<Affectation />} />
         </Routes>
       </Box>
     </Box>

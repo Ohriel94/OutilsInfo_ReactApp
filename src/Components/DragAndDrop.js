@@ -2,19 +2,9 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Typography, Button, Paper, Box } from "@mui/material";
 import { toast } from "react-toastify";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const DragAndDrop = (props) => {
-  const { usagers, setUsagers, ordinateurs, setOrdinateurs } = props;
-  const [contextMenu, setContextMenu] = useState(null);
-  const [boutonCourant, setBoutonCourant] = useState("");
-  const [nouveauJeu, setNouveauJeu] = useState({ nom: null });
-
-  useEffect(() => {}, []);
+  const { usagers, ordinateurs } = props;
 
   const grid = 10;
 
@@ -44,35 +34,20 @@ const DragAndDrop = (props) => {
   });
 
   const formaterEtat = (usagers, ordinateurs) => {
-    var newEtat = [[], []];
+    var newEtat = [];
+    newEtat.push([]);
     usagers.map((usager, indUsager) => {
-      let usagerFormater = {
-        id: `item-${Math.floor(Math.random() * 900000000)}`,
-        title: `${usager.prenom} ${usager.nom}`,
-        prenom: usager.prenom,
-        nom: usager.nom,
-        _id: usager._id,
-      };
-      newEtat[0].push(usagerFormater);
+      usager.id = `item-${Math.floor(Math.random() * 900000000)}`;
+      usager.title = `${usager.prenom} ${usager.nom}`;
+      newEtat[0].push(usager);
     });
+    newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
-      let ordinateurFormater = {
-        id: `item-${Math.floor(Math.random() * 900000000)}`,
-        title: `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`,
-        serialNumber: ordinateur.serialNumber,
-        marque: ordinateur.marque,
-        modele: ordinateur.modele,
-        systeme: ordinateur.systeme,
-        processeur: ordinateur.processeur,
-        memoire: ordinateur.memoire,
-        disque: ordinateur.disque,
-        dateAcquisition: ordinateur.dateAcquisition,
-        etat: ordinateur.etat,
-        _id: ordinateur._id,
-      };
-      newEtat[1].push(ordinateurFormater);
+      ordinateur.id = `item-${Math.floor(Math.random() * 900000000)}`;
+      ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`;
+      newEtat[1].push(ordinateur);
     });
-    console.log("newEtat -------------------");
+    console.log("newEtat -----");
     console.log(newEtat);
 
     return newEtat;
@@ -150,9 +125,9 @@ const DragAndDrop = (props) => {
   }
 
   const nomColonne = (index) => {
-    let nom = "Empty";
+    let nom = "Vide";
     switch (index) {
-      default:
+      case 0:
         nom = "Listes des usagers";
         break;
       case 1:
@@ -160,6 +135,9 @@ const DragAndDrop = (props) => {
         break;
       case 2:
         nom = "Telephones";
+        break;
+      default:
+        nom = "Autres";
         break;
     }
     return nom;
@@ -231,10 +209,7 @@ const DragAndDrop = (props) => {
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {etat.map((colonne, indColonne) => (
-            <Droppable
-              key={nomColonne(indColonne)}
-              droppableId={`${indColonne}`}
-            >
+            <Droppable key={indColonne} droppableId={`${indColonne}`}>
               {(provided, snapshot) => (
                 <Box
                   sx={{ borderRadius: 2 }}
@@ -247,15 +222,12 @@ const DragAndDrop = (props) => {
                   </Typography>
                   {colonne.map((item, indItem) => (
                     <Draggable
-                      key={item.id}
+                      key={indItem}
                       draggableId={item.id}
                       index={indItem}
                     >
                       {(provided, snapshot) => (
                         <Paper
-                          onContextMenu={() => {
-                            setBoutonCourant([indColonne, indItem]);
-                          }}
                           elevation={9}
                           sx={{ ...commonStyles, borderRadius: 2 }}
                           ref={provided.innerRef}

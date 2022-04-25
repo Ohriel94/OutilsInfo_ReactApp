@@ -2,7 +2,7 @@ import * as React from "react";
 import { Routes, Route } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import axios from "axios";
+import Axios from "axios";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import AppareilAccordeon from "../../Components/AppareilAccordeon";
@@ -19,7 +19,7 @@ const Appareils = (props) => {
   const getOrdinateurs = () => {
     const f = async () => {
       try {
-        const getOrdinateursRequest = await axios({
+        const getOrdinateursRequest = await Axios({
           method: "get",
           url: "http://localhost:3001/appareils",
         });

@@ -4,13 +4,15 @@ import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Container from "@mui/material/Container";
-import Autocomplete from "@mui/material/Autocomplete";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Autocomplete from "@mui/material/Autocomplete";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 import DragAndDrop from "../../Components/DragAndDrop";
+import { ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Affectation = (props) => {
   const [ordinateurs, setOrdinateurs] = useState([]);
@@ -60,7 +62,7 @@ const Affectation = (props) => {
     });
     newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
-      newEtat[1].push(ordinateur);
+      if (ordinateur.etatDisponible === true) newEtat[1].push(ordinateur);
     });
     console.log(newEtat);
     return newEtat;
@@ -82,6 +84,15 @@ const Affectation = (props) => {
 
   return (
     <React.Fragment>
+      <ToastContainer
+        position="top-left"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        transition={Flip}
+      />
       <Box
         sx={{
           padding: "10px",
@@ -94,10 +105,11 @@ const Affectation = (props) => {
           <Grid item xs={6}>
             <Autocomplete
               blurOnSelect
+              disableClearable
               onChange={(event, value) => setUsagerChoisi(value)}
               id="choixUsager"
               options={usagers}
-              getOptionLabel={(option) => option.nom + " " + option.prenom}
+              getOptionLabel={(option) => option.prenom + " " + option.nom}
               width={300}
               renderInput={(params) => (
                 <TextField {...params} label="Choisissez un usager" />

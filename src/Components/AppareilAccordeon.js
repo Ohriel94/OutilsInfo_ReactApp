@@ -9,16 +9,24 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { LocalFireDepartment } from "@mui/icons-material";
 
+const BGCouleurListe = (etat) => {
+  let couleur = "";
+  if (etat === false) couleur = "#b55353";
+  else couleur = "#67b56f";
+  return couleur;
+};
+
 const AppareilAccordeon = (props) => {
   const { appareil } = props;
   return (
     <Accordion>
       <AccordionSummary
+        sx={{ backgroundColor: BGCouleurListe(appareil.etatDisponible) }}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography variant="h4">
+        <Typography variant="h5">
           {appareil.serialNumber +
             " - " +
             appareil.marque +
@@ -28,8 +36,8 @@ const AppareilAccordeon = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
-          <Grid item xs={2} textAlign={"center"} padding={1} width="150vh">
-            <Typography variant="h5">Spécifications</Typography>
+          <Grid item xs={3} textAlign={"center"} padding={1} width="150vh">
+            <Typography variant="h6">Spécifications</Typography>
             <Typography variant="subtitle2">{appareil.processeur}</Typography>
             <Typography variant="subtitle2">{appareil.systeme}</Typography>
             <Typography variant="subtitle2">{appareil.memoire} Go</Typography>
@@ -38,11 +46,11 @@ const AppareilAccordeon = (props) => {
               {appareil.dateAcquisition}
             </Typography>
           </Grid>
-          <Grid item xs={10} padding={1}>
-            <Typography variant="h5" textAlign={"center"}>
+          <Grid item xs={9} padding={1}>
+            <Typography variant="h6" textAlign={"center"}>
               Notes
             </Typography>
-            <Typography variant="p">
+            <Typography variant="subtitle2">
               blablalbalbalblbablablalbalbalblbablablalbalbalblba
             </Typography>
           </Grid>

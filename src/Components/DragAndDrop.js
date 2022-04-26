@@ -42,7 +42,8 @@ const DragAndDrop = (props) => {
     var newEtat = [];
     newEtat.push([]);
     if (
-      usagerChoisi.appareilsAffectes !== null &&
+      usagerChoisi !== {} &&
+      usagerChoisi.appareilsAffectes !== [] &&
       usagerChoisi.appareilsAffectes !== undefined
     ) {
       usagerChoisi.appareilsAffectes.map((appareil, indUsager) => {
@@ -79,9 +80,11 @@ const DragAndDrop = (props) => {
     if (destination.droppableId === 0) {
       const newItem = source;
       newItem.id = `item-${Math.floor(Math.random() * 900000000)}`;
+      newItem.etatDisponible = true;
       destClone.splice(destination.index, 0, newItem);
     } else {
       const [removed] = sourceClone.splice(source.index, 1);
+      removed.etatDisponible = false;
       destClone.splice(destination.index, 0, removed);
     }
     const result = [];
@@ -133,7 +136,7 @@ const DragAndDrop = (props) => {
       case 0:
         if (usagerChoisi.nom === undefined || usagerChoisi.prenom === undefined)
           nom = "Aucun usager choisi";
-        else nom = usagerChoisi.nom + " " + usagerChoisi.prenom;
+        else nom = usagerChoisi.prenom + " " + usagerChoisi.nom;
         break;
       case 1:
         nom = "Ordinateurs";
@@ -148,10 +151,11 @@ const DragAndDrop = (props) => {
     return nom;
   };
 
-  const notifySaveSuccess = () =>
-    toast.success("Sauvegarde réussie...", {
+  const notifySaveSuccess = () => {
+    toast.success("Affectation réussie...", {
       toastId: "save-in-progress",
     });
+  };
   const notifySuppressionSuccess = () =>
     toast.success("Jeu supprimé...", {
       toastId: "suppression-reussi",
@@ -162,8 +166,9 @@ const DragAndDrop = (props) => {
     });
 
   const sauvegarderSoirée = async (listeAppareils) => {
-    let appareilsAffectes = { ordinateurs: [] };
-    appareilsAffectes.ordinateurs = listeAppareils;
+    let appareils = { ordinateurs: [] };
+    appareils.ordinateurs = listeAppareils;
+    console.log(usagerChoisi.appareils);
     notifySaveSuccess();
   };
 
@@ -231,7 +236,7 @@ const DragAndDrop = (props) => {
                               flexDirection: "column",
                               justifyContent: "center",
                               alignItems: "center",
-                              height: "5vh",
+                              height: "3vh",
                             }}
                           >
                             <Typography

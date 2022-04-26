@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Typography, Button, Paper, Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 import { toast } from "react-toastify";
 
 const DragAndDrop = (props) => {
-  const { usagers, ordinateurs } = props;
+  const { usagerChoisi, ordinateurs } = props;
 
   const grid = 10;
 
@@ -19,7 +23,8 @@ const DragAndDrop = (props) => {
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
     padding: grid * 2,
-    margin: `${grid * 2}px 0`,
+    margin: `${grid * 1.2}px 0`,
+    height: grid * 2.6,
 
     // change background colour if dragging
     background: isDragging ? "lightgreen" : "darkgray",
@@ -29,18 +34,23 @@ const DragAndDrop = (props) => {
   });
 
   const getListStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? "gray" : "",
+    background: isDraggingOver ? "lightgray" : "",
     padding: grid,
   });
 
-  const formaterEtat = (usagers, ordinateurs) => {
+  const formaterEtat = (usagerChoisi, ordinateurs) => {
     var newEtat = [];
     newEtat.push([]);
-    usagers.map((usager, indUsager) => {
-      usager.id = `item-${Math.floor(Math.random() * 900000000)}`;
-      usager.title = `${usager.prenom} ${usager.nom}`;
-      newEtat[0].push(usager);
-    });
+    if (
+      usagerChoisi.appareilsAffectes !== null &&
+      usagerChoisi.appareilsAffectes !== undefined
+    ) {
+      usagerChoisi.appareilsAffectes.map((appareil, indUsager) => {
+        appareil.id = `item-${Math.floor(Math.random() * 900000000)}`;
+        appareil.title = `${appareil._id}`;
+        newEtat[0].push(appareil);
+      });
+    }
     newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
       ordinateur.id = `item-${Math.floor(Math.random() * 900000000)}`;
@@ -53,7 +63,7 @@ const DragAndDrop = (props) => {
     return newEtat;
   };
 
-  const [etat, setEtat] = useState(formaterEtat(usagers, ordinateurs));
+  const [etat, setEtat] = useState(formaterEtat(usagerChoisi, ordinateurs));
 
   const reorder = (liste, startIndex, endIndex) => {
     const result = [...liste];
@@ -63,25 +73,20 @@ const DragAndDrop = (props) => {
     return result;
   };
 
-  const move = (listeSource, listeDest, itemSource, itemDest, idSource) => {
+  const move = (listeSource, listeDest, source, destination) => {
     const sourceClone = Array.from(listeSource);
     const destClone = Array.from(listeDest);
-    if (idSource === 0) {
-      const newItem = {
-        id: `item-${Math.floor(Math.random() * 900000000)}`,
-        title: `${itemSource.prenom} ${itemSource.nom}`,
-        prenom: itemSource.prenom,
-        nom: itemSource.nom,
-        _id: itemSource._id,
-      };
-      destClone.splice(itemDest.index, 0, newItem);
+    if (destination.droppableId === 0) {
+      const newItem = source;
+      newItem.id = `item-${Math.floor(Math.random() * 900000000)}`;
+      destClone.splice(destination.index, 0, newItem);
     } else {
-      const [removed] = sourceClone.splice(itemSource.index, 1);
-      destClone.splice(itemDest.index, 0, removed);
+      const [removed] = sourceClone.splice(source.index, 1);
+      destClone.splice(destination.index, 0, removed);
     }
     const result = [];
-    result[itemSource.droppableId] = sourceClone;
-    result[itemDest.droppableId] = destClone;
+    result[source.droppableId] = sourceClone;
+    result[destination.droppableId] = destClone;
     result.map((tour, indItem) => {
       if (tour === {}) result.splice(indItem, 1);
     });
@@ -96,31 +101,29 @@ const DragAndDrop = (props) => {
     }
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
-    if (dInd != 0) {
-      if (sInd === dInd) {
-        const items = reorder(etat[sInd], source.index, destination.index);
-        const newEtat = [...etat];
-        etat.map((tour, indTour) => {
-          if (indTour < 0) {
-            tour.map((item, indItem) => {
-              newEtat[indTour].push({ id: indItem, nom: item });
-            });
-          }
-        });
-        newEtat[dInd] = items;
-        setEtat(newEtat);
-      } else {
-        const result = move(etat[sInd], etat[dInd], source, destination, sInd);
-        const newEtat = [...etat];
-        newEtat[sInd] = result[sInd];
-        newEtat[dInd] = result[dInd];
-        newEtat[dInd].map((item, indItem) => {
-          if (Object.keys(item).length === 0) {
-            newEtat[dInd].splice(indItem, 1);
-          }
-        });
-        setEtat(newEtat);
-      }
+    if (sInd === dInd) {
+      const items = reorder(etat[sInd], source.index, destination.index);
+      const newEtat = [...etat];
+      etat.map((colonne, indColonne) => {
+        if (indColonne < 0) {
+          colonne.map((item, indItem) => {
+            newEtat[indColonne].push(item);
+          });
+        }
+      });
+      newEtat[dInd] = items;
+      setEtat(newEtat);
+    } else {
+      const result = move(etat[sInd], etat[dInd], source, destination);
+      const newEtat = [...etat];
+      newEtat[sInd] = result[sInd];
+      newEtat[dInd] = result[dInd];
+      newEtat[dInd].map((item, indItem) => {
+        if (Object.keys(item).length === 0) {
+          newEtat[dInd].splice(indItem, 1);
+        }
+      });
+      setEtat(newEtat);
     }
   }
 
@@ -128,7 +131,9 @@ const DragAndDrop = (props) => {
     let nom = "Vide";
     switch (index) {
       case 0:
-        nom = "Listes des usagers";
+        if (usagerChoisi.nom === undefined || usagerChoisi.prenom === undefined)
+          nom = "Aucun usager choisi";
+        else nom = usagerChoisi.nom + " " + usagerChoisi.prenom;
         break;
       case 1:
         nom = "Ordinateurs";
@@ -156,32 +161,9 @@ const DragAndDrop = (props) => {
       toastId: "suppression-impossible",
     });
 
-  const sauvegarderSoirée = async () => {
-    let soireeASauvegader = { tours: [] };
-    // etat.map((tour, colonne) => {
-    //   let listeJeux = [];
-    //   if (colonne > 0) {
-    //     tour.map((jeu) => {
-    //       listeJeux.push(jeu.nom);
-    //     });
-    //     soireeASauvegader.tours.push({ jeux: listeJeux });
-    //   }
-    // });
-    // await PartieDomaine.modifierPartie(soireeASauvegader);
-    // let anciennePartie = [];
-    // anciennePartie.push([]);
-    // nomJeux.map((jeu, i) => {
-    //   anciennePartie[0].push({ id: i, nom: jeu.nom });
-    // });
-    // if (soireeASauvegader !== undefined) {
-    //   soireeASauvegader.tours.map((tour, i) => {
-    //     anciennePartie.push([]);
-    //     tour.jeux.map((jeu, j) => {
-    //       anciennePartie[i + 1].push({ id: j, nom: jeu });
-    //     });
-    //   });
-    // }
-    // setPartie(formaterEtat(anciennePartie));
+  const sauvegarderSoirée = async (listeAppareils) => {
+    let appareilsAffectes = { ordinateurs: [] };
+    appareilsAffectes.ordinateurs = listeAppareils;
     notifySaveSuccess();
   };
 
@@ -199,10 +181,10 @@ const DragAndDrop = (props) => {
           type="button"
           variant="contained"
           sx={{ margin: "1vh" }}
-          onClick={() => sauvegarderSoirée(etat)}
+          onClick={() => sauvegarderSoirée(etat[0])}
           disabled={etat.length < 2 || etat[1].length < 1}
         >
-          Sauvegarder la soirée
+          Sauvegarder l'affectation
         </Button>
       </div>
       <br />
@@ -212,12 +194,17 @@ const DragAndDrop = (props) => {
             <Droppable key={indColonne} droppableId={`${indColonne}`}>
               {(provided, snapshot) => (
                 <Box
-                  sx={{ borderRadius: 2 }}
+                  sx={{ borderRadius: 1 }}
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                   {...provided.droppableProps}
                 >
-                  <Typography variant="h6" textAlign="center" key={indColonne}>
+                  <Typography
+                    variant="h6"
+                    textAlign="center"
+                    key={indColonne}
+                    width={225}
+                  >
                     {nomColonne(indColonne)}
                   </Typography>
                   {colonne.map((item, indItem) => (
@@ -228,7 +215,7 @@ const DragAndDrop = (props) => {
                     >
                       {(provided, snapshot) => (
                         <Paper
-                          elevation={9}
+                          elevation={3}
                           sx={{ ...commonStyles, borderRadius: 2 }}
                           ref={provided.innerRef}
                           {...provided.draggableProps}
@@ -244,7 +231,7 @@ const DragAndDrop = (props) => {
                               flexDirection: "column",
                               justifyContent: "center",
                               alignItems: "center",
-                              height: "2vh",
+                              height: "5vh",
                             }}
                           >
                             <Typography
@@ -253,6 +240,23 @@ const DragAndDrop = (props) => {
                             >
                               {item.title}
                             </Typography>
+                            <Box textAlign="center">
+                              <Typography variant="subtitle2">
+                                {item.processeur}
+                              </Typography>
+                              <Grid container spacing={2} display="flex">
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    {item.memoire} Go
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography variant="subtitle2">
+                                    {item.disque} Go
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </Box>
                           </div>
                         </Paper>
                       )}

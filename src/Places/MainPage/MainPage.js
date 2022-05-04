@@ -25,6 +25,8 @@ import GroupAddTwoToneIcon from "@mui/icons-material/GroupAddTwoTone";
 import GroupRemoveTwoToneIcon from "@mui/icons-material/GroupRemoveTwoTone";
 import BuildCircleTwoToneIcon from "@mui/icons-material/BuildCircleTwoTone";
 import CreateTwoToneIcon from "@mui/icons-material/CreateTwoTone";
+import { ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const drawerWidth = 250;
 
@@ -38,6 +40,15 @@ const MainPage = (props) => {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        transition={Flip}
+      />
       <AppBar
         position="fixed"
         sx={{

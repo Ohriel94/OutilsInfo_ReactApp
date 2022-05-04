@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -8,7 +9,22 @@ import Paper from "@mui/material/Paper";
 import { toast } from "react-toastify";
 
 const DragAndDrop = (props) => {
-  const { usagerChoisi, ordinateurs } = props;
+  const { usagerChoisi, ordinateurs, refreshState } = props;
+
+  const affecterAppareil = (usagerChoisi) => {
+    const f = async () => {
+      try {
+        const updateUserRequest = await Axios({
+          method: "post",
+          url: "http://localhost:3001/affectation",
+          data: usagerChoisi,
+        });
+      } catch (e) {
+        console.log("Failed to connect " + e);
+      }
+    };
+    f();
+  };
 
   const grid = 10;
 
@@ -22,9 +38,9 @@ const DragAndDrop = (props) => {
   const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    padding: grid * 2,
-    margin: `${grid * 1.2}px 0`,
-    height: grid * 2.6,
+    padding: `${grid * 1.2}px`,
+    margin: `0 0 ${grid * 0.9}px 0`,
+    width: `${grid * 30}px`,
 
     // change background colour if dragging
     background: isDragging ? "lightgreen" : "darkgray",
@@ -38,33 +54,39 @@ const DragAndDrop = (props) => {
     padding: grid,
   });
 
-  const formaterEtat = (usagerChoisi, ordinateurs) => {
+  const formaterEtat = (appareilsAffectes, ordinateurs) => {
     var newEtat = [];
     newEtat.push([]);
-    if (
-      usagerChoisi !== {} &&
-      usagerChoisi.appareilsAffectes !== [] &&
-      usagerChoisi.appareilsAffectes !== undefined
-    ) {
-      usagerChoisi.appareilsAffectes.map((appareil, indUsager) => {
-        appareil.id = `item-${Math.floor(Math.random() * 900000000)}`;
-        appareil.title = `${appareil._id}`;
-        newEtat[0].push(appareil);
-      });
+    if (appareilsAffectes !== undefined) {
+      if (appareilsAffectes !== []) {
+        appareilsAffectes.map((appareil, indUsager) => {
+          appareil.id = `item-${Math.floor(Math.random() * 900000000)}`;
+          appareil.title = `${appareil.serialNumber} - ${appareil.marque} ${appareil.modele}`;
+          newEtat[0].push(appareil);
+        });
+      }
     }
     newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
-      ordinateur.id = `item-${Math.floor(Math.random() * 900000000)}`;
-      ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`;
-      newEtat[1].push(ordinateur);
+      if (ordinateur.etatDisponible === true) {
+        ordinateur.id = `item-${Math.floor(Math.random() * 900000000)}`;
+        ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`;
+        newEtat[1].push(ordinateur);
+      }
     });
-    console.log("newEtat -----");
-    console.log(newEtat);
 
     return newEtat;
   };
 
-  const [etat, setEtat] = useState(formaterEtat(usagerChoisi, ordinateurs));
+  const [etat, setEtat] = useState(
+    formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs)
+  );
+
+  React.useEffect(() => {
+    console.log("UseEffect");
+    formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs);
+    console.log(refreshState);
+  }, [refreshState]);
 
   const reorder = (liste, startIndex, endIndex) => {
     const result = [...liste];
@@ -77,16 +99,9 @@ const DragAndDrop = (props) => {
   const move = (listeSource, listeDest, source, destination) => {
     const sourceClone = Array.from(listeSource);
     const destClone = Array.from(listeDest);
-    if (destination.droppableId === 0) {
-      const newItem = source;
-      newItem.id = `item-${Math.floor(Math.random() * 900000000)}`;
-      newItem.etatDisponible = true;
-      destClone.splice(destination.index, 0, newItem);
-    } else {
-      const [removed] = sourceClone.splice(source.index, 1);
-      removed.etatDisponible = false;
-      destClone.splice(destination.index, 0, removed);
-    }
+    const [removed] = sourceClone.splice(source.index, 1);
+    destClone.splice(destination.index, 0, removed);
+
     const result = [];
     result[source.droppableId] = sourceClone;
     result[destination.droppableId] = destClone;
@@ -121,11 +136,6 @@ const DragAndDrop = (props) => {
       const newEtat = [...etat];
       newEtat[sInd] = result[sInd];
       newEtat[dInd] = result[dInd];
-      newEtat[dInd].map((item, indItem) => {
-        if (Object.keys(item).length === 0) {
-          newEtat[dInd].splice(indItem, 1);
-        }
-      });
       setEtat(newEtat);
     }
   }
@@ -134,7 +144,7 @@ const DragAndDrop = (props) => {
     let nom = "Vide";
     switch (index) {
       case 0:
-        if (usagerChoisi.nom === undefined || usagerChoisi.prenom === undefined)
+        if (usagerChoisi.prenom === undefined || usagerChoisi.nom === undefined)
           nom = "Aucun usager choisi";
         else nom = usagerChoisi.prenom + " " + usagerChoisi.nom;
         break;
@@ -166,9 +176,10 @@ const DragAndDrop = (props) => {
     });
 
   const sauvegarderSoirée = async (listeAppareils) => {
-    let appareils = { ordinateurs: [] };
-    appareils.ordinateurs = listeAppareils;
-    console.log(usagerChoisi.appareils);
+    console.log("sauvegarderSoirée");
+    usagerChoisi.appareilsAffectes = listeAppareils;
+    console.log(usagerChoisi);
+    affecterAppareil(usagerChoisi);
     notifySaveSuccess();
   };
 
@@ -177,15 +188,15 @@ const DragAndDrop = (props) => {
       <br />
       <div
         style={{
+          margin: "0px 10px",
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "left",
           alignItems: "center",
         }}
       >
         <Button
           type="button"
           variant="contained"
-          sx={{ margin: "1vh" }}
           onClick={() => sauvegarderSoirée(etat[0])}
           disabled={etat.length < 2 || etat[1].length < 1}
         >
@@ -217,6 +228,7 @@ const DragAndDrop = (props) => {
                       key={indItem}
                       draggableId={item.id}
                       index={indItem}
+                      padding={15}
                     >
                       {(provided, snapshot) => (
                         <Paper
@@ -236,16 +248,14 @@ const DragAndDrop = (props) => {
                               flexDirection: "column",
                               justifyContent: "center",
                               alignItems: "center",
-                              height: "3vh",
+                              textAlign: "center",
+                              height: "6vh",
                             }}
                           >
-                            <Typography
-                              textAlign="center"
-                              key={indItem + item.id}
-                            >
+                            <Typography key={indItem + item.id} variant="h6">
                               {item.title}
                             </Typography>
-                            <Box textAlign="center">
+                            <Box>
                               <Typography variant="subtitle2">
                                 {item.processeur}
                               </Typography>

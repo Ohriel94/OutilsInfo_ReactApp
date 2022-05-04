@@ -9,6 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const UsagerAccordeon = (props) => {
   const { usager } = props;
+  if (usager.nom === "Bernard") console.log(usager.appareilsAffectes);
   return (
     <Accordion>
       <AccordionSummary
@@ -16,7 +17,7 @@ const UsagerAccordeon = (props) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography variant="h4">{usager.nom + " " + usager.prenom}</Typography>
+        <Typography variant="h4">{usager.prenom + " " + usager.nom}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>

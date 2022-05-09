@@ -40,7 +40,7 @@ const DragAndDrop = (props) => {
     userSelect: "none",
     padding: `${grid * 1.2}px`,
     margin: `0 0 ${grid * 0.9}px 0`,
-    width: `${grid * 30}px`,
+    width: `${grid * 25}px`,
 
     // change background colour if dragging
     background: isDragging ? "lightgreen" : "darkgray",
@@ -59,19 +59,21 @@ const DragAndDrop = (props) => {
     newEtat.push([]);
     if (appareilsAffectes !== undefined) {
       if (appareilsAffectes !== []) {
-        appareilsAffectes.map((appareil, indUsager) => {
-          appareil.id = `item-${Math.floor(Math.random() * 900000000)}`;
+        console.log("appareils usager");
+        appareilsAffectes.map((appareil, indAppareil) => {
           appareil.title = `${appareil.serialNumber} - ${appareil.marque} ${appareil.modele}`;
           newEtat[0].push(appareil);
+          console.log(indAppareil + " - " + appareil.id);
         });
       }
     }
     newEtat.push([]);
+    console.log("ordinateurs");
     ordinateurs.map((ordinateur, indOrdinateur) => {
       if (ordinateur.etatDisponible === true) {
-        ordinateur.id = `item-${Math.floor(Math.random() * 900000000)}`;
         ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`;
         newEtat[1].push(ordinateur);
+        console.log(indOrdinateur + " - " + ordinateur.id);
       }
     });
 
@@ -84,7 +86,8 @@ const DragAndDrop = (props) => {
 
   React.useEffect(() => {
     console.log("UseEffect");
-    formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs);
+    formaterEtat(...etat);
+    console.log(etat);
     console.log(refreshState);
   }, [refreshState]);
 
@@ -92,15 +95,20 @@ const DragAndDrop = (props) => {
     const result = [...liste];
     const [dragged] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, dragged);
-
     return result;
   };
 
   const move = (listeSource, listeDest, source, destination) => {
-    const sourceClone = Array.from(listeSource);
-    const destClone = Array.from(listeDest);
-    const [removed] = sourceClone.splice(source.index, 1);
-    destClone.splice(destination.index, 0, removed);
+    const sourceClone = [...listeSource];
+    const destClone = [...listeDest];
+
+    if (source.droppableId === 0) {
+      const newItem = listeSource[source.index];
+      destClone.splice(destination.index, 0, newItem);
+    } else {
+      const [removed] = sourceClone.splice(source.index, 1);
+      destClone.splice(destination.index, 0, removed);
+    }
 
     const result = [];
     result[source.droppableId] = sourceClone;
@@ -113,6 +121,7 @@ const DragAndDrop = (props) => {
 
   function onDragEnd(result) {
     const { source, destination } = result;
+    console.log(result);
     // dropped outside the list
     if (!destination) {
       return;
@@ -207,10 +216,18 @@ const DragAndDrop = (props) => {
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {etat.map((colonne, indColonne) => (
-            <Droppable key={indColonne} droppableId={`${indColonne}`}>
+            <Droppable
+              key={indColonne}
+              droppableId={`${indColonne}`}
+              id={indColonne}
+            >
               {(provided, snapshot) => (
                 <Box
-                  sx={{ borderRadius: 1 }}
+                  sx={{
+                    borderRadius: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                   {...provided.droppableProps}
@@ -218,14 +235,14 @@ const DragAndDrop = (props) => {
                   <Typography
                     variant="h6"
                     textAlign="center"
-                    key={indColonne}
-                    width={225}
+                    key={nomColonne(indColonne)}
+                    width={"auto"}
                   >
                     {nomColonne(indColonne)}
                   </Typography>
                   {colonne.map((item, indItem) => (
                     <Draggable
-                      key={indItem}
+                      key={item.id}
                       draggableId={item.id}
                       index={indItem}
                       padding={15}
@@ -247,26 +264,34 @@ const DragAndDrop = (props) => {
                               display: "flex",
                               flexDirection: "column",
                               justifyContent: "center",
-                              alignItems: "center",
                               textAlign: "center",
                               height: "6vh",
                             }}
                           >
-                            <Typography key={indItem + item.id} variant="h6">
+                            <Typography key={"TITL-" + item.id} variant="h6">
                               {item.title}
                             </Typography>
                             <Box>
-                              <Typography variant="subtitle2">
+                              <Typography
+                                key={"PROC-" + item.id}
+                                variant="subtitle2"
+                              >
                                 {item.processeur}
                               </Typography>
-                              <Grid container spacing={2} display="flex">
+                              <Grid container display="flex">
                                 <Grid item xs={6}>
-                                  <Typography variant="subtitle2">
+                                  <Typography
+                                    key={"MEMO-" + item.id}
+                                    variant="subtitle2"
+                                  >
                                     {item.memoire} Go
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
-                                  <Typography variant="subtitle2">
+                                  <Typography
+                                    key={"DISQ-" + item.id}
+                                    variant="subtitle2"
+                                  >
                                     {item.disque} Go
                                   </Typography>
                                 </Grid>

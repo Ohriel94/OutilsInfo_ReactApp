@@ -19,6 +19,7 @@ const Affectation = (props) => {
   const [refreshState, setRefreshState] = useState(false);
 
   const getUsers = () => {
+    console.log("getUsers");
     const f = async () => {
       try {
         const getUsersRequest = await Axios({
@@ -27,6 +28,11 @@ const Affectation = (props) => {
         });
         getUsersRequest.data.map((usager) => {
           usager.label = usager.prenom + " " + usager.nom;
+        });
+        getUsersRequest.data.map((usager) => {
+          usager.appareilsAffectes.map((appareil) => {
+            appareil.id = `item-${Math.floor(Math.random() * 90000000)}`;
+          });
         });
         setUsagers(getUsersRequest.data);
       } catch (e) {
@@ -41,9 +47,12 @@ const Affectation = (props) => {
       try {
         const getOrdinateursRequest = await Axios({
           method: "get",
-          url: "http://localhost:3001/appareils",
+          url: "http://localhost:3001/ordinateurs",
         });
-        setOrdinateurs(getOrdinateursRequest.data[0].ordinateurs);
+        getOrdinateursRequest.data.map((ordinateur) => {
+          ordinateur.id = `item-${Math.floor(Math.random() * 90000000)}`;
+        });
+        setOrdinateurs(getOrdinateursRequest.data);
       } catch (e) {
         console.log("Failed to connect " + e);
       }
@@ -58,9 +67,7 @@ const Affectation = (props) => {
   React.useEffect(() => {
     getUsers();
     getOrdinateurs();
-    console.log(refreshState);
     setRefreshState(false);
-    console.log(refreshState);
   }, [refreshState]);
 
   // const listerNomsUsagers = () => {

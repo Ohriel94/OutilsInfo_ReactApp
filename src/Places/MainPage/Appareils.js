@@ -5,10 +5,10 @@ import Box from "@mui/material/Box";
 import Axios from "axios";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import AppareilAccordeon from "../../Components/AppareilAccordeon";
+import OrdinateurAccordeon from "../../Components/OrdinateurAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 
-const Appareils = (props) => {
+const Ordinateurs = (props) => {
   const [ordinateurs, setOrdinateurs] = React.useState([]);
   const { token, niveau, setNiveau } = props;
 
@@ -21,15 +21,14 @@ const Appareils = (props) => {
       try {
         const getOrdinateursRequest = await Axios({
           method: "get",
-          url: "http://localhost:3001/appareils",
+          url: "http://localhost:3001/ordinateurs",
         });
-        setOrdinateurs(getOrdinateursRequest.data[0].ordinateurs);
+        setOrdinateurs(getOrdinateursRequest.data);
       } catch (e) {
         console.log("Failed to connect " + e);
       }
     };
     f();
-    console.log(ordinateurs[0]);
   };
 
   return (
@@ -44,11 +43,11 @@ const Appareils = (props) => {
         }}
       >
         {ordinateurs.map((ordinateur, ordinateurKey) => (
-          <AppareilAccordeon appareil={ordinateur} key={ordinateurKey} />
+          <OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} />
         ))}
       </Box>
     </React.Fragment>
   );
 };
 
-export default Appareils;
+export default Ordinateurs;

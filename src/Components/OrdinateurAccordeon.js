@@ -16,34 +16,34 @@ const BGCouleurListe = (etat) => {
   return couleur;
 };
 
-const AppareilAccordeon = (props) => {
-  const { appareil } = props;
+const OrdinateurAccordeon = (props) => {
+  const { ordinateur } = props;
   return (
     <Accordion>
       <AccordionSummary
-        sx={{ backgroundColor: BGCouleurListe(appareil.etatDisponible) }}
+        sx={{ backgroundColor: BGCouleurListe(ordinateur.etatDisponible) }}
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <Typography variant="h5">
-          {appareil.serialNumber +
+          {ordinateur.serialNumber +
             " - " +
-            appareil.marque +
+            ordinateur.marque +
             " " +
-            appareil.modele}
+            ordinateur.modele}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid item xs={3} textAlign={"center"} padding={1} width="150vh">
             <Typography variant="h6">Spécifications</Typography>
-            <Typography variant="subtitle2">{appareil.processeur}</Typography>
-            <Typography variant="subtitle2">{appareil.systeme}</Typography>
-            <Typography variant="subtitle2">{appareil.memoire} Go</Typography>
-            <Typography variant="subtitle2">{appareil.disque} Go</Typography>
+            <Typography variant="subtitle2">{ordinateur.processeur}</Typography>
+            <Typography variant="subtitle2">{ordinateur.systeme}</Typography>
+            <Typography variant="subtitle2">{ordinateur.memoire} Go</Typography>
+            <Typography variant="subtitle2">{ordinateur.disque} Go</Typography>
             <Typography variant="subtitle2">
-              {appareil.dateAcquisition}
+              {ordinateur.dateAcquisition}
             </Typography>
           </Grid>
           <Grid item xs={9} padding={1}>
@@ -91,4 +91,4 @@ const AppareilAccordeon = (props) => {
   );
 };
 
-export default AppareilAccordeon;
+export default OrdinateurAccordeon;

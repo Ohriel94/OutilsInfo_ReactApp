@@ -29,6 +29,7 @@ import { ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const drawerWidth = 250;
+const drawerZIndex = 0;
 
 const MainPage = (props) => {
   const navigate = useNavigate();
@@ -39,7 +40,15 @@ const MainPage = (props) => {
   });
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        heigth: window.innerHeight * 0.2,
+        marginTop: "70px",
+        marginLeft: "-15px",
+        width: window.innerWidth * 0.997,
+      }}
+    >
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -52,8 +61,7 @@ const MainPage = (props) => {
       <AppBar
         position="fixed"
         sx={{
-          width: `calc(100% - ${drawerWidth}px)`,
-          ml: `${drawerWidth}px`,
+          zIndex: drawerZIndex + 1,
         }}
       >
         <Toolbar>
@@ -65,12 +73,9 @@ const MainPage = (props) => {
       </AppBar>
       <Drawer
         sx={{
+          zIndex: drawerZIndex,
           width: drawerWidth,
           flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
         }}
         variant="permanent"
         anchor="left"
@@ -107,7 +112,7 @@ const MainPage = (props) => {
         </List>
       </Drawer>
       <Box component="main">
-        <Routes sx={{ flexGrow: 1, p: 3, marginTop: "64px" }}>
+        <Routes>
           <Route path="/usagers" element={<Usagers />} />
           <Route path="/appareils" element={<Appareils />} />
           <Route path="/historique" element={<Historique />} />

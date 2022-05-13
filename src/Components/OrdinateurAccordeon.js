@@ -29,29 +29,61 @@ const OrdinateurAccordeon = (props) => {
         <Typography variant="h5">
           {ordinateur.serialNumber +
             " - " +
-            ordinateur.marque +
+            ordinateur.details.marque +
             " " +
-            ordinateur.modele}
+            ordinateur.details.modele}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
-          <Grid item xs={3} textAlign={"center"} padding={1} width="150vh">
-            <Typography variant="h6">Spécifications</Typography>
-            <Typography variant="subtitle2">{ordinateur.processeur}</Typography>
-            <Typography variant="subtitle2">{ordinateur.systeme}</Typography>
-            <Typography variant="subtitle2">{ordinateur.memoire} Go</Typography>
-            <Typography variant="subtitle2">{ordinateur.disque} Go</Typography>
-            <Typography variant="subtitle2">
-              {ordinateur.dateAcquisition}
+          <Grid
+            item
+            xs={5}
+            sm={3}
+            textAlign={"center"}
+            width="65vh"
+            sx={{ border: "lightgray solid 1px" }}
+            padding={(0, 2)}
+          >
+            <Typography variant="h5" textAlign="center">
+              Spécifications
             </Typography>
+            <Typography variant="subtitle2">
+              {ordinateur.details.configuration.processeur}
+            </Typography>
+            <Typography variant="subtitle2">
+              {ordinateur.details.configuration.systeme}
+            </Typography>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography variant="subtitle2">
+                  {ordinateur.details.configuration.disque} Go
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="subtitle2">
+                  {ordinateur.details.configuration.memoire} Go
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">
+                {ordinateur.details.dateAcquisition}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={9} padding={1}>
-            <Typography variant="h6" textAlign={"center"}>
+          <Grid
+            item
+            xs={7}
+            sm={9}
+            sx={{ border: "lightgray solid 1px" }}
+            padding={(0, 2)}
+          >
+            <Typography variant="h5" textAlign={"center"}>
               Notes
             </Typography>
             <Typography variant="subtitle2">
-              blablalbalbalblbablablalbalbalblbablablalbalbalblba
+              {ordinateur.details.notes}
             </Typography>
           </Grid>
         </Grid>
@@ -66,19 +98,25 @@ const OrdinateurAccordeon = (props) => {
             </AccordionSummary>
             <AccordionDetails>
               <Box>
-                <Grid item xs={4} padding={1}>
-                  <Typography variant="h5">Assigner à :</Typography>
+                <Grid container alignItems={"center"} textAlign={"center"}>
+                  <Grid item xs={3}>
+                    <Typography variant="h6">Assigner à</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h6">Début du prêt</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h6">Fin du prêt</Typography>
+                  </Grid>
                 </Grid>
-                <Grid container padding={1} alignItems={"center"} width="100%">
-                  <Grid item xs={2}>
+                <Grid container alignItems={"center"} textAlign={"center"}>
+                  <Grid item xs={3}>
                     <Typography variant="h6">Detenteur 1</Typography>
                   </Grid>
-                  <Grid item xs={2} textAlign={"right"}>
-                    <Typography variant="subtitle2">Début du prêt :</Typography>
-                    <Typography variant="subtitle2">Fin du prêt :</Typography>
-                  </Grid>
-                  <Grid item xs={8} textAlign={"center"}>
+                  <Grid item xs={3}>
                     <Typography variant="subtitle2">00/00/00</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
                     <Typography variant="subtitle2">99/99/99</Typography>
                   </Grid>
                 </Grid>

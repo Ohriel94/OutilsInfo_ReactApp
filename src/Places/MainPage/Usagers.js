@@ -51,15 +51,7 @@ const Usagers = (props) => {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          padding: "10px",
-          heigth: "400px",
-          margin: "10px",
-          marginTop: "100px",
-          width: "100%",
-        }}
-      >
+      <Box>
         <Button
           variant="contained"
           size="small"

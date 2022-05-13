@@ -9,7 +9,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const UsagerAccordeon = (props) => {
   const { usager } = props;
-  if (usager.nom === "Bernard") console.log(usager.appareilsAffectes);
+  if (usager.nom === "Cordova")
+    usager.appareilsAffectes.map((appareil) => {
+      console.log(appareil.serialNumber);
+    });
+
   return (
     <Accordion>
       <AccordionSummary
@@ -17,14 +21,21 @@ const UsagerAccordeon = (props) => {
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography variant="h4">{usager.prenom + " " + usager.nom}</Typography>
+        <Typography variant="h5">{usager.prenom + " " + usager.nom}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Box>
-          <Typography variant="h5">Appareils assignés</Typography>
+          <Typography variant="h6">Appareils assignés</Typography>
+          {usager.appareilsAffectes.map((appareil) => {
+            return (
+              <Typography variant="sutitle2">
+                {appareil.serialNumber}
+              </Typography>
+            );
+          })}
         </Box>
         <Box>
-          <Typography variant="h5">Appareils révoqué</Typography>
+          <Typography variant="h6">Appareils révoqué</Typography>
         </Box>
       </AccordionDetails>
     </Accordion>

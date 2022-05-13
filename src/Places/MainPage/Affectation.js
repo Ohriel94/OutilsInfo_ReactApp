@@ -31,7 +31,7 @@ const Affectation = (props) => {
         });
         getUsersRequest.data.map((usager) => {
           usager.appareilsAffectes.map((appareil) => {
-            appareil.id = `item-${Math.floor(Math.random() * 90000000)}`;
+            appareil.id = `item-${Math.floor(Math.random() * 90000001)}`;
           });
         });
         setUsagers(getUsersRequest.data);
@@ -50,7 +50,7 @@ const Affectation = (props) => {
           url: "http://localhost:3001/ordinateurs",
         });
         getOrdinateursRequest.data.map((ordinateur) => {
-          ordinateur.id = `item-${Math.floor(Math.random() * 90000000)}`;
+          ordinateur.id = `item-${Math.floor(Math.random() * 90000001)}`;
         });
         setOrdinateurs(getOrdinateursRequest.data);
       } catch (e) {
@@ -80,15 +80,7 @@ const Affectation = (props) => {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          padding: "10px",
-          heigth: "400px",
-          margin: "10px",
-          marginTop: "100px",
-          width: window.innerWidth * 0.7,
-        }}
-      >
+      <Box sx={{ marginTop: "10px" }}>
         <Grid container spacing={2} display="flex" alignItems="center">
           <Grid item xs={12}>
             <Autocomplete
@@ -102,7 +94,6 @@ const Affectation = (props) => {
               options={usagers}
               getOptionLabel={(option) => option.label}
               isOptionEqualToValue={(option, value) => option._id === value._id}
-              width={300}
               renderInput={(params) => (
                 <TextField {...params} label="Choisissez un usager" />
               )}

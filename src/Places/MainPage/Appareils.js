@@ -33,15 +33,7 @@ const Ordinateurs = (props) => {
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          padding: "10px",
-          heigth: "400px",
-          margin: "10px",
-          marginTop: "100px",
-          width: "auto",
-        }}
-      >
+      <Box>
         {ordinateurs.map((ordinateur, ordinateurKey) => (
           <OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} />
         ))}

@@ -11,13 +11,14 @@ import { toast } from "react-toastify";
 const DragAndDrop = (props) => {
   const { usagerChoisi, ordinateurs, refreshState } = props;
 
-  const affecterAppareil = (usagerChoisi) => {
+  const affecterAppareil = (etat) => {
+    console.log(`etat : ${etat[0]}`);
     const f = async () => {
       try {
         const updateUserRequest = await Axios({
           method: "post",
           url: "http://localhost:3001/affectation",
-          data: usagerChoisi,
+          data: etat[0],
         });
       } catch (e) {
         console.log("Failed to connect " + e);
@@ -40,7 +41,7 @@ const DragAndDrop = (props) => {
     userSelect: "none",
     padding: `${grid * 1.2}px`,
     margin: `0 0 ${grid * 0.9}px 0`,
-    width: `${grid * 25}px`,
+    width: `${grid * 30}px`,
 
     // change background colour if dragging
     background: isDragging ? "lightgreen" : "darkgray",
@@ -55,25 +56,36 @@ const DragAndDrop = (props) => {
   });
 
   const formaterEtat = (appareilsAffectes, ordinateurs) => {
+    console.log("formaterEtat");
     var newEtat = [];
     newEtat.push([]);
     if (appareilsAffectes !== undefined) {
       if (appareilsAffectes !== []) {
-        console.log("appareils usager");
         appareilsAffectes.map((appareil, indAppareil) => {
-          appareil.title = `${appareil.serialNumber} - ${appareil.marque} ${appareil.modele}`;
+          console.log(
+            indAppareil +
+              " - " +
+              appareil.serialNumber +
+              " : " +
+              appareil.etatDisponible
+          );
+          appareil.title = `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`;
           newEtat[0].push(appareil);
-          console.log(indAppareil + " - " + appareil.id);
         });
       }
     }
     newEtat.push([]);
-    console.log("ordinateurs");
     ordinateurs.map((ordinateur, indOrdinateur) => {
+      console.log(
+        indOrdinateur +
+          " - " +
+          ordinateur.serialNumber +
+          " : " +
+          ordinateur.etatDisponible
+      );
       if (ordinateur.etatDisponible === true) {
-        ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.marque} ${ordinateur.modele}`;
+        ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`;
         newEtat[1].push(ordinateur);
-        console.log(indOrdinateur + " - " + ordinateur.id);
       }
     });
 
@@ -126,25 +138,25 @@ const DragAndDrop = (props) => {
     if (!destination) {
       return;
     }
-    const sInd = +source.droppableId;
-    const dInd = +destination.droppableId;
-    if (sInd === dInd) {
-      const items = reorder(etat[sInd], source.index, destination.index);
+    if (source.droppableId === destination.droppableId) {
+      const items = reorder(
+        etat[source.droppableId],
+        source.index,
+        destination.index
+      );
       const newEtat = [...etat];
-      etat.map((colonne, indColonne) => {
-        if (indColonne < 0) {
-          colonne.map((item, indItem) => {
-            newEtat[indColonne].push(item);
-          });
-        }
-      });
-      newEtat[dInd] = items;
+      newEtat[destination.droppableId] = items;
       setEtat(newEtat);
     } else {
-      const result = move(etat[sInd], etat[dInd], source, destination);
+      const result = move(
+        etat[source.droppableId],
+        etat[destination.droppableId],
+        source,
+        destination
+      );
       const newEtat = [...etat];
-      newEtat[sInd] = result[sInd];
-      newEtat[dInd] = result[dInd];
+      newEtat[source.droppableId] = result[source.droppableId];
+      newEtat[destination.droppableId] = result[destination.droppableId];
       setEtat(newEtat);
     }
   }
@@ -236,7 +248,7 @@ const DragAndDrop = (props) => {
                     variant="h6"
                     textAlign="center"
                     key={nomColonne(indColonne)}
-                    width={"auto"}
+                    width={300}
                   >
                     {nomColonne(indColonne)}
                   </Typography>
@@ -276,7 +288,7 @@ const DragAndDrop = (props) => {
                                 key={"PROC-" + item.id}
                                 variant="subtitle2"
                               >
-                                {item.processeur}
+                                {item.details.configuration.processeur}
                               </Typography>
                               <Grid container display="flex">
                                 <Grid item xs={6}>
@@ -284,7 +296,7 @@ const DragAndDrop = (props) => {
                                     key={"MEMO-" + item.id}
                                     variant="subtitle2"
                                   >
-                                    {item.memoire} Go
+                                    {item.details.configuration.memoire} Go
                                   </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -292,7 +304,7 @@ const DragAndDrop = (props) => {
                                     key={"DISQ-" + item.id}
                                     variant="subtitle2"
                                   >
-                                    {item.disque} Go
+                                    {item.details.configuration.disque} Go
                                   </Typography>
                                 </Grid>
                               </Grid>

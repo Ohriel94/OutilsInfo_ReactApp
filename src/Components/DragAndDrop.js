@@ -10,21 +10,31 @@ import { toast } from "react-toastify";
 
 const DragAndDrop = (props) => {
   const { usagerChoisi, ordinateurs, refreshState } = props;
+  const usagerFourni = ordinateurs;
+  console.log(ordinateurs);
 
-  const affecterAppareil = (etat) => {
-    console.log(`etat : ${etat[0]}`);
-    const f = async () => {
-      try {
-        const updateUserRequest = await Axios({
-          method: "post",
-          url: "http://localhost:3001/affectation",
-          data: etat[0],
-        });
-      } catch (e) {
-        console.log("Failed to connect " + e);
-      }
-    };
-    f();
+  const affecterAppareil = (usager, etat) => {
+    console.log(`etat index 0 : ${etat[0]}`);
+    console.log(`etat en entier : ${etat}`);
+    if (usagerChoisi.appareilsAffectes.length > 0) {
+      usagerChoisi.appareilsAffectes = etat[0];
+      usagerChoisi.appareilsAffectes.map(async (appareil) => {
+        delete appareil.details;
+        delete appareil.etatDisponible;
+        const f = async () => {
+          try {
+            const updateUserRequest = await Axios({
+              method: "post",
+              url: "http://localhost:3001/affectation/affecter",
+              data: usagerChoisi,
+            });
+          } catch (e) {
+            console.log("Failed to connect " + e);
+          }
+        };
+        f();
+      });
+    }
   };
 
   const grid = 10;
@@ -62,13 +72,6 @@ const DragAndDrop = (props) => {
     if (appareilsAffectes !== undefined) {
       if (appareilsAffectes !== []) {
         appareilsAffectes.map((appareil, indAppareil) => {
-          console.log(
-            indAppareil +
-              " - " +
-              appareil.serialNumber +
-              " : " +
-              appareil.etatDisponible
-          );
           appareil.title = `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`;
           newEtat[0].push(appareil);
         });
@@ -76,13 +79,6 @@ const DragAndDrop = (props) => {
     }
     newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
-      console.log(
-        indOrdinateur +
-          " - " +
-          ordinateur.serialNumber +
-          " : " +
-          ordinateur.etatDisponible
-      );
       if (ordinateur.etatDisponible === true) {
         ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`;
         newEtat[1].push(ordinateur);
@@ -200,7 +196,7 @@ const DragAndDrop = (props) => {
     console.log("sauvegarderSoirée");
     usagerChoisi.appareilsAffectes = listeAppareils;
     console.log(usagerChoisi);
-    affecterAppareil(usagerChoisi);
+    affecterAppareil(usagerChoisi, etat);
     notifySaveSuccess();
   };
 

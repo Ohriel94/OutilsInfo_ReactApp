@@ -13,28 +13,54 @@ const DragAndDrop = (props) => {
   const usagerFourni = ordinateurs;
   console.log(ordinateurs);
 
-  const affecterAppareil = (usager, etat) => {
-    console.log(`etat index 0 : ${etat[0]}`);
-    console.log(`etat en entier : ${etat}`);
-    if (usagerChoisi.appareilsAffectes.length > 0) {
-      usagerChoisi.appareilsAffectes = etat[0];
-      usagerChoisi.appareilsAffectes.map(async (appareil) => {
-        delete appareil.details;
-        delete appareil.etatDisponible;
-        const f = async () => {
-          try {
-            const updateUserRequest = await Axios({
-              method: "post",
-              url: "http://localhost:3001/affectation/affecter",
-              data: usagerChoisi,
-            });
-          } catch (e) {
-            console.log("Failed to connect " + e);
-          }
-        };
-        f();
-      });
-    }
+  const affecterAppareil = (usager, appareil) => {
+    console.log("Affecter Appareil");
+    console.log(`appareil : ${appareil}`);
+    console.log(appareil);
+    console.log("usager : ");
+    console.log(usager);
+    delete appareil.etatDisponible;
+    delete appareil.details;
+    delete appareil.appareilsAffectes;
+    usager.appareilsAffectes = appareil;
+    console.log(usager);
+    const f = async () => {
+      try {
+        const updateUserRequest = await Axios({
+          method: "post",
+          url: "http://localhost:3001/affectation/affecter",
+          data: usager,
+        });
+      } catch (e) {
+        console.log("Failed to connect " + e);
+      }
+    };
+    f();
+  };
+
+  const retirerAppareil = (usager, appareil) => {
+    console.log("Affecter Appareil");
+    console.log(`appareil : ${appareil}`);
+    console.log(appareil);
+    console.log("usager : ");
+    console.log(usager);
+    delete appareil.etatDisponible;
+    delete appareil.details;
+    delete appareil.appareilsAffectes;
+    usager.appareilsAffectes = appareil;
+    console.log(usager);
+    const f = async () => {
+      try {
+        const updateUserRequest = await Axios({
+          method: "post",
+          url: "http://localhost:3001/affectation/retirer",
+          data: usager,
+        });
+      } catch (e) {
+        console.log("Failed to connect " + e);
+      }
+    };
+    f();
   };
 
   const grid = 10;
@@ -106,16 +132,23 @@ const DragAndDrop = (props) => {
     return result;
   };
 
-  const move = (listeSource, listeDest, source, destination) => {
+  const move = (listeSource, listeDestin, source, destination) => {
     const sourceClone = [...listeSource];
-    const destClone = [...listeDest];
+    const destClone = [...listeDestin];
 
-    if (source.droppableId === 0) {
+    const item = listeSource[source.index];
+    if (destination.droppableId === "0") {
       const newItem = listeSource[source.index];
       destClone.splice(destination.index, 0, newItem);
+      console.log("--- affecter");
+      console.log(usagerChoisi);
+      affecterAppareil(usagerChoisi, item);
     } else {
       const [removed] = sourceClone.splice(source.index, 1);
       destClone.splice(destination.index, 0, removed);
+      console.log("--- retirer");
+      console.log(usagerChoisi);
+      retirerAppareil(usagerChoisi, item);
     }
 
     const result = [];
@@ -128,8 +161,8 @@ const DragAndDrop = (props) => {
   };
 
   function onDragEnd(result) {
+    retirerAppareil(usagerChoisi, etat);
     const { source, destination } = result;
-    console.log(result);
     // dropped outside the list
     if (!destination) {
       return;
@@ -196,7 +229,6 @@ const DragAndDrop = (props) => {
     console.log("sauvegarderSoirée");
     usagerChoisi.appareilsAffectes = listeAppareils;
     console.log(usagerChoisi);
-    affecterAppareil(usagerChoisi, etat);
     notifySaveSuccess();
   };
 

@@ -9,7 +9,7 @@ import UsagerAccordeon from "../../Components/UsagerAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 
 const Usagers = (props) => {
-  const [historique, setHistorique] = React.useState([]);
+  const [historiqueComplet, setHistoriqueComplet] = React.useState([]);
   const { token, niveau, setNiveau } = props;
 
   const paperTheme = {
@@ -38,7 +38,7 @@ const Usagers = (props) => {
           method: "get",
           url: "http://localhost:3001/historique",
         });
-        setHistorique(getHistoriqueRequest.data);
+        setHistoriqueComplet(getHistoriqueRequest.data);
       } catch (e) {
         console.log("Failed to connect " + e);
       }
@@ -55,36 +55,43 @@ const Usagers = (props) => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          flexDirection: "column",
-          flexDirection: "row",
-        }}
-      >
-        {historique.map((historique, historiqueKey) =>
-          historique.entrees.map((entreeHistorique, entreeHistoriqueKey) => (
-            <Paper
-              key={entreeHistoriqueKey}
-              elevation={6}
-              sx={{
-                padding: "2vh",
-                margin: "0.3vh",
-                backgroundColor: BGCouleurListe(entreeHistorique.type),
-              }}
-              style={paperTheme.style}
-            >
-              <Typography variant={"subtitle2"}>
-                {entreeHistorique.type}
-              </Typography>
-              <Typography variant={"h5"}>{entreeHistorique.time}</Typography>
-            </Paper>
-          ))
-        )}
-      </Grid>
+      {historiqueComplet.map((historique, historiqueKey) => (
+        <Grid
+          container
+          style={{
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant={"h5"}>{historique.date}</Typography>
+          <Grid
+            container
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              flexDirection: "row",
+            }}
+          >
+            {historique.entrees.map((entreeHistorique, entreeHistoriqueKey) => (
+              <Paper
+                key={entreeHistoriqueKey}
+                elevation={6}
+                sx={{
+                  padding: "2vh",
+                  margin: "0.3vh",
+                  backgroundColor: BGCouleurListe(entreeHistorique.type),
+                }}
+                style={paperTheme.style}
+              >
+                <Typography variant={"subtitle2"}>
+                  {entreeHistorique.type}
+                </Typography>
+                <Typography variant={"h5"}>{entreeHistorique.time}</Typography>
+              </Paper>
+            ))}
+          </Grid>
+        </Grid>
+      ))}
     </React.Fragment>
   );
 };

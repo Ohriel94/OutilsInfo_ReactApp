@@ -118,7 +118,7 @@ const DragAndDrop = (props) => {
   const move = (listeSource, listeDest, source, destination) => {
     console.log("----- move");
     const sourceClone = [...listeSource];
-    const destClone = [...listeDestin];
+    const destClone = [...listeDest];
 
     const item = listeSource[source.index];
     if (destination.droppableId === "0") {

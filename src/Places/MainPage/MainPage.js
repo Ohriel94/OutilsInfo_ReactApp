@@ -1,7 +1,7 @@
-import Usagers from "./Usagers";
-import Appareils from "./Appareils";
-import Historique from "./Historique";
-import Affectation from "./Affectation";
+import Usagers from "./EcranUsagers";
+import EcranOrdinateur from "./EcranOrdinateur";
+import EcranHistorique from "./EcranHistorique";
+import EcranAffectation from "./EcranAffectation";
 import axios from "axios";
 import * as React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
+import HistoryTwoToneIcon from "@mui/icons-material/HistoryTwoTone";
 import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
 import DevicesTwoToneIcon from "@mui/icons-material/DevicesTwoTone";
 import GroupsTwoToneIcon from "@mui/icons-material/GroupsTwoTone";
@@ -85,7 +86,7 @@ const MainPage = (props) => {
         <List>
           <ListItem
             button
-            key={"Devices"}
+            key={"EcranOrdinateur"}
             onClick={() => navigate("appareils")}
           >
             <ListItemIcon>
@@ -93,7 +94,11 @@ const MainPage = (props) => {
             </ListItemIcon>
             <ListItemText primary={"Liste des appareils"} />
           </ListItem>
-          <ListItem button key={"Users"} onClick={() => navigate("usagers")}>
+          <ListItem
+            button
+            key={"EcranUsager"}
+            onClick={() => navigate("usagers")}
+          >
             <ListItemIcon>
               <GroupsTwoToneIcon />
             </ListItemIcon>
@@ -101,7 +106,7 @@ const MainPage = (props) => {
           </ListItem>
           <ListItem
             button
-            key={"AddDevices"}
+            key={"EcranAffectation"}
             onClick={() => navigate("affectation")}
           >
             <ListItemIcon>
@@ -109,14 +114,24 @@ const MainPage = (props) => {
             </ListItemIcon>
             <ListItemText primary={"Affecter un appareil"} />
           </ListItem>
+          <ListItem
+            button
+            key={"EcranHistorique"}
+            onClick={() => navigate("historique")}
+          >
+            <ListItemIcon>
+              <HistoryTwoToneIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Afficher historique"} />
+          </ListItem>
         </List>
       </Drawer>
-      <Box component="main">
+      <Box component="main" sx={{ marginY: 0, marginX: 2 }}>
         <Routes>
           <Route path="/usagers" element={<Usagers />} />
-          <Route path="/appareils" element={<Appareils />} />
-          <Route path="/historique" element={<Historique />} />
-          <Route path="/affectation" element={<Affectation />} />
+          <Route path="/appareils" element={<EcranOrdinateur />} />
+          <Route path="/historique" element={<EcranHistorique />} />
+          <Route path="/affectation" element={<EcranAffectation />} />
         </Routes>
       </Box>
     </Box>

@@ -16,6 +16,15 @@ const BGCouleurListe = (etat) => {
   return couleur;
 };
 
+const componentStyle = {
+  style: {
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
+  sx: { padding: (0, 2), border: "lightgray solid 1px" },
+};
+
 const OrdinateurAccordeon = (props) => {
   const { ordinateur } = props;
   return (
@@ -36,18 +45,9 @@ const OrdinateurAccordeon = (props) => {
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
-          <Grid
-            item
-            xs={5}
-            sm={3}
-            textAlign={"center"}
-            width="65vh"
-            sx={{ border: "lightgray solid 1px" }}
-            padding={(0, 2)}
-          >
-            <Typography variant="h5" textAlign="center">
-              Spécifications
-            </Typography>
+          <Grid item xs={5} sm={3} textAlign={"center"} sx={componentStyle.sx}>
+            <Typography variant="h5">Spécifications</Typography>
+            <hr />
             <Typography variant="subtitle2">
               {ordinateur.details.configuration.processeur}
             </Typography>
@@ -72,16 +72,11 @@ const OrdinateurAccordeon = (props) => {
               </Typography>
             </Grid>
           </Grid>
-          <Grid
-            item
-            xs={7}
-            sm={9}
-            sx={{ border: "lightgray solid 1px" }}
-            padding={(0, 2)}
-          >
+          <Grid item xs={7} sm={9} sx={componentStyle.sx}>
             <Typography variant="h5" textAlign={"center"}>
               Notes
             </Typography>
+            <hr />
             <Typography variant="subtitle2">
               {ordinateur.details.notes}
             </Typography>

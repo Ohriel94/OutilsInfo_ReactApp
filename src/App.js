@@ -2,8 +2,8 @@ import React, { useState, Fragment } from "react";
 import CSS from "./App.css";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import MainPage from "./Places/MainPage/MainPage";
-import Usagers from "./Places/MainPage/Usagers";
-import Appareils from "./Places/MainPage/Appareils";
+import EcranUsagers from "./Places/MainPage/EcranUsagers";
+import EcranOrdinateur from "./Places/MainPage/EcranOrdinateur";
 
 const App = () => {
   const navigate = useNavigate();

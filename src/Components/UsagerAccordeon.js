@@ -1,4 +1,5 @@
 import * as React from "react";
+import CarteOrdinateur from "../Components/CarteOrdinateur";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -9,10 +10,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const UsagerAccordeon = (props) => {
   const { usager } = props;
-  if (usager.nom === "Cordova")
-    usager.appareilsAffectes.map((appareil) => {
-      console.log(appareil.serialNumber);
-    });
 
   return (
     <Accordion>
@@ -27,11 +24,7 @@ const UsagerAccordeon = (props) => {
         <Box>
           <Typography variant="h6">Appareils assignés</Typography>
           {usager.appareilsAffectes.map((appareil) => {
-            return (
-              <Typography variant="sutitle2">
-                {appareil.serialNumber}
-              </Typography>
-            );
+            return <CarteOrdinateur appareil={appareil} />;
           })}
         </Box>
         <Box>

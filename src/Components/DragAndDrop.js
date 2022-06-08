@@ -10,15 +10,34 @@ import { toast } from "react-toastify";
 
 const DragAndDrop = (props) => {
   const { usagerChoisi, ordinateurs, refreshState } = props;
+  const [appareilAssigne, setAppareilAssigne] = useState({});
 
-  const affecterAppareil = (etat) => {
-    console.log(`etat : ${etat[0]}`);
+  const affecterAppareil = (usager, appareil) => {
+    console.log(`affecterAppareil()`);
+    console.log(usager);
     const f = async () => {
       try {
         const updateUserRequest = await Axios({
           method: "post",
-          url: "http://localhost:3001/affectation",
-          data: etat[0],
+          url: "http://localhost:3001/affecterAppareil",
+          data: usager,
+        });
+      } catch (e) {
+        console.log("Failed to connect " + e);
+      }
+    };
+    f();
+  };
+
+  const retirerAppareil = (usager, appareil) => {
+    console.log(`retirerAppareil()`);
+    console.log(usager);
+    const f = async () => {
+      try {
+        const updateUserRequest = await Axios({
+          method: "post",
+          url: "http://localhost:3001/retirerAppareil",
+          data: usager,
         });
       } catch (e) {
         console.log("Failed to connect " + e);
@@ -62,13 +81,6 @@ const DragAndDrop = (props) => {
     if (appareilsAffectes !== undefined) {
       if (appareilsAffectes !== []) {
         appareilsAffectes.map((appareil, indAppareil) => {
-          console.log(
-            indAppareil +
-              " - " +
-              appareil.serialNumber +
-              " : " +
-              appareil.etatDisponible
-          );
           appareil.title = `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`;
           newEtat[0].push(appareil);
         });
@@ -76,13 +88,6 @@ const DragAndDrop = (props) => {
     }
     newEtat.push([]);
     ordinateurs.map((ordinateur, indOrdinateur) => {
-      console.log(
-        indOrdinateur +
-          " - " +
-          ordinateur.serialNumber +
-          " : " +
-          ordinateur.etatDisponible
-      );
       if (ordinateur.etatDisponible === true) {
         ordinateur.title = `${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`;
         newEtat[1].push(ordinateur);
@@ -111,29 +116,32 @@ const DragAndDrop = (props) => {
   };
 
   const move = (listeSource, listeDest, source, destination) => {
+    console.log("----- move");
     const sourceClone = [...listeSource];
     const destClone = [...listeDest];
 
     if (source.droppableId === 0) {
       const newItem = listeSource[source.index];
       destClone.splice(destination.index, 0, newItem);
+      console.log(newItem);
+      usagerChoisi.ordinateurAssigne = newItem;
     } else {
       const [removed] = sourceClone.splice(source.index, 1);
+      console.log(removed);
       destClone.splice(destination.index, 0, removed);
+      usagerChoisi.ordinateurAssigne = removed;
     }
 
-    const result = [];
+    let result = [];
     result[source.droppableId] = sourceClone;
     result[destination.droppableId] = destClone;
-    result.map((tour, indItem) => {
-      if (tour === {}) result.splice(indItem, 1);
-    });
+    result = result.filter((item) => item !== {});
     return result;
   };
 
   function onDragEnd(result) {
+    console.log("----- onDragEnd");
     const { source, destination } = result;
-    console.log(result);
     // dropped outside the list
     if (!destination) {
       return;
@@ -158,6 +166,10 @@ const DragAndDrop = (props) => {
       newEtat[source.droppableId] = result[source.droppableId];
       newEtat[destination.droppableId] = result[destination.droppableId];
       setEtat(newEtat);
+      if (destination.droppableId == 0)
+        affecterAppareil(usagerChoisi, appareilAssigne);
+      if (source.droppableId == 0)
+        retirerAppareil(usagerChoisi, appareilAssigne);
     }
   }
 
@@ -198,9 +210,11 @@ const DragAndDrop = (props) => {
 
   const sauvegarderSoirée = async (listeAppareils) => {
     console.log("sauvegarderSoirée");
-    usagerChoisi.appareilsAffectes = listeAppareils;
+    // console.log("listeAppareils");
+    // console.log(listeAppareils);
+    // usagerChoisi.appareilsAffectes = listeAppareils;
     console.log(usagerChoisi);
-    affecterAppareil(usagerChoisi);
+    affecterAppareil(usagerChoisi, listeAppareils);
     notifySaveSuccess();
   };
 

@@ -7,6 +7,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import UsagerAccordeon from "../../Components/UsagerAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
+import HistoriqueAccordeon from "../../Components/Historique/HistoriqueAccordeon";
 
 const Usagers = (props) => {
   const [historiqueComplet, setHistoriqueComplet] = React.useState([]);
@@ -62,34 +63,7 @@ const Usagers = (props) => {
             flexDirection: "column",
           }}
         >
-          <Typography variant={"h5"}>{historique.date}</Typography>
-          <Grid
-            container
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              flexDirection: "row",
-            }}
-          >
-            {historique.entrees.map((entreeHistorique, entreeHistoriqueKey) => (
-              <Paper
-                key={entreeHistoriqueKey}
-                elevation={6}
-                sx={{
-                  padding: "2vh",
-                  margin: "0.3vh",
-                  backgroundColor: BGCouleurListe(entreeHistorique.type),
-                }}
-                style={paperTheme.style}
-              >
-                <Typography variant={"subtitle2"}>
-                  {entreeHistorique.type}
-                </Typography>
-                <Typography variant={"h5"}>{entreeHistorique.time}</Typography>
-              </Paper>
-            ))}
-          </Grid>
+          <HistoriqueAccordeon historique={historique} />
         </Grid>
       ))}
     </React.Fragment>

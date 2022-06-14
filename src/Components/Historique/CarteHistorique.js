@@ -66,14 +66,14 @@ const CarteHistorique = (props) => {
       key={entreeKey}
       elevation={6}
       sx={{
-        padding: "3vh",
+        padding: "1.5vh",
         margin: "0.5vh",
         backgroundColor: BGCouleurListe(entree.type),
       }}
       style={paperTheme.style}
     >
       <Typography
-        variant={"h5"}
+        variant={"h6"}
       >{`${usagerInfos.prenom} ${usagerInfos.nom}`}</Typography>
       <hr />
       <Grid
@@ -92,10 +92,12 @@ const CarteHistorique = (props) => {
           sx={componentStyle.sx}
           style={{ height: "auto" }}
         >
-          <Typography variant={"h5"}>{entree.time}</Typography>
+          <Typography variant={"h6"}>{entree.time}</Typography>
         </Grid>
         <Grid>
-          <Typography variant="subtitle2">XXX XXX XXX</Typography>
+          <Typography variant="subtitle2">XXX</Typography>
+          <Typography variant="subtitle2">XXX</Typography>
+          <Typography variant="subtitle2">XXX</Typography>
         </Grid>
       </Grid>
     </Paper>

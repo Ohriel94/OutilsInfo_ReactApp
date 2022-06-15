@@ -36,11 +36,7 @@ const OrdinateurAccordeon = (props) => {
         id="panel1a-header"
       >
         <Typography variant="h5">
-          {ordinateur.serialNumber +
-            " - " +
-            ordinateur.details.marque +
-            " " +
-            ordinateur.details.modele}
+          {`${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

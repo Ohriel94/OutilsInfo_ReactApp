@@ -39,15 +39,35 @@ const componentStyle = {
 const CarteHistorique = (props) => {
   const { entree, entreeKey } = props;
 
-  const getUsagerInfo = (idUsager) => {
+  const getInfos = (idUsager, idAppareil) => {
     const f = async () => {
       try {
-        const getUsagerInfo = await axios({
+        const getUsager = await axios({
           method: "get",
-          url: "http://localhost:3001/recupererUsager",
-          data: { id: idUsager },
+          url: `http://localhost:3001/usagers`,
         });
-        setUsagerInfos(getUsagerInfo.data);
+        getUsager.data.map((usr, ind) => {
+          if (usr._id == idUsager) {
+            setUsager(usr);
+          }
+        });
+
+        const getOrdinateur = await axios({
+          method: "get",
+          url: "http://localhost:3001/ordinateurs",
+        });
+        getOrdinateur.data.map((app, ind) => {
+          if (app._id == idAppareil) {
+            setOrdinateur({
+              serialNumber: app.serialNumber,
+              nom: app.nom,
+              systeme: app.details.configuration.systeme,
+              processeur: app.details.configuration.processeur,
+              memoire: app.details.configuration.memoire,
+              disque: app.details.configuration.disque,
+            });
+          }
+        });
       } catch (e) {
         console.log("Failed to connect " + e);
       }
@@ -55,26 +75,25 @@ const CarteHistorique = (props) => {
     f();
   };
 
-  const [usagerInfos, setUsagerInfos] = React.useState({});
+  const [usager, setUsager] = React.useState({});
+  const [ordinateur, setOrdinateur] = React.useState({});
 
   React.useEffect(() => {
-    // getUsagerInfo(entree.idUsager);
-  }, [usagerInfos]);
+    getInfos(entree.idUsager, entree.idAppareil);
+  }, []);
 
   return (
     <Paper
       key={entreeKey}
       elevation={6}
       sx={{
-        padding: "1.5vh",
+        padding: "1vh",
         margin: "0.5vh",
         backgroundColor: BGCouleurListe(entree.type),
       }}
       style={paperTheme.style}
     >
-      <Typography
-        variant={"h6"}
-      >{`${usagerInfos.prenom} ${usagerInfos.nom}`}</Typography>
+      <Typography variant={"h6"}>{`${usager.prenom} ${usager.nom}`}</Typography>
       <hr />
       <Grid
         container
@@ -84,20 +103,39 @@ const CarteHistorique = (props) => {
         sx={{
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center",
         }}
       >
         <Grid
           textAlign={"center"}
-          sx={componentStyle.sx}
-          style={{ height: "auto" }}
+          style={{ height: "auto", width: "9vh" }}
+          sx={{
+            textAlign: "left",
+          }}
         >
           <Typography variant={"h6"}>{entree.time}</Typography>
         </Grid>
-        <Grid>
-          <Typography variant="subtitle2">XXX</Typography>
-          <Typography variant="subtitle2">XXX</Typography>
-          <Typography variant="subtitle2">XXX</Typography>
+        <Grid
+          sx={{
+            textAlign: "right",
+          }}
+        >
+          <Typography variant="subtitle2">
+            {`${ordinateur.serialNumber} - ${ordinateur.nom}`}
+          </Typography>
+          <Typography variant="subtitle2">{`${ordinateur.systeme}`}</Typography>
+          <Typography variant="subtitle2">{`${ordinateur.processeur}`}</Typography>
+          <Grid container>
+            <Grid item xs={7}>
+              <Typography variant="subtitle2">
+                {ordinateur.disque} Go
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
+              <Typography variant="subtitle2">
+                {ordinateur.memoire} Go
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Paper>

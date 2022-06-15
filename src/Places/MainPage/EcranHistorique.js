@@ -59,11 +59,15 @@ const Usagers = (props) => {
       {historiqueComplet.map((historique, historiqueKey) => (
         <Grid
           container
+          key={historiqueKey}
           style={{
             flexDirection: "column",
           }}
         >
-          <HistoriqueAccordeon historique={historique} />
+          <HistoriqueAccordeon
+            historique={historique}
+            historiqueKey={historiqueKey}
+          />
         </Grid>
       ))}
     </React.Fragment>

@@ -33,10 +33,10 @@ const paperTheme = {
 };
 
 const HistoriqueAccordeon = (props) => {
-  const { historique } = props;
+  const { historique, historiqueKey } = props;
 
   return (
-    <Accordion>
+    <Accordion key={historiqueKey}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"

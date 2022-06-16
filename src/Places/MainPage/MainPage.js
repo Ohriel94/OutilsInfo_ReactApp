@@ -1,4 +1,4 @@
-import Usagers from "./EcranUsagers";
+import EcranUsagers from "./EcranUsagers";
 import EcranOrdinateur from "./EcranOrdinateur";
 import EcranHistorique from "./EcranHistorique";
 import EcranAffectation from "./EcranAffectation";
@@ -128,7 +128,7 @@ const MainPage = (props) => {
       </Drawer>
       <Box component="main" sx={{ marginY: 0, marginX: 2 }}>
         <Routes>
-          <Route path="/usagers" element={<Usagers />} />
+          <Route path="/usagers" element={<EcranUsagers />} />
           <Route path="/appareils" element={<EcranOrdinateur />} />
           <Route path="/historique" element={<EcranHistorique />} />
           <Route path="/affectation" element={<EcranAffectation />} />

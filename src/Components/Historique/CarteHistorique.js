@@ -1,9 +1,7 @@
 import * as React from "react";
 import axios from "axios";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import { Grid, Button, Typography, Paper } from "@mui/material";
+import { InfoTwoToneIcon } from "@mui/icons-material";
 
 const BGCouleurListe = (etat) => {
   let couleur = "";
@@ -47,7 +45,7 @@ const CarteHistorique = (props) => {
           url: `http://localhost:3001/usagers`,
         });
         getUsager.data.map((usr, ind) => {
-          if (usr._id == idUsager) {
+          if (usr._id === idUsager) {
             setUsager(usr);
           }
         });
@@ -57,7 +55,7 @@ const CarteHistorique = (props) => {
           url: "http://localhost:3001/ordinateurs",
         });
         getOrdinateur.data.map((app, ind) => {
-          if (app._id == idAppareil) {
+          if (app._id === idAppareil) {
             setOrdinateur({
               serialNumber: app.serialNumber,
               nom: app.nom,

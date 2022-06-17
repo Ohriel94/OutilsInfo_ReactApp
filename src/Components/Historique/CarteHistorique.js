@@ -106,6 +106,7 @@ const CarteHistorique = (props) => {
         <Grid
           textAlign={"center"}
           style={{ height: "auto", width: "9vh" }}
+          xs={4}
           sx={{
             textAlign: "left",
           }}
@@ -113,6 +114,7 @@ const CarteHistorique = (props) => {
           <Typography variant={"h6"}>{entree.time}</Typography>
         </Grid>
         <Grid
+          xs={8}
           sx={{
             textAlign: "right",
           }}
@@ -123,12 +125,12 @@ const CarteHistorique = (props) => {
           <Typography variant="subtitle2">{`${ordinateur.systeme}`}</Typography>
           <Typography variant="subtitle2">{`${ordinateur.processeur}`}</Typography>
           <Grid container>
-            <Grid item xs={7}>
+            <Grid item xs={6}>
               <Typography variant="subtitle2">
                 {ordinateur.disque} Go
               </Typography>
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={6}>
               <Typography variant="subtitle2">
                 {ordinateur.memoire} Go
               </Typography>

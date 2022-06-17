@@ -1,15 +1,17 @@
 import * as React from "react";
+import Theme from "../../Ressources/Theme";
 import { ThemeProvider } from "@mui/material/styles";
-import Theme from "../Ressources/Theme";
-import IconButton from "@mui/material/IconButton";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import EditerOrdinateur from "./EditerOrdinateur";
 
 const BGCouleurListe = (etat) => {
   let couleur = "";
@@ -28,7 +30,10 @@ const componentStyle = {
 };
 
 const OrdinateurAccordeon = (props) => {
-  const { ordinateur } = props;
+  const navigate = useNavigate();
+
+  const { ordinateur, handleSubmit, notifier } = props;
+
   return (
     <ThemeProvider theme={Theme}>
       <Accordion>
@@ -53,45 +58,48 @@ const OrdinateurAccordeon = (props) => {
             >
               <Typography variant="h5">Spécifications</Typography>
               <hr />
-              <Typography variant="subtitle2">
-                {ordinateur.details.configuration.processeur}
-              </Typography>
-              <Typography variant="subtitle2">
-                {ordinateur.details.configuration.systeme}
-              </Typography>
-              <Grid container>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2">
-                    {ordinateur.details.configuration.disque} Go
-                  </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2">
-                    {ordinateur.details.configuration.memoire} Go
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
+              <Grid container style={componentStyle.style}>
                 <Typography variant="subtitle2">
-                  {ordinateur.details.dateAcquisition}
+                  {ordinateur.details.configuration.processeur}
                 </Typography>
+                <Typography variant="subtitle2">
+                  {ordinateur.details.configuration.systeme}
+                </Typography>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Typography variant="subtitle2">
+                      {ordinateur.details.configuration.disque} Go
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="subtitle2">
+                      {ordinateur.details.configuration.memoire} Go
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">
+                    {ordinateur.details.dateAcquisition}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
             <Grid item xs={7} sm={9} sx={componentStyle.sx}>
               <Grid container>
-                <Typography variant="h5" textAlign={"center"}>
-                  Notes
-                </Typography>
-                <IconButton
-                  variant="outlined"
-                  color="primary"
-                  sx={{ ml: "80%" }}
-                >
-                  <EditTwoToneIcon />
-                </IconButton>
+                <Grid item xs={11} style={componentStyle.style}>
+                  <Typography variant="h5">Notes</Typography>
+                </Grid>
+
+                <Grid item xs={1}>
+                  <EditerOrdinateur
+                    handleSubmit={handleSubmit}
+                    notifier={notifier}
+                    ordinateur={ordinateur}
+                  />
+                </Grid>
               </Grid>
               <hr />
-              <Typography variant="subtitle2">
+              <Typography variant="body2">
                 {ordinateur.details.notes}
               </Typography>
             </Grid>

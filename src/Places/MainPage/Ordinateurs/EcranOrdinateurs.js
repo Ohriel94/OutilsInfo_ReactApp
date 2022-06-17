@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Axios from "axios";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import OrdinateurAccordeon from "../../Components/OrdinateurAccordeon";
+import OrdinateurAccordeon from "../../../Components/OrdinateurAccordeon";
 import { NoMeetingRoomTwoTone } from "@mui/icons-material";
 
 const Ordinateurs = (props) => {

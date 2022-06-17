@@ -1,7 +1,7 @@
 import EcranUsagers from "./EcranUsagers";
-import EcranOrdinateur from "./EcranOrdinateur";
+import EcranOrdinateurs from "./Ordinateurs/EcranOrdinateurs";
 import EcranHistorique from "./EcranHistorique";
-import EcranAffectation from "./EcranAffectation";
+import EcranAffectations from "./EcranAffectations";
 import axios from "axios";
 import * as React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -86,7 +86,7 @@ const MainPage = (props) => {
         <List>
           <ListItem
             button
-            key={"EcranOrdinateur"}
+            key={"EcranOrdinateurs"}
             onClick={() => navigate("appareils")}
           >
             <ListItemIcon>
@@ -129,9 +129,9 @@ const MainPage = (props) => {
       <Box component="main" sx={{ marginY: 0, marginX: 2 }}>
         <Routes>
           <Route path="/usagers" element={<EcranUsagers />} />
-          <Route path="/appareils" element={<EcranOrdinateur />} />
+          <Route path="/appareils" element={<EcranOrdinateurs />} />
           <Route path="/historique" element={<EcranHistorique />} />
-          <Route path="/affectation" element={<EcranAffectation />} />
+          <Route path="/affectation" element={<EcranAffectations />} />
         </Routes>
       </Box>
     </Box>

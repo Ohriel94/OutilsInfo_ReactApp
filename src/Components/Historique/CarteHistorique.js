@@ -58,7 +58,7 @@ const CarteHistorique = (props) => {
           if (app._id === idAppareil) {
             setOrdinateur({
               serialNumber: app.serialNumber,
-              nom: app.nom,
+              nom: `${app.details.marque} ${app.details.modele}`,
               systeme: app.details.configuration.systeme,
               processeur: app.details.configuration.processeur,
               memoire: app.details.configuration.memoire,

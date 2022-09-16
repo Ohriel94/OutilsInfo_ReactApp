@@ -9,7 +9,7 @@ const creerUsager = async (prenom, nom) => {
   prenom: prenom,
   nom: nom,
  };
- await usagersDB.addUsager(newUsager);
+ await usagersDB.addOne(newUsager);
 };
 
 const recupererOrdinateurDeUsager = async (username) => {
@@ -23,8 +23,8 @@ const recupererOrdinateurDeUsager = async (username) => {
 };
 
 const recupererUsagers = async () => {
- console.log('--- usagerDM/getUsers');
- const usagers = await usagersDB.getUsers();
+ console.log('--- usagerDM/recupererUsagers');
+ const usagers = await usagersDB.getAll();
  return usagers;
 };
 

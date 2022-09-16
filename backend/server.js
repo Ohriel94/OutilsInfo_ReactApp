@@ -76,9 +76,9 @@ app.get('/ordinateurs', async (req, res) => {
  res.send(response);
 });
 
-app.get('/recupererOrdinateur', async (req, res) => {
+app.get('/recupererOrdinateur/:serNum', async (req, res) => {
  console.log('----- GET/recupererOrdinateur -----');
- const serNum = req.body;
+ const serNum = req.params.serNum;
  console.log(serNum);
  const response = await ordinateursDM.trouverOrdinateur(serNum);
  res.send(response);
@@ -86,7 +86,7 @@ app.get('/recupererOrdinateur', async (req, res) => {
 
 app.get('/historique', async (req, res) => {
  console.log('----- GET/historiqueDM -----');
- const response = await historiqueDM.recupererHistorique();
+ const response = await historiqueDM.recupererHistoriques();
  res.send(response);
 });
 

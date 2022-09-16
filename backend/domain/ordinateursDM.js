@@ -3,33 +3,40 @@ import mongoose from 'mongoose';
 
 const creerOrdinateur = async (
  serNb,
+ etatDisp,
  mar,
  mod,
+ dateAcqu,
  sys,
  proc,
  mem,
  disq,
- dateAcqu,
- etatDisp
+ notes
 ) => {
  console.log('--- ordinateursDM/creerOrdinateur');
  const newOrdinateur = {
   serialNumber: serNb,
-  marque: mar,
-  modele: mod,
-  systeme: sys,
-  processeur: proc,
-  memoire: mem,
-  disque: disq,
-  dateAcquisition: dateAcqu,
+  nom: `${mar} ${mod}`,
   etatDisponible: etatDisp,
+  details: {
+   marque: mar,
+   modele: mod,
+   dateAcquisition: dateAcqu,
+   configuration: {
+    systeme: sys,
+    processeur: proc,
+    memoire: mem,
+    disque: disq,
+   },
+   notes: notes,
+  },
  };
- await ordinateursDB.addOrdinateur(newOrdinateur);
+ await ordinateursDB.addOne(newOrdinateur);
 };
 
 const recupererOrdinateurs = async () => {
  console.log('--- ordinateursDM/recupererOrdinateurs');
- const ordinateurs = await ordinateursDB.getOrdinateurs();
+ const ordinateurs = await ordinateursDB.getAll();
  return ordinateurs;
 };
 

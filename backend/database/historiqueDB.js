@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const dbName = 'OutilInventaire';
-const collectionName = 'Historique';
+const collectionName = 'Historiques';
 
 const getCollection = async () => {
  client.connect();
@@ -17,8 +17,8 @@ const closeConnection = async () => {
  await client.close();
 };
 
-const getHistorique = async () => {
- console.log('--- historiqueDB/getHistorique');
+const getAll = async () => {
+ console.log('--- historiqueDB/getAll');
  const collection = await getCollection();
  const historique = await collection.find({}).toArray();
  await closeConnection();
@@ -33,7 +33,7 @@ const findByDate = async (Date) => {
   const res = await collection.find({}).toArray();
   const historique = res.filter((hist) => hist.date == Date);
   console.log(historique != undefined ? 'Trouvé...' : 'Pas trouvé...');
-  if (historique === undefined) throw new Error('Historique pas trouvé...');
+  if (historique === undefined) throw new Error('Historiques pas trouvé...');
   return historique[0];
  } catch (e) {
   throw e;
@@ -58,8 +58,8 @@ const updateById = async (id, historique) => {
  }
 };
 
-const addEntree = async (newEntry) => {
- console.log('--- historiqueDB/addEntree');
+const addOne = async (newEntry) => {
+ console.log('--- historiqueDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(newEntry);
@@ -69,8 +69,8 @@ const addEntree = async (newEntry) => {
  }
 };
 
-const removeEntree = async (affectation) => {
- console.log('--- historiqueDB/removeEntree');
+const deleteById = async (affectation) => {
+ console.log('--- historiqueDB/deleteById');
  try {
   const collection = await getCollection();
   await collection.insertOne(affectation);
@@ -81,9 +81,9 @@ const removeEntree = async (affectation) => {
 };
 
 export default {
- getHistorique,
- updateById,
+ getAll,
+ addOne,
  findByDate,
- addEntree,
- removeEntree,
+ updateById,
+ deleteById,
 };

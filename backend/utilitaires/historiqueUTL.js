@@ -1,48 +1,6 @@
 import historiqueDB from '../database/historiqueDB.js';
 import mongoose from 'mongoose';
 
-const recupererHistoriques = async () => {
- console.log('--- historiqueDM/recupererHistoriques');
- const historique = await historiqueDB.getAll();
- return historique;
-};
-
-const enregistrerAffectationAppareil = async (usager, appareil) => {
- console.log('--- historiqueDM/enregistrerAffectationAppareil');
- const date = new Date();
- if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(
-   date,
-   appareil,
-   usager,
-   `affectation`
-  );
-  console.log(nouvelleEntree);
-  const nouvelleJournee = creerJourneeHistorique(date);
-  console.log(nouvelleJournee);
-  await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
- }
-};
-
-const enregistrerRetraitAppareil = async (usager, appareil) => {
- console.log('--- historiqueDM/enregistrerRetraitAppareil');
- const date = new Date();
- if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(
-   date,
-   appareil,
-   usager,
-   `retrait`
-  );
-  console.log(nouvelleEntree);
-  const nouvelleJournee = creerJourneeHistorique(date);
-  console.log(nouvelleJournee);
-  await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
- }
-};
-
-//=============== Utilitaires ===============
-
 const creerJourneeHistorique = (date) => {
  const nouvelleJournee = { date: formaterDate(date), entrees: [] };
  return nouvelleJournee;
@@ -98,7 +56,10 @@ const formaterDate = (date) => {
 };
 
 export default {
- recupererHistoriques,
- enregistrerAffectationAppareil,
- enregistrerRetraitAppareil,
+ creerJourneeHistorique,
+ creerEntreeHistorique,
+ ajouterEntreeHistorique,
+ formaterA2Digits,
+ formaterHeure,
+ formaterDate,
 };

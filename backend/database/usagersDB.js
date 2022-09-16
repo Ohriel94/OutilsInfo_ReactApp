@@ -1,78 +1,78 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient, ObjectId } from 'mongodb';
 
-const url = "mongodb://localhost:27017";
+const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
-const dbName = "OutilInventaire";
-const collectionName = "Usagers";
+const dbName = 'OutilInventaire';
+const collectionName = 'Usagers';
 
 const getCollection = async () => {
-  client.connect();
-  const db = client.db(dbName);
-  const collection = db.collection(collectionName);
+ client.connect();
+ const db = client.db(dbName);
+ const collection = db.collection(collectionName);
 
-  return collection;
+ return collection;
 };
 
 const closeConnection = async () => {
-  await client.close();
+ await client.close();
 };
 
-const addUsager = async (usager) => {
-  console.log("--- usagerDB/addUsager");
-  try {
-    const collection = await getCollection();
-    await collection.insertOne(usager);
-    await closeConnection();
-  } catch (e) {
-    await closeConnection();
-  }
+const addOne = async (usager) => {
+ console.log('--- usagerDB/addOne');
+ try {
+  const collection = await getCollection();
+  await collection.insertOne(usager);
+  await closeConnection();
+ } catch (e) {
+  await closeConnection();
+ }
 };
 
 const findUserById = async (usagerId) => {
-  console.log("--- usagerDB/findUserById");
-  console.log(usagerId);
-  try {
-    const collection = await getCollection();
-    const res = await collection.find().toArray();
-    const usager = res.find((usager) => {
-      return usager._id == usagerId;
-    });
-    if (usager === undefined) throw new Error("Usager pas trouvé...");
-    return usager;
-  } catch (e) {
-    throw e;
-  } finally {
-    await closeConnection();
-  }
+ console.log('--- usagerDB/findUserById');
+ console.log(usagerId);
+ try {
+  const collection = await getCollection();
+  const res = await collection.find().toArray();
+  const usager = res.find((usager) => {
+   return usager._id == usagerId;
+  });
+  if (usager === undefined) throw new Error('Usager pas trouvé...');
+  return usager;
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
 };
 
 const updateById = async (id, usager) => {
-  console.log("--- usagerDB/updateById");
-  try {
-    const collection = await getCollection();
-    let updatedItems = await collection.updateOne(
-      { _id: ObjectId(id) },
-      { $set: usager }
-    );
-    if (updatedItems.matchedCount == 0) throw new Error("Usager pas trouvé...");
-  } catch (e) {
-    throw e;
-  } finally {
-    await closeConnection();
-  }
+ console.log('--- usagerDB/updateById');
+ try {
+  const collection = await getCollection();
+  let updatedItems = await collection.updateOne(
+   { _id: ObjectId(id) },
+   { $set: usager }
+  );
+  if (updatedItems.matchedCount == 0) throw new Error('Usager pas trouvé...');
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
 };
 
-const getUsers = async () => {
-  console.log("--- usagerDB/getUsers");
-  const collection = await getCollection();
-  const usagers = await collection.find({}).toArray();
-  await closeConnection();
-  return usagers;
+const getAll = async () => {
+ console.log('--- usagerDB/getAll');
+ const collection = await getCollection();
+ const usagers = await collection.find({}).toArray();
+ await closeConnection();
+ return usagers;
 };
 
 export default {
-  findUserById,
-  addUsager,
-  updateById,
-  getUsers,
+ findUserById,
+ addOne,
+ updateById,
+ getAll,
 };

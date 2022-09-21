@@ -59,14 +59,20 @@ describe('recupererHistoriques', () => {
 });
 
 describe('formaterA2Digits', () => {
+ const expected = 4;
  it('should have been called 1 time', () => {
-  historiquesDM.formaterA2Digits(4);
+  historiquesDM.formaterA2Digits(expected);
   expect(historiquesDM.formaterA2Digits).toHaveBeenCalledTimes(1);
  });
 
  it('should return the correct number on 2 digits', () => {
-  const actual = historiquesDM.formaterA2Digits(4);
+  const actual = historiquesDM.formaterA2Digits(expected);
   expect(actual).toBe('04');
+ });
+
+ it('should have been called with the right parameters', async () => {
+  await historiquesDM.formaterA2Digits(expected);
+  expect(historiquesDM.formaterA2Digits).toHaveBeenCalledWith(expected);
  });
 });
 
@@ -82,6 +88,12 @@ describe('formaterHeure', () => {
   const actual = historiquesDM.formaterHeure(date);
   expect(actual).toBe(expected);
  });
+
+ it('should have been called with the right parameters', async () => {
+  const expected = date;
+  await historiquesDM.formaterHeure(expected);
+  expect(historiquesDM.formaterHeure).toHaveBeenCalledWith(expected);
+ });
 });
 
 describe('creerEntreeHistorique', () => {
@@ -91,24 +103,25 @@ describe('creerEntreeHistorique', () => {
   serialNumber: 9999,
   details: { marque: 'Asus', modele: 'Alpha' },
  };
- const expected = {
-  time: '12:05:08',
-  type: 'operation',
-  appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-  idUsager: 'supose to be the _id of the user',
-  idAppareil: `${appareil._id}`,
- };
+
  it('should have been called 1 time', () => {
   historiquesDM.creerEntreeHistorique(
    date,
    appareil,
-   expected.idUsager,
+   'supose to be the _id of the user',
    'operation'
   );
   expect(historiquesDM.creerEntreeHistorique).toHaveBeenCalledTimes(1);
  });
 
  it('should return the correct object', () => {
+  const expected = {
+   time: '12:05:08',
+   type: 'operation',
+   appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
+   idUsager: 'supose to be the _id of the user',
+   idAppareil: `${appareil._id}`,
+  };
   const actual = historiquesDM.creerEntreeHistorique(
    date,
    appareil,
@@ -116,6 +129,21 @@ describe('creerEntreeHistorique', () => {
    'operation'
   );
   expect(actual).toEqual(expected);
+ });
+
+ it('should have been called with the right parameters', async () => {
+  await historiquesDM.creerEntreeHistorique(
+   date,
+   appareil,
+   'supose to be the _id of the user',
+   'operation'
+  );
+  expect(historiquesDM.creerEntreeHistorique).toHaveBeenCalledWith(
+   date,
+   appareil,
+   'supose to be the _id of the user',
+   'operation'
+  );
  });
 });
 
@@ -131,11 +159,69 @@ describe('formaterDate', () => {
   const actual = historiquesDM.formaterDate(date);
   expect(actual).toBe(expected);
  });
+
+ it('should have been called with the right parameters', async () => {
+  const expected = date;
+  await historiquesDM.formaterDate(expected);
+  expect(historiquesDM.formaterDate).toHaveBeenCalledWith(expected);
+ });
 });
 
-describe('creerJourneeHistorique', () => {});
+describe('creerJourneeHistorique', () => {
+ const date = new Date();
+ const expected = { date: historiquesDM.formaterDate(date), entrees: [] };
+ it('should have been called 1 time', () => {
+  historiquesDM.creerJourneeHistorique(date);
+  expect(historiquesDM.creerJourneeHistorique).toHaveBeenCalledTimes(1);
+ });
 
-describe('ajouterEntreeHistorique', () => {});
+ it('should return the correct object', () => {
+  const actual = historiquesDM.creerJourneeHistorique(date);
+  expect(actual).toEqual(expected);
+ });
+
+ it('should have been called with the right parameters', async () => {
+  const actual = historiquesDM.creerJourneeHistorique(date);
+  expect(historiquesDM.creerJourneeHistorique).toHaveBeenCalledWith(date);
+ });
+});
+
+// describe('ajouterEntreeHistorique', () => {
+//  const date = new Date();
+//  const appareil = {
+//   _id: 'supose to be the _id of the device',
+//   serialNumber: 9999,
+//   details: { marque: 'Asus', modele: 'Alpha' },
+//  };
+//  const expected = {
+//   date: historiquesDM.formaterDate(date),
+//   entrees: [
+//    {
+//     time: historiquesDM.formaterHeure(date),
+//     type: 'operation',
+//     appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
+//     idUsager: 'supose to be the _id of the user',
+//     idAppareil: `${appareil._id}`,
+//    },
+//   ],
+//  };
+
+//  it('should have been called 1 time', () => {
+//   historiquesDM.ajouterEntreeHistorique(date);
+//   expect(historiquesDM.creerJourneeHistorique).toHaveBeenCalledTimes(1);
+//   //  expect(historiquesDB.addOne).toHaveBeenCalledTimes(1);
+//  });
+
+//  it('should have been called 1 time', () => {
+//   historiquesDM.ajouterEntreeHistorique(date);
+//   expect(historiquesDB.updateById).toHaveBeenCalledTimes(1);
+//  });
+
+//  it('should return the correct object', () => {
+//   const actual = historiquesDM.ajouterEntreeHistorique(date);
+//   expect(actual).toEqual(expected);
+//  });
+// });
 
 describe('enregistrerAffectationAppareil', () => {
  const date = new Date();
@@ -161,6 +247,11 @@ describe('enregistrerAffectationAppareil', () => {
  it('should call historiquesDB 1 time', async () => {
   await historiquesDM.enregistrerAffectationAppareil(usager, appareil);
   expect(historiquesDB.addOne).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameters', async () => {
+  await historiquesDM.enregistrerAffectationAppareil(usager, appareil);
+  expect(historiquesDB.addOne).toHaveBeenCalledWith(expected);
  });
 
  it('should have been called with the right parameters', async () => {
@@ -193,6 +284,11 @@ describe('enregistrerRetraitAppareil', () => {
  it('should call historiquesDB 1 time', async () => {
   await historiquesDM.enregistrerRetraitAppareil(usager, appareil);
   expect(historiquesDB.addOne).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameters', async () => {
+  await historiquesDM.enregistrerRetraitAppareil(usager, appareil);
+  expect(historiquesDB.addOne).toHaveBeenCalledWith(expected);
  });
 
  it('should have been called with the right parameters', async () => {

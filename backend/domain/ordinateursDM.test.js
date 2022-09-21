@@ -6,6 +6,8 @@ jest.mock('../database/ordinateursDB.js');
 beforeEach(async () => {
  ordinateursDB.getAll.mockClear();
  ordinateursDB.addOne.mockClear();
+ ordinateursDB.findBySerialNumber.mockClear();
+ ordinateursDB.updateById.mockClear();
 });
 
 describe('recupererOrdinateurs', () => {
@@ -98,6 +100,7 @@ describe('creerOrdinateur', () => {
    notes: '',
   },
  };
+
  it('should call ordinateursDB 1 time', async () => {
   await ordinateursDM.creerOrdinateur(
    expected.serialNumber,
@@ -129,71 +132,78 @@ describe('creerOrdinateur', () => {
  });
 });
 
-// describe('trouverOrdinateur', () => {
-//  const expected = {
-//
-//   serialNumber: '9999',
-//   nom: 'Asus Alpha',
-//   etatDisponible: true,
-//   details: {
-//    marque: 'Asus',
-//    modele: 'Alpha',
-//    dateAcquisition: '01/01/2000',
-//    configuration: {
-//     systeme: 'Windows 10 64x',
-//     processeur: 'intel core i7-1165G7 @ 2.80Ghz',
-//     memoire: '16',
-//     disque: '512',
-//    },
-//    notes: '',
-//   },
-//  };
+describe('trouverOrdinateur', () => {
+ const expected = {
+  serialNumber: '9992',
+  nom: 'Asus Alpha',
+  etatDisponible: true,
+  details: {
+   configuration: {},
+  },
+ };
 
-//  it('should call ordinateursDB 1 time', async () => {
-//   await ordinateursDM.trouverOrdinateur('9999');
-//   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
-//  });
+ it('should call ordinateursDB 1 time', async () => {
+  await ordinateursDM.trouverOrdinateur('9992');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+ });
 
-//  it('should have been called with the right parameter', async () => {
-//   await ordinateursDM.trouverOrdinateur('9999');
-//   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9999');
-//  });
+ it('should have been called with the right parameter', async () => {
+  await ordinateursDM.trouverOrdinateur('9992');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
+ });
 
-//  it('should return the correct elements from DB', async () => {
-//   const actual = await ordinateursDM.trouverOrdinateur('9999');
-//   expect(actual).toEqual(expected);
-//  });
-// });
+ it('should return the correct elements from DB', async () => {
+  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+   return {
+    serialNumber: '9992',
+    nom: 'Asus Alpha',
+    etatDisponible: true,
+    details: {
+     configuration: {},
+    },
+   };
+  });
+  const actual = await ordinateursDM.trouverOrdinateur('9992');
+  expect(actual).toEqual(expected);
+ });
+});
 
-// describe('affecterOrdinateur', () => {
-//  it('should call ordinateursDB', async () => {
-//   const ordinateur = {
-//
-//    serialNumber: '9999',
-//    nom: 'Asus Alpha',
-//    etatDisponible: true,
-//    details: {
-//     marque: 'Asus',
-//     modele: 'Alpha',
-//     dateAcquisition: '01/01/2000',
-//     configuration: {
-//      systeme: 'Windows 10 64x',
-//      processeur: 'intel core i7-1165G7 @ 2.80Ghz',
-//      memoire: '16',
-//      disque: '512',
-//     },
-//     notes: '',
-//    },
-//   };
-//   const actual = await ordinateursDM.affecterOrdinateur('9999');
+describe('affecterOrdinateur', () => {
+ const expected = {
+  _id: "ObjectId('1')",
+  serialNumber: '9992',
+  nom: 'Asus Alpha',
+  etatDisponible: false,
+  details: {
+   configuration: {},
+  },
+ };
+ it('should call ordinateursDB', async () => {
+  await ordinateursDM.affecterOrdinateur('9999');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+  expect(ordinateursDB.updateById).toHaveBeenCalledTimes(1);
+ });
 
-//   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
-//   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9999');
-//  });
+ it('should have been called with the right parameter', async () => {
+  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+   return {
+    _id: "ObjectId('1')",
+    serialNumber: '9992',
+    nom: 'Asus Alpha',
+    etatDisponible: false,
+    details: {
+     configuration: {},
+    },
+   };
+  });
+  await ordinateursDM.affecterOrdinateur('9999');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9999');
+  expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
+ });
 
-//  it(`should throw exception when DB cant find item'`, async () => {
-//   expect(() =>
-//    ordinateursDM.affecterOrdinateur("Ce lien n'existe pas").reject().toThrow()
-//   );
-//  });
-// });
+ it(`should throw exception when DB cant find item'`, async () => {
+  expect(() =>
+   ordinateursDM.affecterOrdinateur("Ce lien n'existe pas").reject().toThrow()
+  );
+ });
+});

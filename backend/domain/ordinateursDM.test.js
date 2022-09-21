@@ -179,7 +179,7 @@ describe('affecterOrdinateur', () => {
   },
  };
  it('should call ordinateursDB', async () => {
-  await ordinateursDM.affecterOrdinateur('9999');
+  await ordinateursDM.affecterOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
   expect(ordinateursDB.updateById).toHaveBeenCalledTimes(1);
  });
@@ -190,20 +190,60 @@ describe('affecterOrdinateur', () => {
     _id: "ObjectId('1')",
     serialNumber: '9992',
     nom: 'Asus Alpha',
-    etatDisponible: false,
+    etatDisponible: null,
     details: {
      configuration: {},
     },
    };
   });
-  await ordinateursDM.affecterOrdinateur('9999');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9999');
+  await ordinateursDM.affecterOrdinateur('9992');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
   expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
  });
 
  it(`should throw exception when DB cant find item'`, async () => {
   expect(() =>
    ordinateursDM.affecterOrdinateur("Ce lien n'existe pas").reject().toThrow()
+  );
+ });
+});
+
+describe('retirerOrdinateur', () => {
+ const expected = {
+  _id: "ObjectId('1')",
+  serialNumber: '9992',
+  nom: 'Asus Alpha',
+  etatDisponible: true,
+  details: {
+   configuration: {},
+  },
+ };
+ it('should call ordinateursDB', async () => {
+  await ordinateursDM.retirerOrdinateur('9992');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+  expect(ordinateursDB.updateById).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+   return {
+    _id: "ObjectId('1')",
+    serialNumber: '9992',
+    nom: 'Asus Alpha',
+    etatDisponible: null,
+    details: {
+     configuration: {},
+    },
+   };
+  });
+  await ordinateursDM.retirerOrdinateur('9992');
+  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
+  expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
+ });
+
+ it(`should throw exception when DB cant find item'`, async () => {
+  expect(() =>
+   ordinateursDM.retirerOrdinateur("Ce lien n'existe pas").reject().toThrow()
   );
  });
 });

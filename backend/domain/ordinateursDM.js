@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 
 const creerOrdinateur = async (
  serNb,
- etatDisp,
  mar,
  mod,
  dateAcqu,
@@ -13,11 +12,10 @@ const creerOrdinateur = async (
  disq,
  notes
 ) => {
- console.log('--- ordinateursDM/creerOrdinateur');
  const newOrdinateur = {
   serialNumber: serNb,
   nom: `${mar} ${mod}`,
-  etatDisponible: etatDisp,
+  etatDisponible: true,
   details: {
    marque: mar,
    modele: mod,
@@ -35,33 +33,31 @@ const creerOrdinateur = async (
 };
 
 const recupererOrdinateurs = async () => {
- console.log('--- ordinateursDM/recupererOrdinateurs');
  const ordinateurs = await ordinateursDB.getAll();
  return ordinateurs;
 };
 
-const trouverOrdinateur = async (serNum) => {
- console.log('--- ordinateursDM/trouverOrdinateur');
- const ordinateurs = await ordinateursDB.findBySerialNumber(serNum);
- return ordinateurs;
+const trouverOrdinateur = async (serialNumber) => {
+ try {
+  const ordinateur = await ordinateursDB.findBySerialNumber(serialNumber);
+  return ordinateur;
+ } catch (e) {
+  throw new Error(e);
+ }
 };
 
-const affecterOrdinateur = async (ordinateur) => {
- console.log('--- ordinateursDM/affecterOrdinateur');
- console.log('serialNumber : ' + ordinateur.serialNumber);
- if (ordinateur != undefined) {
-  const ordi = await ordinateursDB.findBySerialNumber(ordinateur.serialNumber);
-  console.log('ordinateur : ' + ordi._id);
+const affecterOrdinateur = async (serialNumber) => {
+ if (serialNumber != undefined) {
+  const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
+  console.log(ordi);
   ordi.etatDisponible = false;
   await ordinateursDB.updateById(ordi._id, ordi);
  }
 };
 
-const retirerOrdinateur = async (ordinateur) => {
- console.log('--- ordinateursDM/retirerOrdinateur');
- console.log(ordinateur);
- if (ordinateur != undefined) {
-  const ordi = await ordinateursDB.findBySerialNumber(ordinateur.serialNumber);
+const retirerOrdinateur = async (serialNumber) => {
+ if (serialNumber != undefined) {
+  const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = true;
   await ordinateursDB.updateById(ordi._id, ordi);
  }

@@ -30,7 +30,6 @@ const addOne = async (usager) => {
 
 const findUserById = async (usagerId) => {
  console.log('--- usagerDB/findUserById');
- console.log(usagerId);
  try {
   const collection = await getCollection();
   const res = await collection.find().toArray();

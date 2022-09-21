@@ -30,13 +30,14 @@ const addOne = async (ordinateur) => {
 
 const findBySerialNumber = async (serNum) => {
  console.log('--- ordinateursDB/findBySerialNumber');
+ console.log(serNum);
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
-  const ordinateur = res.filter((ordi) => ordi.serialNumber === serNum);
+  const ordinateur = res.filter((ordi) => ordi.serialNumber === serNum)[0];
   console.log(ordinateur != undefined ? 'Trouvé...' : 'Pas trouvé...');
   if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  return ordinateur[0];
+  else return ordinateur;
  } catch (e) {
   throw e;
  } finally {
@@ -46,7 +47,6 @@ const findBySerialNumber = async (serNum) => {
 
 const updateById = async (id, ordinateur) => {
  console.log('--- ordinateursDB/updateById');
- console.log(id);
  const collection = await getCollection();
  try {
   let updatedItems = await collection.updateOne(

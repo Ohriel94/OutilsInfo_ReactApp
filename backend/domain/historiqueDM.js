@@ -17,9 +17,7 @@ const enregistrerAffectationAppareil = async (usager, appareil) => {
    usager,
    `affectation`
   );
-  console.log(nouvelleEntree);
   const nouvelleJournee = creerJourneeHistorique(date);
-  console.log(nouvelleJournee);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }
 };
@@ -34,9 +32,7 @@ const enregistrerRetraitAppareil = async (usager, appareil) => {
    usager,
    `retrait`
   );
-  console.log(nouvelleEntree);
   const nouvelleJournee = creerJourneeHistorique(date);
-  console.log(nouvelleJournee);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }
 };
@@ -64,13 +60,11 @@ const ajouterEntreeHistorique = async (nouvelleJournee, nouvelleEntree) => {
  console.log(trouve !== undefined);
  if (trouve !== undefined) {
   trouve.entrees.push(nouvelleEntree);
-  console.log(`trouve : ${trouve.date}`);
   await historiqueDB.updateById(trouve._id, trouve);
  } else {
   nouvelleJournee.entrees.push(nouvelleEntree);
   await historiqueDB.addOne(nouvelleJournee);
  }
- console.log(nouvelleJournee);
 };
 
 const formaterA2Digits = (num) => {
@@ -83,7 +77,6 @@ const formaterHeure = (date) => {
   formaterA2Digits(date.getMinutes()),
   formaterA2Digits(date.getSeconds()),
  ].join(':');
- console.log(heureFormatee);
  return heureFormatee;
 };
 
@@ -93,7 +86,6 @@ const formaterDate = (date) => {
   formaterA2Digits(date.getMonth() + 1),
   date.getFullYear(),
  ].join('/');
- console.log(dateFormatee);
  return dateFormatee;
 };
 

@@ -73,15 +73,15 @@ app.get('/recupererUsager*', async (req, res) => {
 app.get('/ordinateurs', async (req, res) => {
  console.log('----- GET/ordinateurs -----');
  const response = await ordinateursDM.recupererOrdinateurs();
- res.send(response);
+ response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
 app.get('/recupererOrdinateur/:serNum', async (req, res) => {
  console.log('----- GET/recupererOrdinateur -----');
  const serNum = req.params.serNum;
- console.log(serNum);
  const response = await ordinateursDM.trouverOrdinateur(serNum);
- res.send(response);
+ console.log(response);
+ response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
 app.get('/historique', async (req, res) => {
@@ -120,7 +120,9 @@ app.post('/affecterAppareil', async (req, res) => {
     usager.ordinateurAssigne
    );
    console.log(`Affecter a l'ordinateur...`);
-   await ordinateursDM.affecterOrdinateur(usager.ordinateurAssigne);
+   await ordinateursDM.affecterOrdinateur(
+    usager.ordinateurAssigne.serialNumber
+   );
    await historiqueDM.enregistrerAffectationAppareil(
     usager,
     usager.ordinateurAssigne

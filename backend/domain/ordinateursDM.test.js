@@ -11,34 +11,6 @@ beforeEach(async () => {
 });
 
 describe('recupererOrdinateurs', () => {
- ordinateursDB.getAll.mockImplementation(() => {
-  return [
-   {
-    serialNumber: '9991',
-    nom: 'Asus Alpha',
-    etatDisponible: true,
-    details: {
-     configuration: {},
-    },
-   },
-   {
-    serialNumber: '9992',
-    nom: 'Asus Alpha',
-    etatDisponible: true,
-    details: {
-     configuration: {},
-    },
-   },
-   {
-    serialNumber: '9993',
-    nom: 'Asus Alpha',
-    etatDisponible: true,
-    details: {
-     configuration: {},
-    },
-   },
-  ];
- });
  const expected = [
   {
    serialNumber: '9991',
@@ -65,6 +37,9 @@ describe('recupererOrdinateurs', () => {
    },
   },
  ];
+ ordinateursDB.getAll.mockImplementation(() => {
+  return expected;
+ });
 
  it('should call ordinateursDB 1 time', async () => {
   await ordinateursDM.recupererOrdinateurs();
@@ -154,14 +129,7 @@ describe('trouverOrdinateur', () => {
 
  it('should return the correct elements from DB', async () => {
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
-   return {
-    serialNumber: '9992',
-    nom: 'Asus Alpha',
-    etatDisponible: true,
-    details: {
-     configuration: {},
-    },
-   };
+   return expected;
   });
   const actual = await ordinateursDM.trouverOrdinateur('9992');
   expect(actual).toEqual(expected);
@@ -186,15 +154,7 @@ describe('affecterOrdinateur', () => {
 
  it('should have been called with the right parameter', async () => {
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
-   return {
-    _id: "ObjectId('1')",
-    serialNumber: '9992',
-    nom: 'Asus Alpha',
-    etatDisponible: null,
-    details: {
-     configuration: {},
-    },
-   };
+   return expected;
   });
   await ordinateursDM.affecterOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
@@ -226,15 +186,7 @@ describe('retirerOrdinateur', () => {
 
  it('should have been called with the right parameter', async () => {
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
-   return {
-    _id: "ObjectId('1')",
-    serialNumber: '9992',
-    nom: 'Asus Alpha',
-    etatDisponible: null,
-    details: {
-     configuration: {},
-    },
-   };
+   return expected;
   });
   await ordinateursDM.retirerOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');

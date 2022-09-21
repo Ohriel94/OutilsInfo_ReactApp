@@ -2,7 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import usagersDM from './domain/usagersDM.js';
 import ordinateursDM from './domain/ordinateursDM.js';
-import historiqueDM from './domain/historiqueDM.js';
+import historiqueDM from './domain/historiquesDM.js';
 import cors from 'cors';
 
 const app = express();

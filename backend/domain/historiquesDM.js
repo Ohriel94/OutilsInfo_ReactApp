@@ -1,4 +1,4 @@
-import historiqueDB from '../database/historiqueDB.js';
+import historiqueDB from '../database/historiquesDB.js';
 import mongoose from 'mongoose';
 
 const recupererHistoriques = async () => {
@@ -14,7 +14,7 @@ const enregistrerAffectationAppareil = async (usager, appareil) => {
   const nouvelleEntree = creerEntreeHistorique(
    date,
    appareil,
-   usager,
+   usager._id,
    `affectation`
   );
   const nouvelleJournee = creerJourneeHistorique(date);
@@ -29,7 +29,7 @@ const enregistrerRetraitAppareil = async (usager, appareil) => {
   const nouvelleEntree = creerEntreeHistorique(
    date,
    appareil,
-   usager,
+   usager._id,
    `retrait`
   );
   const nouvelleJournee = creerJourneeHistorique(date);
@@ -44,12 +44,12 @@ const creerJourneeHistorique = (date) => {
  return nouvelleJournee;
 };
 
-const creerEntreeHistorique = (date, appareil, usager, operation) => {
+const creerEntreeHistorique = (date, appareil, idUsager, operation) => {
  const nouvelleEntree = {
   time: formaterHeure(date),
   type: operation,
   appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-  idUsager: usager._id,
+  idUsager: idUsager,
   idAppareil: appareil._id,
  };
  return nouvelleEntree;
@@ -93,4 +93,10 @@ export default {
  recupererHistoriques,
  enregistrerAffectationAppareil,
  enregistrerRetraitAppareil,
+ formaterA2Digits,
+ formaterHeure,
+ creerEntreeHistorique,
+ formaterDate,
+ creerJourneeHistorique,
+ ajouterEntreeHistorique,
 };

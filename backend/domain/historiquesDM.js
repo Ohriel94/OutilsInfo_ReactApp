@@ -56,11 +56,10 @@ const creerEntreeHistorique = (date, appareil, idUsager, operation) => {
 };
 
 const ajouterEntreeHistorique = async (nouvelleJournee, nouvelleEntree) => {
- const trouve = await historiqueDB.findByDate(nouvelleJournee.date);
- console.log(trouve !== undefined);
- if (trouve !== undefined) {
-  trouve.entrees.push(nouvelleEntree);
-  await historiqueDB.updateById(trouve._id, trouve);
+ const journeeTrouvee = await historiqueDB.findByDate(nouvelleJournee.date);
+ if (journeeTrouvee !== undefined) {
+  journeeTrouvee.entrees.push(nouvelleEntree);
+  await historiqueDB.updateById(journeeTrouvee._id, journeeTrouvee);
  } else {
   nouvelleJournee.entrees.push(nouvelleEntree);
   await historiqueDB.addOne(nouvelleJournee);

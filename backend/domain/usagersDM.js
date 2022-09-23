@@ -3,23 +3,13 @@ import mongoose from 'mongoose';
 
 const creerUsager = async (prenom, nom) => {
  console.log('--- usagerDM/creerUsager');
- const pseudo = prenom.substring(0, 1) + nom;
+ const username = prenom.substring(0, 1) + nom;
  const newUsager = {
-  pseudo: pseudo.toLowerCase(),
+  username: username.toLowerCase(),
   prenom: prenom,
   nom: nom,
  };
  await usagersDB.addOne(newUsager);
-};
-
-const recupererOrdinateurDeUsager = async (username) => {
- console.log('--- usagerDM/recupererOrdinateurDeUsager');
- try {
-  const usager = await usagersDB.findByName(username);
-  return usager.appareils;
- } catch (e) {
-  throw new Error('Usager not found');
- }
 };
 
 const recupererUsagers = async () => {
@@ -28,51 +18,51 @@ const recupererUsagers = async () => {
  return usagers;
 };
 
-const recupererUsagerParId = async (_id) => {
+const recupererUsagerParId = async (id) => {
  console.log('--- usagerDM/recupererUsagerParId');
  try {
-  const usager = await usagersDB.findUserById(_id);
+  const usager = await usagersDB.findUserById(id);
   return usager;
  } catch (e) {
   throw new Error('Usager not found');
  }
 };
 
-const affecterAppareilAUsager = async (usagerId, appareil) => {
- console.log('--- usagerDM/affecterAppareilAUsager');
+const recupererUsagerParUsername = async (username) => {
+ console.log('--- usagerDM/recupererUsagerParUsername');
+ try {
+  const usager = await usagersDB.findByUsername(username);
+  return usager;
+ } catch (e) {
+  throw new Error('Usager not found');
+ }
+};
+
+const affecterAppareilAUsagerParId = async (usagerId, appareil) => {
+ console.log('--- usagerDM/affecterAppareilAUsagerParId');
  if (appareil !== undefined) {
   let usager = await usagersDB.findUserById(usagerId);
-  console.log(
-   !usager.appareilsAffectes.includes(appareil)
-    ? `${appareil.serialNumber} a été trouvé...`
-    : `${appareil.ser0ialNumber} n'a pas été trouvé...`
-  );
-  const trouvé = usager.appareilsAffectes.filter(
+  const appareilTrouve = usager.appareilsAffectes.filter(
    (app) => app.serialNumber === appareil.serialNumber
   );
-  if (trouvé[0] === undefined) usager.appareilsAffectes.push(appareil);
+  if (appareilTrouve[0] === undefined) usager.appareilsAffectes.push(appareil);
   try {
    await usagersDB.updateById(usagerId, usager);
   } catch (e) {
    throw new Error('User not found');
   }
- } else usagersDB.updateDevicesOfUser(usagerId, []);
+ }
 };
 
-const retirerAppareilAUsager = async (usagerId, appareil) => {
- console.log('--- usagerDM/retirerAppareilAUsager');
+const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
+ console.log('--- usagerDM/retirerAppareilAUsagerParId');
  try {
   if (appareil !== undefined) {
    let usager = await usagersDB.findUserById(usagerId);
-   console.log(
-    !usager.appareilsAffectes.includes(appareil)
-     ? `${appareil.serialNumber} a été trouvé...`
-     : `${appareil.serialNumber} n'a pas été trouvé...`
-   );
-   const trouvé = usager.appareilsAffectes.filter(
+   const appareilTrouve = usager.appareilsAffectes.filter(
     (app) => app.serialNumber === appareil.serialNumber
    );
-   if (trouvé[0] !== undefined)
+   if (appareilTrouve[0] !== undefined)
     usager.appareilsAffectes.map((appareil, index) =>
      usager.appareilsAffectes.splice(index, 1)
     );
@@ -86,8 +76,8 @@ const retirerAppareilAUsager = async (usagerId, appareil) => {
 export default {
  creerUsager,
  recupererUsagers,
- recupererOrdinateurDeUsager,
  recupererUsagerParId,
- affecterAppareilAUsager,
- retirerAppareilAUsager,
+ recupererUsagerParUsername,
+ affecterAppareilAUsagerParId,
+ retirerAppareilAUsagerParId,
 };

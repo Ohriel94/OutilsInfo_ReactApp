@@ -37,7 +37,7 @@ const recupererOrdinateurs = async () => {
  return ordinateurs;
 };
 
-const trouverOrdinateur = async (serialNumber) => {
+const recupererOrdinateurParSerialNumber = async (serialNumber) => {
  try {
   const ordinateur = await ordinateursDB.findBySerialNumber(serialNumber);
   return ordinateur;
@@ -66,7 +66,7 @@ const retirerOrdinateur = async (serialNumber) => {
 export default {
  creerOrdinateur,
  recupererOrdinateurs,
- trouverOrdinateur,
+ recupererOrdinateurParSerialNumber,
  affecterOrdinateur,
  retirerOrdinateur,
 };

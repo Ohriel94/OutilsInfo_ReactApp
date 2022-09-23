@@ -16,6 +16,7 @@
  "scripts": {
   "test": "jest",
   "watch": "jest --watchAll",
+  "cover": "npx jest --coverage",
   "start": "nodemon server.js"
  },
  "author": "",

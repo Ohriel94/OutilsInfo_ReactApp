@@ -187,46 +187,47 @@ describe('creerJourneeHistorique', () => {
 });
 
 describe('ajouterEntreeHistorique', () => {
- const date = new Date();
  const appareil = {
   _id: 'supose to be the _id of the device',
   serialNumber: 9999,
   details: { marque: 'Asus', modele: 'Alpha' },
  };
- const expected = {
-  date: historiquesDM.formaterDate(date),
-  entrees: [
-   {
-    time: historiquesDM.formaterHeure(date),
-    type: 'operation',
-    appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-    idUsager: 'supose to be the _id of the user',
-    idAppareil: `${appareil._id}`,
-   },
-  ],
- };
- const entree = historiquesDM.creerEntreeHistorique(
-  date,
-  appareil,
-  'supose to be the _id of the user',
-  'operation'
- );
- const journee = historiquesDM.creerJourneeHistorique(date);
 
  it('should have been called 1 time', async () => {
+  const date = new Date();
+  const entree = historiquesDM.creerEntreeHistorique(
+   date,
+   appareil,
+   'supose to be the _id of the user',
+   'operation'
+  );
+  const journee = historiquesDM.creerJourneeHistorique(date);
   await historiquesDM.ajouterEntreeHistorique(journee, entree);
   expect(historiquesDB.findByDate).toHaveBeenCalledTimes(1);
   expect(historiquesDB.addOne).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
-  expected.entrees.push({
-   appareil: '9999 - Asus Alpha',
-   idAppareil: 'supose to be the _id of the device',
-   idUsager: 'supose to be the _id of the user',
-   time: historiquesDM.formaterHeure(date),
-   type: 'operation',
-  });
+  const date = new Date();
+  const expected = {
+   date: historiquesDM.formaterDate(date),
+   entrees: [
+    {
+     time: historiquesDM.formaterHeure(date),
+     type: 'operation',
+     appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
+     idUsager: 'supose to be the _id of the user',
+     idAppareil: `${appareil._id}`,
+    },
+   ],
+  };
+  const entree = historiquesDM.creerEntreeHistorique(
+   date,
+   appareil,
+   'supose to be the _id of the user',
+   'operation'
+  );
+  const journee = historiquesDM.creerJourneeHistorique(date);
   await historiquesDM.ajouterEntreeHistorique(journee, entree);
   expect(historiquesDB.findByDate).toHaveBeenCalledWith(journee.date);
   expect(historiquesDB.addOne).toHaveBeenCalledWith(expected);
@@ -234,7 +235,6 @@ describe('ajouterEntreeHistorique', () => {
 });
 
 describe('enregistrerAffectationAppareil', () => {
- const date = new Date();
  const usager = { _id: 'supose to be the _id of the user' };
  const appareil = {
   _id: 'supose to be the _id of the device',
@@ -248,6 +248,7 @@ describe('enregistrerAffectationAppareil', () => {
  });
 
  it('should have been called with the right parameters', async () => {
+  const date = new Date();
   const expected = {
    date: historiquesDM.formaterDate(date),
    entrees: [
@@ -266,24 +267,11 @@ describe('enregistrerAffectationAppareil', () => {
 });
 
 describe('enregistrerRetraitAppareil', () => {
- const date = new Date();
  const usager = { _id: 'supose to be the _id of the user' };
  const appareil = {
   _id: 'supose to be the _id of the device',
   serialNumber: '9999',
   details: { marque: 'Asus', modele: 'Alpha' },
- };
- const expected = {
-  date: historiquesDM.formaterDate(date),
-  entrees: [
-   {
-    appareil: '9999 - Asus Alpha',
-    idAppareil: 'supose to be the _id of the device',
-    idUsager: usager._id,
-    time: historiquesDM.formaterHeure(date),
-    type: 'retrait',
-   },
-  ],
  };
 
  it('should call historiquesDB 1 time', async () => {
@@ -292,6 +280,7 @@ describe('enregistrerRetraitAppareil', () => {
  });
 
  it('should have been called with the right parameters', async () => {
+  const date = new Date();
   const expected = {
    date: historiquesDM.formaterDate(date),
    entrees: [

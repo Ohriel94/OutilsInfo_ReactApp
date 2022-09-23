@@ -34,10 +34,9 @@ const findBySerialNumber = async (serNum) => {
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
-  const ordinateur = res.filter((ordi) => ordi.serialNumber === serNum)[0];
-  console.log(ordinateur != undefined ? 'Trouvé...' : 'Pas trouvé...');
+  const ordinateur = res.filter((ordi) => ordi.serialNumber === serNum);
   if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  else return ordinateur;
+  else return ordinateur[0];
  } catch (e) {
   throw e;
  } finally {

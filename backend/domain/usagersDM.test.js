@@ -8,6 +8,7 @@ beforeEach(() => {
  usagersDB.addOne.mockClear();
  usagersDB.updateById.mockClear();
  usagersDB.findUserById.mockClear();
+ usagersDB.findByUsername.mockClear();
 });
 
 describe('recupererUsagers', () => {
@@ -17,7 +18,14 @@ describe('recupererUsagers', () => {
  });
 
  it('should return content from DB', async () => {
-  const expected = [{ lien: '' }, { id: 'Lien 1' }];
+  const expected = [
+   {
+    _id: 'supposed to be the _id of a user',
+    prenom: 'Primus',
+    nom: 'Resultatus',
+    appareilsAffectes: [],
+   },
+  ];
   usagersDB.getAll.mockImplementation(() => {
    return expected;
   });
@@ -27,51 +35,169 @@ describe('recupererUsagers', () => {
  });
 });
 
-// describe('ajouterLien', () => {
-//  it('should call usagersDB', async () => {
-//   await usagersDM.creerlien();
-//   const all = await usagersDB.getAll();
+describe('creerUsager', () => {
+ const expected = {
+  username: 'presultatus',
+  prenom: 'Primus',
+  nom: 'Resultatus',
+ };
+ it('should call usagersDB 1 time', async () => {
+  await usagersDM.creerUsager(expected.prenom, expected.nom);
+  expect(usagersDB.addOne).toHaveBeenCalledTimes(1);
+ });
 
-//   expect(usagersDB.addUsager).toHaveBeenCalledTimes(1);
-//   expect(usagersDB.addUsager).toHaveBeenCalledWith({
-//    id: `Lien ${all.length + 1}`,
-//    lien: '',
-//   });
-//  });
-// });
+ it('should have been called with the right parameters', async () => {
+  await usagersDM.creerUsager(expected.prenom, expected.nom);
+  expect(usagersDB.addOne).toHaveBeenCalledWith(expected);
+ });
+});
 
-// describe('modiferLien', () => {
-//  it('should call usagersDB', async () => {
-//   await usagersDB.updateById('Lien 1', 'nouveauLien');
+describe('recupererUsagerParId', () => {
+ it('should call usagersDB 1 time', async () => {
+  await usagersDM.recupererUsagerParId();
+  expect(usagersDB.findUserById).toHaveBeenCalledTimes(1);
+ });
 
-//   expect(usagersDB.updateById).toHaveBeenCalledTimes(1);
-//   expect(usagersDB.updateById).toHaveBeenCalledWith('Lien 1', 'nouveauLien');
-//  });
+ it('should call usagersDB with the right parameters', async () => {
+  const expected = {
+   _id: 'supposed to be the _id of a user',
+   username: 'presultatus',
+   prenom: 'Primus',
+   nom: 'Resultatus',
+   appareilsAffectes: [],
+  };
+  usagersDB.findUserById.mockImplementation(() => {
+   return expected;
+  });
+  await usagersDM.recupererUsagerParId(expected._id);
+  expect(usagersDB.findUserById).toHaveBeenCalledWith(expected._id);
+ });
 
-//  it(`should throw exception when DB doesn't find item`, async () => {
-//   usagersDB.updateById.mockImplementation(() => {
-//    throw new Error();
-//   });
+ it('should return the correct element from DB', async () => {
+  const expected = {
+   _id: 'supposed to be the _id of a user',
+   username: 'presultatus',
+   prenom: 'Primus',
+   nom: 'Resultatus',
+   appareilsAffectes: [],
+  };
+  usagersDB.findUserById.mockImplementation(() => {
+   return expected;
+  });
+  const actual = await usagersDM.recupererUsagerParId(expected._id);
+  expect(actual).toEqual(expected);
+ });
+});
 
-//   expect(() => usagersDM.modifierLien.reject().toThrow());
-//  });
-// });
+describe('recupererUsagerParUsername', () => {
+ it('should call usagersDB 1 time', async () => {
+  const expected = {
+   _id: 'supposed to be the _id of a user',
+   username: 'presultatus',
+   prenom: 'Primus',
+   nom: 'Resultatus',
+   appareilsAffectes: [],
+  };
+  usagersDB.findByUsername.mockImplementation(() => {
+   return expected;
+  });
+  await usagersDM.recupererUsagerParUsername(expected.username);
+  expect(usagersDB.findByUsername).toHaveBeenCalledTimes(1);
+ });
 
-// describe('supprimerLien', () => {
-//  it('should call usagersDB.deleteById', async () => {
-//   await usagersDB.deleteById({ id: 'Lien 1' });
+ it('should call usagersDB with the right parameters', async () => {
+  const expected = {
+   _id: 'supposed to be the _id of a user',
+   username: 'presultatus',
+   prenom: 'Primus',
+   nom: 'Resultatus',
+   appareilsAffectes: [],
+  };
+  usagersDB.findByUsername.mockImplementation(() => {
+   return expected;
+  });
+  await usagersDM.recupererUsagerParUsername(expected.username);
+  expect(usagersDB.findByUsername).toHaveBeenCalledWith(expected.username);
+ });
 
-//   expect(usagersDB.deleteById).toHaveBeenCalledTimes(1);
-//   expect(usagersDB.deleteById).toHaveBeenCalledWith({ id: 'Lien 1' });
-//  });
+ it('should return the correct element from DB', async () => {
+  const expected = {
+   _id: 'supposed to be the _id of a user',
+   username: 'presultatus',
+   prenom: 'Primus',
+   nom: 'Resultatus',
+   appareilsAffectes: [],
+  };
+  usagersDB.findByUsername.mockImplementation(() => {
+   return expected;
+  });
+  const actual = await usagersDM.recupererUsagerParUsername(expected.username);
+  expect(actual).toEqual(expected);
+ });
+});
 
-//  it(`should throw exception when DB find item'`, async () => {
-//   usagersDB.deleteById.mockImplementation(() => {
-//    throw new Error();
-//   });
+describe('affecterAppareilAUsagerParId', () => {
+ const usager = {
+  _id: 'supposed to be the _id of a user',
+  username: 'presultatus',
+  prenom: 'Primus',
+  nom: 'Resultatus',
+  appareilsAffectes: [],
+ };
+ const appareil = {
+  _id: "ObjectId('1')",
+  serialNumber: '9992',
+  nom: 'Asus Alpha',
+  etatDisponible: false,
+  details: {
+   configuration: {},
+  },
+ };
+ it('should call usagersDB', async () => {
+  await usagersDM.affecterAppareilAUsagerParId(usager._id, appareil);
+  expect(usagersDB.findUserById).toHaveBeenCalledTimes(1);
+  expect(usagersDB.updateById).toHaveBeenCalledTimes(1);
+ });
 
-//   expect(() =>
-//    usagersDM.supprimerLien("Ce lien n'existe pas").reject().toThrow()
-//   );
-//  });
-// });
+ it('should have been called with the right parameter', async () => {
+  usagersDB.findUserById.mockImplementation(() => {
+   return usager;
+  });
+  await usagersDM.affecterAppareilAUsagerParId(usager._id, appareil);
+  expect(usagersDB.findUserById).toHaveBeenCalledWith(usager._id);
+  expect(usagersDB.updateById).toHaveBeenCalledWith(usager._id, usager);
+ });
+});
+
+describe('retirerAppareilAUsagerParId', () => {
+ const usager = {
+  _id: 'supposed to be the _id of a user',
+  username: 'presultatus',
+  prenom: 'Primus',
+  nom: 'Resultatus',
+  appareilsAffectes: [],
+ };
+ const appareil = {
+  _id: "ObjectId('1')",
+  serialNumber: '9992',
+  nom: 'Asus Alpha',
+  etatDisponible: false,
+  details: {
+   configuration: {},
+  },
+ };
+ it('should call usagersDB', async () => {
+  await usagersDM.retirerAppareilAUsagerParId(usager._id, appareil);
+  expect(usagersDB.findUserById).toHaveBeenCalledTimes(1);
+  expect(usagersDB.updateById).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  usagersDB.findUserById.mockImplementation(() => {
+   return usager;
+  });
+  await usagersDM.retirerAppareilAUsagerParId(usager._id, appareil);
+  expect(usagersDB.findUserById).toHaveBeenCalledWith(usager._id);
+  expect(usagersDB.updateById).toHaveBeenCalledWith(usager._id, usager);
+ });
+});

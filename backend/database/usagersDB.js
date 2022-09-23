@@ -33,11 +33,24 @@ const findUserById = async (usagerId) => {
  try {
   const collection = await getCollection();
   const res = await collection.find().toArray();
-  const usager = res.find((usager) => {
-   return usager._id == usagerId;
-  });
+  const usager = res.filter((usager) => usager._id == usagerId)[0];
   if (usager === undefined) throw new Error('Usager pas trouvé...');
   return usager;
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
+};
+
+const findByUsername = async (username) => {
+ console.log('--- usagerDB/findByUsername');
+ try {
+  const collection = await getCollection();
+  const res = await collection.find().toArray();
+  const usager = res.filter((usager) => usager.username == username);
+  if (usager === undefined) throw new Error('Usager pas trouvé...');
+  return usager[0];
  } catch (e) {
   throw e;
  } finally {
@@ -71,6 +84,7 @@ const getAll = async () => {
 
 export default {
  findUserById,
+ findByUsername,
  addOne,
  updateById,
  getAll,

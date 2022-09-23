@@ -32,7 +32,6 @@ const findByDate = async (Date) => {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
   const historique = res.filter((hist) => hist.date == Date);
-  console.log(historique != undefined ? 'Trouvé...' : 'Pas trouvé...');
   if (historique === undefined) throw new Error('Historiques pas trouvé...');
   return historique[0];
  } catch (e) {

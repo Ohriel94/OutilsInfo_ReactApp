@@ -79,7 +79,9 @@ app.get('/ordinateurs', async (req, res) => {
 app.get('/recupererOrdinateur/:serNum', async (req, res) => {
  console.log('----- GET/recupererOrdinateur -----');
  const serNum = req.params.serNum;
- const response = await ordinateursDM.trouverOrdinateur(serNum);
+ const response = await ordinateursDM.recupererOrdinateurParSerialNumber(
+  serNum
+ );
  console.log(response);
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
@@ -115,7 +117,7 @@ app.post('/affecterAppareil', async (req, res) => {
    delete usager.ordinateurAssigne.title;
    delete usager.ordinateurAssigne.etatDisponible;
    console.log(usager);
-   await usagersDM.affecterAppareilAUsager(
+   await usagersDM.affecterAppareilAUsagerParId(
     usager._id,
     usager.ordinateurAssigne
    );
@@ -150,7 +152,10 @@ app.post('/retirerAppareil', async (req, res) => {
    delete usager.ordinateurAssigne.title;
    delete usager.ordinateurAssigne.etatDisponible;
    console.log(usager);
-   await usagersDM.retirerAppareilAUsager(usager._id, usager.ordinateurAssigne);
+   await usagersDM.retirerAppareilAUsagerParId(
+    usager._id,
+    usager.ordinateurAssigne
+   );
    console.log(`Retirer a l'ordinateur...`);
    await ordinateursDM.retirerOrdinateur(usager.ordinateurAssigne);
    await historiqueDM.enregistrerRetraitAppareil(

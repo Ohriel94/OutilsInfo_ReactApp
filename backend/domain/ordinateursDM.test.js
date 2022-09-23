@@ -107,7 +107,7 @@ describe('creerOrdinateur', () => {
  });
 });
 
-describe('trouverOrdinateur', () => {
+describe('recupererOrdinateurParSerialNumber', () => {
  const expected = {
   serialNumber: '9992',
   nom: 'Asus Alpha',
@@ -118,12 +118,12 @@ describe('trouverOrdinateur', () => {
  };
 
  it('should call ordinateursDB 1 time', async () => {
-  await ordinateursDM.trouverOrdinateur('9992');
+  await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameter', async () => {
-  await ordinateursDM.trouverOrdinateur('9992');
+  await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
  });
 
@@ -131,7 +131,7 @@ describe('trouverOrdinateur', () => {
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
    return expected;
   });
-  const actual = await ordinateursDM.trouverOrdinateur('9992');
+  const actual = await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
   expect(actual).toEqual(expected);
  });
 });

@@ -232,6 +232,8 @@ describe('ajouterEntreeHistorique', () => {
   expect(historiquesDB.findByDate).toHaveBeenCalledWith(journee.date);
   expect(historiquesDB.addOne).toHaveBeenCalledWith(expected);
  });
+
+ it('should throw an error if the day is not found', () => {});
 });
 
 describe('enregistrerAffectationAppareil', () => {

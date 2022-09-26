@@ -108,15 +108,6 @@ describe('creerOrdinateur', () => {
 });
 
 describe('recupererOrdinateurParSerialNumber', () => {
- const expected = {
-  serialNumber: '9992',
-  nom: 'Asus Alpha',
-  etatDisponible: true,
-  details: {
-   configuration: {},
-  },
- };
-
  it('should call ordinateursDB 1 time', async () => {
   await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
@@ -128,6 +119,14 @@ describe('recupererOrdinateurParSerialNumber', () => {
  });
 
  it('should return the correct elements from DB', async () => {
+  const expected = {
+   serialNumber: '9992',
+   nom: 'Asus Alpha',
+   etatDisponible: true,
+   details: {
+    configuration: {},
+   },
+  };
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
    return expected;
   });
@@ -137,15 +136,6 @@ describe('recupererOrdinateurParSerialNumber', () => {
 });
 
 describe('affecterOrdinateur', () => {
- const expected = {
-  _id: "ObjectId('1')",
-  serialNumber: '9992',
-  nom: 'Asus Alpha',
-  etatDisponible: false,
-  details: {
-   configuration: {},
-  },
- };
  it('should call ordinateursDB', async () => {
   await ordinateursDM.affecterOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
@@ -153,31 +143,33 @@ describe('affecterOrdinateur', () => {
  });
 
  it('should have been called with the right parameter', async () => {
+  const expected = {
+   _id: "ObjectId('1')",
+   serialNumber: '9992',
+   nom: 'Asus Alpha',
+   etatDisponible: false,
+   details: {
+    configuration: {},
+   },
+  };
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
-   return expected;
+   return {
+    _id: "ObjectId('1')",
+    serialNumber: '9992',
+    nom: 'Asus Alpha',
+    etatDisponible: true,
+    details: {
+     configuration: {},
+    },
+   };
   });
   await ordinateursDM.affecterOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
   expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
- });
-
- it(`should throw exception when DB cant find item'`, async () => {
-  expect(() =>
-   ordinateursDM.affecterOrdinateur("Ce lien n'existe pas").reject().toThrow()
-  );
  });
 });
 
 describe('retirerOrdinateur', () => {
- const expected = {
-  _id: "ObjectId('1')",
-  serialNumber: '9992',
-  nom: 'Asus Alpha',
-  etatDisponible: true,
-  details: {
-   configuration: {},
-  },
- };
  it('should call ordinateursDB', async () => {
   await ordinateursDM.retirerOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
@@ -185,17 +177,28 @@ describe('retirerOrdinateur', () => {
  });
 
  it('should have been called with the right parameter', async () => {
+  const expected = {
+   _id: "ObjectId('1')",
+   serialNumber: '9992',
+   nom: 'Asus Alpha',
+   etatDisponible: true,
+   details: {
+    configuration: {},
+   },
+  };
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
-   return expected;
+   return {
+    _id: "ObjectId('1')",
+    serialNumber: '9992',
+    nom: 'Asus Alpha',
+    etatDisponible: false,
+    details: {
+     configuration: {},
+    },
+   };
   });
   await ordinateursDM.retirerOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
   expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
- });
-
- it(`should throw exception when DB cant find item'`, async () => {
-  expect(() =>
-   ordinateursDM.retirerOrdinateur("Ce lien n'existe pas").reject().toThrow()
-  );
  });
 });

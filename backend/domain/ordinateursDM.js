@@ -49,8 +49,8 @@ const recupererOrdinateurParSerialNumber = async (serialNumber) => {
 const affecterOrdinateur = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
-  console.log(ordi);
   ordi.etatDisponible = false;
+  console.log(ordi);
   await ordinateursDB.updateById(ordi._id, ordi);
  }
 };
@@ -59,6 +59,7 @@ const retirerOrdinateur = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = true;
+  console.log(ordi);
   await ordinateursDB.updateById(ordi._id, ordi);
  }
 };

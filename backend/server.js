@@ -96,39 +96,32 @@ app.post('/creerUsager'),
  async (req, res) => {
   console.log('----- POST/usagersDM -----');
   const newUsager = req.body;
-  newUsager.appareilsAffecter = [];
-  console.log('Add Usager');
-  console.log(newUsager);
+  //   newUsager.appareilsAffecter = [];
+  //   console.log('Add Usager');
+  //   console.log(newUsager);
  };
 
 app.post('/affecterAppareil', async (req, res) => {
  console.log('----- POST/affecterAppareil -----');
- const usager = req.body;
+ const usager = req.body.usager;
+ console.log(usager);
+ const appareil = req.body.appareil;
+ console.log(appareil);
  try {
-  if (
-   usager.ordinateurAssigne !== undefined &&
-   usager.ordinateurAssigne !== {}
-  ) {
+  if (usager !== undefined && appareil !== undefined) {
    console.log(`Affecter a l'usager...`);
    delete usager.id;
    delete usager.label;
    delete usager.title;
-   delete usager.ordinateurAssigne.id;
-   delete usager.ordinateurAssigne.title;
-   delete usager.ordinateurAssigne.etatDisponible;
-   console.log(usager);
-   await usagersDM.affecterAppareilAUsagerParId(
-    usager._id,
-    usager.ordinateurAssigne
-   );
-   console.log(`Affecter a l'ordinateur...`);
-   await ordinateursDM.affecterOrdinateur(
-    usager.ordinateurAssigne.serialNumber
-   );
-   await historiqueDM.enregistrerAffectationAppareil(
-    usager,
-    usager.ordinateurAssigne
-   );
+   delete appareil.id;
+   delete appareil.title;
+   delete appareil.etatDisponible;
+   delete appareil.details.notes;
+   delete appareil.details.configuration;
+   await usagersDM.affecterAppareilAUsagerParId(usager._id, appareil);
+   console.log(`Rendre l'ordinateur indisponible...`);
+   await ordinateursDM.affecterOrdinateur(appareil.serialNumber);
+   await historiqueDM.enregistrerAffectationAppareil(usager, appareil);
    res.sendStatus(200);
   }
  } catch (e) {
@@ -138,34 +131,27 @@ app.post('/affecterAppareil', async (req, res) => {
 
 app.post('/retirerAppareil', async (req, res) => {
  console.log('----- POST/retirerAppareil -----');
- const usager = req.body;
- if (
-  usager.ordinateurAssigne !== undefined &&
-  usager.ordinateurAssigne !== {}
- ) {
-  try {
+ const usager = req.body.usager;
+ const appareil = req.body.appareil;
+ try {
+  if (usager !== undefined && appareil !== undefined) {
    console.log(`Retirer a l'usager...`);
    delete usager.id;
    delete usager.label;
    delete usager.title;
-   delete usager.ordinateurAssigne.id;
-   delete usager.ordinateurAssigne.title;
-   delete usager.ordinateurAssigne.etatDisponible;
-   console.log(usager);
-   await usagersDM.retirerAppareilAUsagerParId(
-    usager._id,
-    usager.ordinateurAssigne
-   );
-   console.log(`Retirer a l'ordinateur...`);
-   await ordinateursDM.retirerOrdinateur(usager.ordinateurAssigne);
-   await historiqueDM.enregistrerRetraitAppareil(
-    usager,
-    usager.ordinateurAssigne
-   );
+   delete appareil.id;
+   delete appareil.title;
+   delete appareil.etatDisponible;
+   delete appareil.details.notes;
+   delete appareil.details.configuration;
+   await usagersDM.retirerAppareilAUsagerParId(usager._id, appareil);
+   console.log(`Rendre l'ordinateur disponible...`);
+   await ordinateursDM.retirerOrdinateur(appareil.serialNumber);
+   await historiqueDM.enregistrerRetraitAppareil(usager, appareil);
    res.sendStatus(200);
-  } catch (e) {
-   res.sendStatus(404);
   }
+ } catch (e) {
+  res.sendStatus(404);
  }
 });
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Box from '@mui/material/Box';
@@ -9,14 +9,15 @@ import Paper from '@mui/material/Paper';
 import { toast } from 'react-toastify';
 
 const DragAndDrop = (props) => {
- const { usagerChoisi, ordinateurs, refreshState } = props;
- const [appareilAssigne, setAppareilAssigne] = useState({});
+ const { usagerChoisi, ordinateurs } = props;
+ const [appareilAssigne, setAppareilAssigne] = React.useState();
 
  const affecterAppareil = (usager, appareil) => {
   console.log(`affecterAppareil()`);
   console.log(usager);
   console.log(appareil);
   const f = async () => {
+   delete usager.appareilAssigne;
    try {
     const updateUserRequest = await Axios({
      method: 'post',
@@ -35,6 +36,7 @@ const DragAndDrop = (props) => {
   console.log(usager);
   console.log(appareil);
   const f = async () => {
+   delete usager.appareilAssigne;
    try {
     const updateUserRequest = await Axios({
      method: 'post',
@@ -60,8 +62,7 @@ const DragAndDrop = (props) => {
  const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
-  padding: `${grid * 1.2}px`,
-  margin: `0 0 ${grid * 0.9}px 0`,
+  margin: `0 0 ${grid * 0.7}px 0`,
   width: `${grid * 30}px`,
 
   // change background colour if dragging
@@ -99,16 +100,14 @@ const DragAndDrop = (props) => {
   return newEtat;
  };
 
- const [etat, setEtat] = useState(
+ const [etat, setEtat] = React.useState(
   formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs)
  );
 
  React.useEffect(() => {
   console.log('UseEffect');
   formaterEtat(...etat);
-  console.log(etat);
-  console.log(refreshState);
- }, [refreshState]);
+ }, []);
 
  const reorder = (liste, startIndex, endIndex) => {
   const result = [...liste];
@@ -122,23 +121,14 @@ const DragAndDrop = (props) => {
   const sourceClone = [...listeSource];
   const destClone = [...listeDest];
 
-  const item = listeSource[source.index];
-  if (destination.droppableId === '0') {
-   const newItem = listeSource[source.index];
-   destClone.splice(destination.index, 0, newItem);
-   console.log(newItem);
-   setAppareilAssigne(newItem);
-  } else {
-   const [removed] = sourceClone.splice(source.index, 1);
-   console.log(removed);
-   destClone.splice(destination.index, 0, removed);
-   setAppareilAssigne(removed);
-  }
+  const [removed] = sourceClone.splice(source.index, 1);
+  destClone.splice(destination.index, 0, removed);
+  setAppareilAssigne(removed);
 
   let result = [];
   result[source.droppableId] = sourceClone;
   result[destination.droppableId] = destClone;
-  result = result.filter((item) => item !== {});
+  // result = result.filter((item) => item !== {});
   return result;
  };
 
@@ -169,9 +159,12 @@ const DragAndDrop = (props) => {
    newEtat[source.droppableId] = result[source.droppableId];
    newEtat[destination.droppableId] = result[destination.droppableId];
    setEtat(newEtat);
-   if (destination.droppableId == 0)
+   if (destination.droppableId === '0') {
     affecterAppareil(usagerChoisi, appareilAssigne);
-   if (source.droppableId == 0) retirerAppareil(usagerChoisi, appareilAssigne);
+   }
+   if (source.droppableId === '0') {
+    retirerAppareil(usagerChoisi, appareilAssigne);
+   }
   }
  }
 
@@ -265,7 +258,7 @@ const DragAndDrop = (props) => {
            key={item.id}
            draggableId={item.id}
            index={indItem}
-           padding={15}>
+           padding={5}>
            {(provided, snapshot) => (
             <Paper
              elevation={3}

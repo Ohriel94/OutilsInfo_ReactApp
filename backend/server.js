@@ -2,7 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import usagersDM from './domain/usagersDM.js';
 import ordinateursDM from './domain/ordinateursDM.js';
-import historiqueDM from './domain/historiquesDM.js';
+import historiquesDM from './domain/historiquesDM.js';
 import cors from 'cors';
 
 const app = express();
@@ -82,13 +82,12 @@ app.get('/recupererOrdinateur/:serNum', async (req, res) => {
  const response = await ordinateursDM.recupererOrdinateurParSerialNumber(
   serNum
  );
- console.log(response);
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
-app.get('/historique', async (req, res) => {
- console.log('----- GET/historiqueDM -----');
- const response = await historiqueDM.recupererHistoriques();
+app.get('/historiques', async (req, res) => {
+ console.log('----- GET/historiquesDM -----');
+ const response = await historiquesDM.recupererHistoriques();
  res.send(response);
 });
 
@@ -117,11 +116,10 @@ app.post('/affecterAppareil', async (req, res) => {
    delete appareil.title;
    delete appareil.etatDisponible;
    delete appareil.details.notes;
-   delete appareil.details.configuration;
    await usagersDM.affecterAppareilAUsagerParId(usager._id, appareil);
    console.log(`Rendre l'ordinateur indisponible...`);
    await ordinateursDM.affecterOrdinateur(appareil.serialNumber);
-   await historiqueDM.enregistrerAffectationAppareil(usager, appareil);
+   await historiquesDM.enregistrerAffectationAppareil(usager, appareil);
    res.sendStatus(200);
   }
  } catch (e) {
@@ -132,7 +130,9 @@ app.post('/affecterAppareil', async (req, res) => {
 app.post('/retirerAppareil', async (req, res) => {
  console.log('----- POST/retirerAppareil -----');
  const usager = req.body.usager;
+ console.log(usager);
  const appareil = req.body.appareil;
+ console.log(appareil);
  try {
   if (usager !== undefined && appareil !== undefined) {
    console.log(`Retirer a l'usager...`);
@@ -143,11 +143,10 @@ app.post('/retirerAppareil', async (req, res) => {
    delete appareil.title;
    delete appareil.etatDisponible;
    delete appareil.details.notes;
-   delete appareil.details.configuration;
    await usagersDM.retirerAppareilAUsagerParId(usager._id, appareil);
    console.log(`Rendre l'ordinateur disponible...`);
    await ordinateursDM.retirerOrdinateur(appareil.serialNumber);
-   await historiqueDM.enregistrerRetraitAppareil(usager, appareil);
+   await historiquesDM.enregistrerRetraitAppareil(usager, appareil);
    res.sendStatus(200);
   }
  } catch (e) {

@@ -40,22 +40,28 @@ const recupererUsagerParUsername = async (username) => {
 
 const affecterAppareilAUsagerParId = async (usagerId, appareil) => {
  console.log('--- usagerDM/affecterAppareilAUsagerParId');
- if (appareil !== undefined) {
-  let usager = await usagersDB.findUserById(usagerId);
-  const appareilTrouve = usager.appareilsAffectes.filter(
-   (app) => app.serialNumber === appareil.serialNumber
-  );
-  if (appareilTrouve[0] === undefined) usager.appareilsAffectes.push(appareil);
-  try {
+ console.log(usagerId);
+ console.log(appareil);
+ try {
+  if (appareil !== undefined) {
+   let usager = await usagersDB.findUserById(usagerId);
+   const appareilTrouve = usager.appareilsAffectes.filter(
+    (app) => app.serialNumber === appareil.serialNumber
+   );
+   if (appareilTrouve[0] === undefined) usager.appareilsAffectes.push(appareil);
+   console.log(usager.appareilsAffectes);
+
    await usagersDB.updateById(usagerId, usager);
-  } catch (e) {
-   throw new Error('User not found');
   }
+ } catch (e) {
+  throw new Error('User not found');
  }
 };
 
 const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
  console.log('--- usagerDM/retirerAppareilAUsagerParId');
+ console.log(usagerId);
+ console.log(appareil);
  try {
   if (appareil !== undefined) {
    let usager = await usagersDB.findUserById(usagerId);
@@ -66,6 +72,7 @@ const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
     usager.appareilsAffectes.map((appareil, index) =>
      usager.appareilsAffectes.splice(index, 1)
     );
+   console.log(usager.appareilsAffectes);
    await usagersDB.updateById(usagerId, usager);
   }
  } catch (e) {

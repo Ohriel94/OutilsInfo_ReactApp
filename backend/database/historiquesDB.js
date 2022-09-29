@@ -22,7 +22,6 @@ const getAll = async () => {
  const collection = await getCollection();
  const historique = await collection.find({}).toArray();
  await closeConnection();
- console.log(historique);
  return historique;
 };
 

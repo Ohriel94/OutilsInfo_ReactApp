@@ -1,7 +1,7 @@
 import historiquesDM from './historiquesDM.js';
-import historiquesDB from '../database/historiquesDB.js';
+import historiquesDB from '../../database/historiquesDB.js';
 
-jest.mock('../database/historiquesDB.js');
+jest.mock('../../database/historiquesDB.js');
 jest.spyOn(historiquesDM, 'formaterA2Digits');
 jest.spyOn(historiquesDM, 'formaterHeure');
 jest.spyOn(historiquesDM, 'creerEntreeHistorique');

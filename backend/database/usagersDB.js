@@ -62,10 +62,7 @@ const updateById = async (id, usager) => {
  console.log('--- usagerDB/updateById');
  try {
   const collection = await getCollection();
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: usager }
-  );
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: usager });
   if (updatedItems.matchedCount == 0) throw new Error('Usager pas trouvé...');
  } catch (e) {
   throw e;

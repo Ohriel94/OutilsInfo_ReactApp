@@ -1,5 +1,4 @@
-import usagersDB from '../database/usagersDB.js';
-import mongoose from 'mongoose';
+import usagersDB from '../../database/usagersDB.js';
 
 const creerUsager = async (prenom, nom) => {
  console.log('--- usagerDM/creerUsager');
@@ -8,6 +7,7 @@ const creerUsager = async (prenom, nom) => {
   username: username.toLowerCase(),
   prenom: prenom,
   nom: nom,
+  appareilsAffectes: [],
  };
  await usagersDB.addOne(newUsager);
 };
@@ -69,9 +69,7 @@ const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
     (app) => app.serialNumber === appareil.serialNumber
    );
    if (appareilTrouve[0] !== undefined)
-    usager.appareilsAffectes.map((appareil, index) =>
-     usager.appareilsAffectes.splice(index, 1)
-    );
+    usager.appareilsAffectes.map((appareil, index) => usager.appareilsAffectes.splice(index, 1));
    console.log(usager.appareilsAffectes);
    await usagersDB.updateById(usagerId, usager);
   }

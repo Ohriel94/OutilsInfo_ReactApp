@@ -1,7 +1,7 @@
 import usagersDM from './usagersDM.js';
-import usagersDB from '../database/usagersDB.js';
+import usagersDB from '../../database/usagersDB.js';
 
-jest.mock('../database/usagersDB.js');
+jest.mock('../../database/usagersDB.js');
 
 beforeEach(() => {
  usagersDB.getAll.mockClear();

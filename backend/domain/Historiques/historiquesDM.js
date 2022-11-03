@@ -1,5 +1,4 @@
-import historiqueDB from '../database/historiquesDB.js';
-import mongoose from 'mongoose';
+import historiqueDB from '../../database/historiquesDB.js';
 
 const recupererHistoriques = async () => {
  console.log('--- historiqueDM/recupererHistoriques');

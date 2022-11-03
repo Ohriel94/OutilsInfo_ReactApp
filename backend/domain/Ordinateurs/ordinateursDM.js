@@ -1,5 +1,4 @@
-import ordinateursDB from '../database/ordinateursDB.js';
-import mongoose from 'mongoose';
+import ordinateursDB from '../../database/ordinateursDB.js';
 
 const creerOrdinateur = async (
  serNb,

@@ -1,16 +1,16 @@
-import ordinateursDM from './ordinateursDM.js';
-import ordinateursDB from '../database/ordinateursDB.js';
+import moniteursDM from './moniteursDM.js';
+import moniteursDB from '../../database/moniteursDB.js';
 
-jest.mock('../database/ordinateursDB.js');
+jest.mock('../../database/moniteursDB.js');
 
 beforeEach(async () => {
- ordinateursDB.getAll.mockClear();
- ordinateursDB.addOne.mockClear();
- ordinateursDB.findBySerialNumber.mockClear();
- ordinateursDB.updateById.mockClear();
+ moniteursDB.getAll.mockClear();
+ moniteursDB.addOne.mockClear();
+ moniteursDB.findBySerialNumber.mockClear();
+ moniteursDB.updateById.mockClear();
 });
 
-describe('recupererOrdinateurs', () => {
+describe('recupererMoniteurs', () => {
  const expected = [
   {
    serialNumber: '9991',
@@ -37,27 +37,27 @@ describe('recupererOrdinateurs', () => {
    },
   },
  ];
- ordinateursDB.getAll.mockImplementation(() => {
+ moniteursDB.getAll.mockImplementation(() => {
   return expected;
  });
 
- it('should call ordinateursDB 1 time', async () => {
-  await ordinateursDM.recupererOrdinateurs();
-  expect(ordinateursDB.getAll).toHaveBeenCalledTimes(1);
+ it('should call moniteursDB 1 time', async () => {
+  await moniteursDM.recupererMoniteurs();
+  expect(moniteursDB.getAll).toHaveBeenCalledTimes(1);
  });
 
  it('should contain correct number of elements', async () => {
-  const ordinateurs = await ordinateursDM.recupererOrdinateurs();
-  expect(ordinateurs.length).toBe(3);
+  const moniteurs = await moniteursDM.recupererMoniteurs();
+  expect(moniteurs.length).toBe(3);
  });
 
  it('should return the correct elements from DB', async () => {
-  const actual = await ordinateursDM.recupererOrdinateurs();
+  const actual = await moniteursDM.recupererMoniteurs();
   expect(actual).toEqual(expected);
  });
 });
 
-describe('creerOrdinateur', () => {
+describe('creerMoniteur', () => {
  const expected = {
   serialNumber: '9991',
   nom: 'Asus Alpha',
@@ -76,8 +76,8 @@ describe('creerOrdinateur', () => {
   },
  };
 
- it('should call ordinateursDB 1 time', async () => {
-  await ordinateursDM.creerOrdinateur(
+ it('should call moniteursDB 1 time', async () => {
+  await moniteursDM.creerMoniteur(
    expected.serialNumber,
    expected.details.marque,
    expected.details.modele,
@@ -88,11 +88,11 @@ describe('creerOrdinateur', () => {
    expected.details.configuration.disque,
    expected.details.notes
   );
-  expect(ordinateursDB.addOne).toHaveBeenCalledTimes(1);
+  expect(moniteursDB.addOne).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
-  await ordinateursDM.creerOrdinateur(
+  await moniteursDM.creerMoniteur(
    expected.serialNumber,
    expected.details.marque,
    expected.details.modele,
@@ -103,19 +103,19 @@ describe('creerOrdinateur', () => {
    expected.details.configuration.disque,
    expected.details.notes
   );
-  expect(ordinateursDB.addOne).toHaveBeenCalledWith(expected);
+  expect(moniteursDB.addOne).toHaveBeenCalledWith(expected);
  });
 });
 
-describe('recupererOrdinateurParSerialNumber', () => {
- it('should call ordinateursDB 1 time', async () => {
-  await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+describe('recupererMoniteurParSerialNumber', () => {
+ it('should call moniteursDB 1 time', async () => {
+  await moniteursDM.recupererMoniteurParSerialNumber('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameter', async () => {
-  await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
+  await moniteursDM.recupererMoniteurParSerialNumber('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
  });
 
  it('should return the correct elements from DB', async () => {
@@ -127,19 +127,19 @@ describe('recupererOrdinateurParSerialNumber', () => {
     configuration: {},
    },
   };
-  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+  moniteursDB.findBySerialNumber.mockImplementation(() => {
    return expected;
   });
-  const actual = await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
+  const actual = await moniteursDM.recupererMoniteurParSerialNumber('9992');
   expect(actual).toEqual(expected);
  });
 });
 
-describe('affecterOrdinateur', () => {
- it('should call ordinateursDB', async () => {
-  await ordinateursDM.affecterOrdinateur('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
-  expect(ordinateursDB.updateById).toHaveBeenCalledTimes(1);
+describe('affecterMoniteur', () => {
+ it('should call moniteursDB', async () => {
+  await moniteursDM.affecterMoniteur('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+  expect(moniteursDB.updateById).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameter', async () => {
@@ -152,7 +152,7 @@ describe('affecterOrdinateur', () => {
     configuration: {},
    },
   };
-  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+  moniteursDB.findBySerialNumber.mockImplementation(() => {
    return {
     _id: "ObjectId('1')",
     serialNumber: '9992',
@@ -163,17 +163,17 @@ describe('affecterOrdinateur', () => {
     },
    };
   });
-  await ordinateursDM.affecterOrdinateur('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
-  expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
+  await moniteursDM.affecterMoniteur('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
+  expect(moniteursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
  });
 });
 
-describe('retirerOrdinateur', () => {
- it('should call ordinateursDB', async () => {
-  await ordinateursDM.retirerOrdinateur('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
-  expect(ordinateursDB.updateById).toHaveBeenCalledTimes(1);
+describe('retirerMoniteur', () => {
+ it('should call moniteursDB', async () => {
+  await moniteursDM.retirerMoniteur('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledTimes(1);
+  expect(moniteursDB.updateById).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameter', async () => {
@@ -186,7 +186,7 @@ describe('retirerOrdinateur', () => {
     configuration: {},
    },
   };
-  ordinateursDB.findBySerialNumber.mockImplementation(() => {
+  moniteursDB.findBySerialNumber.mockImplementation(() => {
    return {
     _id: "ObjectId('1')",
     serialNumber: '9992',
@@ -197,8 +197,8 @@ describe('retirerOrdinateur', () => {
     },
    };
   });
-  await ordinateursDM.retirerOrdinateur('9992');
-  expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
-  expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
+  await moniteursDM.retirerMoniteur('9992');
+  expect(moniteursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
+  expect(moniteursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
  });
 });

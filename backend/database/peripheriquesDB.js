@@ -18,7 +18,6 @@ const closeConnection = async () => {
 };
 
 const addOne = async (peripharique) => {
- console.log('--- periphariquesDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(peripharique);
@@ -29,8 +28,6 @@ const addOne = async (peripharique) => {
 };
 
 const findBySerialNumber = async (serNum) => {
- console.log('--- periphariquesDB/findBySerialNumber');
- console.log(serNum);
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
@@ -45,15 +42,10 @@ const findBySerialNumber = async (serNum) => {
 };
 
 const updateById = async (id, peripharique) => {
- console.log('--- periphariquesDB/updateById');
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: peripharique }
-  );
-  if (updatedItems.matchedCount == 0)
-   throw new Error('Peripharique pas trouvé...');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: peripharique });
+  if (updatedItems.matchedCount == 0) throw new Error('Peripharique pas trouvé...');
  } catch (e) {
   throw e;
  } finally {
@@ -62,7 +54,6 @@ const updateById = async (id, peripharique) => {
 };
 
 const getAll = async () => {
- console.log('--- periphariquesDB/getAll');
  const collection = await getCollection();
  const periphariques = await collection.find({}).toArray();
  await closeConnection();

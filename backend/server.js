@@ -67,7 +67,7 @@ app.post('/connexion', async (req, res) => {
 
 //=============== Routes - Historiques ===============
 app.get('/historiques', async (req, res) => {
- console.log('----- GET/historiquesDM -----');
+ console.log('----- GET/historiques -----');
  const response = await historiquesDM.recupererHistoriques();
  res.send(response);
 });
@@ -79,11 +79,15 @@ app.get('/ordinateurs', async (req, res) => {
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
-app.get('/recupererOrdinateur/:serNum', async (req, res) => {
+app.get('/recupererOrdinateur/:appareilID', async (req, res) => {
  console.log('----- GET/recupererOrdinateur -----');
- const serNum = req.params.serNum;
- const response = await ordinateursDM.recupererOrdinateurParSerialNumber(serNum);
- response !== undefined ? res.send(response) : res.sendStatus(404);
+ const appareilID = req.params.appareilID;
+ try {
+  const response = await ordinateursDM.recupererOrdinateurParId(appareilID);
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
 });
 
 //=============== Routes - Peripheriques ===============
@@ -91,15 +95,23 @@ app.get('/recupererOrdinateur/:serNum', async (req, res) => {
 //=============== Routes - Usagers ===============
 app.get('/usagers', async (req, res) => {
  console.log('----- GET/usagers -----');
- const response = await usagersDM.recupererUsagers();
- res.send(response);
+ try {
+  const response = await usagersDM.recupererUsagers();
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
 });
 
 app.get('/recupererUsager/:usagerID', async (req, res) => {
  console.log('----- GET/recupererUsager -----');
  const usagerID = req.params.usagerID;
- const response = await usagersDM.recupererUsagerParId(usagerID);
- response !== undefined ? res.send(response) : res.sendStatus(404);
+ try {
+  const response = await usagersDM.recupererUsagerParId(usagerID);
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
 });
 
 app.post('/affecterAppareil', async (req, res) => {

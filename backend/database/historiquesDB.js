@@ -18,7 +18,6 @@ const closeConnection = async () => {
 };
 
 const getAll = async () => {
- console.log('--- historiqueDB/getAll');
  const collection = await getCollection();
  const historique = await collection.find({}).toArray();
  await closeConnection();
@@ -26,7 +25,6 @@ const getAll = async () => {
 };
 
 const findByDate = async (Date) => {
- console.log('--- historiqueDB/findByDate');
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
@@ -41,13 +39,9 @@ const findByDate = async (Date) => {
 };
 
 const updateById = async (id, historique) => {
- console.log('--- historiqueDB/updateById');
  try {
   const collection = await getCollection();
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: historique }
-  );
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: historique });
   if (updatedItems.matchedCount == 0) throw new Error('Usager pas trouvé...');
  } catch (e) {
   throw e;
@@ -57,7 +51,6 @@ const updateById = async (id, historique) => {
 };
 
 const addOne = async (newEntry) => {
- console.log('--- historiqueDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(newEntry);
@@ -68,7 +61,6 @@ const addOne = async (newEntry) => {
 };
 
 const deleteById = async (affectation) => {
- console.log('--- historiqueDB/deleteById');
  try {
   const collection = await getCollection();
   await collection.insertOne(affectation);

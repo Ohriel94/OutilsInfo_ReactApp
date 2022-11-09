@@ -1,5 +1,6 @@
 import ordinateursDM from './ordinateursDM.js';
 import ordinateursDB from '../../database/ordinateursDB.js';
+import { ObjectId } from 'mongodb';
 
 jest.mock('../../database/ordinateursDB.js');
 
@@ -131,6 +132,35 @@ describe('recupererOrdinateurParSerialNumber', () => {
    return expected;
   });
   const actual = await ordinateursDM.recupererOrdinateurParSerialNumber('9992');
+  expect(actual).toEqual(expected);
+ });
+});
+
+describe('recupererOrdinateurParId', () => {
+ it('should call ordinateursDB 1 time', async () => {
+  await ordinateursDM.recupererOrdinateurParId('112233aabbcc');
+  expect(ordinateursDB.findById).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  await ordinateursDM.recupererOrdinateurParId('112233aabbcc');
+  expect(ordinateursDB.findById).toHaveBeenCalledWith('112233aabbcc');
+ });
+
+ it('should return the correct elements from DB', async () => {
+  const expected = {
+   _id: ObjectId('112233aabbcc'),
+   serialNumber: '9992',
+   nom: 'Asus Alpha',
+   etatDisponible: true,
+   details: {
+    configuration: {},
+   },
+  };
+  ordinateursDB.findById.mockImplementation(() => {
+   return expected;
+  });
+  const actual = await ordinateursDM.recupererOrdinateurParId('112233aabbcc');
   expect(actual).toEqual(expected);
  });
 });

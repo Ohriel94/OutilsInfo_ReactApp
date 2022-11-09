@@ -1,16 +1,6 @@
 import moniteursDB from '../../database/moniteursDB.js';
 
-const creerMoniteur = async (
- serNb,
- mar,
- mod,
- dateAcqu,
- sys,
- proc,
- mem,
- disq,
- notes
-) => {
+const creerMoniteur = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  const newMoniteur = {
   serialNumber: serNb,
   nom: `${mar} ${mod}`,
@@ -47,19 +37,17 @@ const recupererMoniteurParSerialNumber = async (serialNumber) => {
 
 const affecterMoniteur = async (serialNumber) => {
  if (serialNumber != undefined) {
-  const ordi = await moniteursDB.findBySerialNumber(serialNumber);
-  ordi.etatDisponible = false;
-  console.log(ordi);
-  await moniteursDB.updateById(ordi._id, ordi);
+  const moni = await moniteursDB.findBySerialNumber(serialNumber);
+  moni.etatDisponible = false;
+  await moniteursDB.updateById(moni._id, moni);
  }
 };
 
 const retirerMoniteur = async (serialNumber) => {
  if (serialNumber != undefined) {
-  const ordi = await moniteursDB.findBySerialNumber(serialNumber);
-  ordi.etatDisponible = true;
-  console.log(ordi);
-  await moniteursDB.updateById(ordi._id, ordi);
+  const moni = await moniteursDB.findBySerialNumber(serialNumber);
+  moni.etatDisponible = true;
+  await moniteursDB.updateById(moni._id, moni);
  }
 };
 

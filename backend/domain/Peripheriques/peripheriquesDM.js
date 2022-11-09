@@ -1,16 +1,6 @@
 import peripheriquesDB from '../../database/peripheriquesDB.js';
 
-const creerPeripherique = async (
- serNb,
- mar,
- mod,
- dateAcqu,
- sys,
- proc,
- mem,
- disq,
- notes
-) => {
+const creerPeripherique = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  const newPeripherique = {
   serialNumber: serNb,
   nom: `${mar} ${mod}`,
@@ -47,19 +37,17 @@ const recupererPeripheriqueParSerialNumber = async (serialNumber) => {
 
 const affecterPeripherique = async (serialNumber) => {
  if (serialNumber != undefined) {
-  const ordi = await peripheriquesDB.findBySerialNumber(serialNumber);
-  ordi.etatDisponible = false;
-  console.log(ordi);
-  await peripheriquesDB.updateById(ordi._id, ordi);
+  const peri = await peripheriquesDB.findBySerialNumber(serialNumber);
+  peri.etatDisponible = false;
+  await peripheriquesDB.updateById(peri._id, peri);
  }
 };
 
 const retirerPeripherique = async (serialNumber) => {
  if (serialNumber != undefined) {
-  const ordi = await peripheriquesDB.findBySerialNumber(serialNumber);
-  ordi.etatDisponible = true;
-  console.log(ordi);
-  await peripheriquesDB.updateById(ordi._id, ordi);
+  const peri = await peripheriquesDB.findBySerialNumber(serialNumber);
+  peri.etatDisponible = true;
+  await peripheriquesDB.updateById(peri._id, peri);
  }
 };
 

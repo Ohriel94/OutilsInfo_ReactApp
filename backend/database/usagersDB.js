@@ -18,7 +18,6 @@ const closeConnection = async () => {
 };
 
 const addOne = async (usager) => {
- console.log('--- usagerDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(usager);
@@ -29,7 +28,6 @@ const addOne = async (usager) => {
 };
 
 const findUserById = async (usagerId) => {
- console.log('--- usagerDB/findUserById');
  try {
   const collection = await getCollection();
   const res = await collection.find().toArray();
@@ -44,7 +42,6 @@ const findUserById = async (usagerId) => {
 };
 
 const findByUsername = async (username) => {
- console.log('--- usagerDB/findByUsername');
  try {
   const collection = await getCollection();
   const res = await collection.find().toArray();
@@ -59,7 +56,6 @@ const findByUsername = async (username) => {
 };
 
 const updateById = async (id, usager) => {
- console.log('--- usagerDB/updateById');
  try {
   const collection = await getCollection();
   let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: usager });
@@ -72,7 +68,6 @@ const updateById = async (id, usager) => {
 };
 
 const getAll = async () => {
- console.log('--- usagerDB/getAll');
  const collection = await getCollection();
  const usagers = await collection.find({}).toArray();
  await closeConnection();

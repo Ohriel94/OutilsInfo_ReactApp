@@ -15,9 +15,9 @@ const DragAndDrop = (props) => {
  const affecterAppareil = (usager, appareil) => {
   console.log(`affecterAppareil()`);
   console.log(usager);
-  console.log(appareil);
+  appareil = usager.appareilAssigne;
+  delete usager.appareilAssigne;
   const f = async () => {
-   delete usager.appareilAssigne;
    try {
     const updateUserRequest = await Axios({
      method: 'post',
@@ -34,7 +34,7 @@ const DragAndDrop = (props) => {
  const retirerAppareil = (usager, appareil) => {
   console.log(`retirerAppareil()`);
   console.log(usager);
-  console.log(appareil);
+  appareil = usager.appareilAssigne;
   const f = async () => {
    delete usager.appareilAssigne;
    try {
@@ -100,9 +100,7 @@ const DragAndDrop = (props) => {
   return newEtat;
  };
 
- const [etat, setEtat] = React.useState(
-  formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs)
- );
+ const [etat, setEtat] = React.useState(formaterEtat(usagerChoisi.appareilsAffectes, ordinateurs));
 
  React.useEffect(() => {
   console.log('UseEffect');
@@ -123,7 +121,7 @@ const DragAndDrop = (props) => {
 
   const [removed] = sourceClone.splice(source.index, 1);
   destClone.splice(destination.index, 0, removed);
-  setAppareilAssigne(removed);
+  usagerChoisi.appareilAssigne = removed;
 
   let result = [];
   result[source.droppableId] = sourceClone;
@@ -140,21 +138,12 @@ const DragAndDrop = (props) => {
    return;
   }
   if (source.droppableId === destination.droppableId) {
-   const items = reorder(
-    etat[source.droppableId],
-    source.index,
-    destination.index
-   );
+   const items = reorder(etat[source.droppableId], source.index, destination.index);
    const newEtat = [...etat];
    newEtat[destination.droppableId] = items;
    setEtat(newEtat);
   } else {
-   const result = move(
-    etat[source.droppableId],
-    etat[destination.droppableId],
-    source,
-    destination
-   );
+   const result = move(etat[source.droppableId], etat[destination.droppableId], source, destination);
    const newEtat = [...etat];
    newEtat[source.droppableId] = result[source.droppableId];
    newEtat[destination.droppableId] = result[destination.droppableId];
@@ -172,8 +161,7 @@ const DragAndDrop = (props) => {
   let nom = 'Vide';
   switch (index) {
    case 0:
-    if (usagerChoisi.prenom === undefined || usagerChoisi.nom === undefined)
-     nom = 'Aucun usager choisi';
+    if (usagerChoisi.prenom === undefined || usagerChoisi.nom === undefined) nom = 'Aucun usager choisi';
     else nom = usagerChoisi.prenom + ' ' + usagerChoisi.nom;
     break;
    case 1:
@@ -222,12 +210,14 @@ const DragAndDrop = (props) => {
      display: 'flex',
      justifyContent: 'left',
      alignItems: 'center',
-    }}>
+    }}
+   >
     <Button
      type='button'
      variant='contained'
      onClick={() => sauvegarderSoirée(etat[0])}
-     disabled={etat.length < 2 || etat[1].length < 1}>
+     disabled={etat.length < 2 || etat[1].length < 1}
+    >
      Sauvegarder l'affectation
     </Button>
    </div>
@@ -245,20 +235,13 @@ const DragAndDrop = (props) => {
          }}
          ref={provided.innerRef}
          style={getListStyle(snapshot.isDraggingOver)}
-         {...provided.droppableProps}>
-         <Typography
-          variant='h6'
-          textAlign='center'
-          key={nomColonne(indColonne)}
-          width={300}>
+         {...provided.droppableProps}
+        >
+         <Typography variant='h6' textAlign='center' key={nomColonne(indColonne)} width={300}>
           {nomColonne(indColonne)}
          </Typography>
          {colonne.map((item, indItem) => (
-          <Draggable
-           key={item.id}
-           draggableId={item.id}
-           index={indItem}
-           padding={5}>
+          <Draggable key={item.id} draggableId={item.id} index={indItem} padding={5}>
            {(provided, snapshot) => (
             <Paper
              elevation={3}
@@ -266,10 +249,8 @@ const DragAndDrop = (props) => {
              ref={provided.innerRef}
              {...provided.draggableProps}
              {...provided.dragHandleProps}
-             style={getItemStyle(
-              snapshot.isDragging,
-              provided.draggableProps.style
-             )}>
+             style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+            >
              <div
               style={{
                display: 'flex',
@@ -277,7 +258,8 @@ const DragAndDrop = (props) => {
                justifyContent: 'center',
                textAlign: 'center',
                height: '6vh',
-              }}>
+              }}
+             >
               <Typography key={'TITL-' + item.id} variant='h6'>
                {item.title}
               </Typography>

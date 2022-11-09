@@ -18,7 +18,6 @@ const closeConnection = async () => {
 };
 
 const addOne = async (moniteur) => {
- console.log('--- moniteursDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(moniteur);
@@ -29,8 +28,6 @@ const addOne = async (moniteur) => {
 };
 
 const findBySerialNumber = async (serNum) => {
- console.log('--- moniteursDB/findBySerialNumber');
- console.log(serNum);
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
@@ -45,13 +42,9 @@ const findBySerialNumber = async (serNum) => {
 };
 
 const updateById = async (id, moniteur) => {
- console.log('--- moniteursDB/updateById');
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: moniteur }
-  );
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: moniteur });
   if (updatedItems.matchedCount == 0) throw new Error('Moniteur pas trouvé...');
  } catch (e) {
   throw e;
@@ -61,7 +54,6 @@ const updateById = async (id, moniteur) => {
 };
 
 const getAll = async () => {
- console.log('--- moniteursDB/getAll');
  const collection = await getCollection();
  const moniteurs = await collection.find({}).toArray();
  await closeConnection();

@@ -22,7 +22,7 @@ describe('recupererUsagers', () => {
    {
     _id: 'supposed to be the _id of a user',
     prenom: 'Primus',
-    nom: 'Resultatus',
+    nom: 'Resultus',
     appareilsAffectes: [],
    },
   ];
@@ -37,9 +37,10 @@ describe('recupererUsagers', () => {
 
 describe('creerUsager', () => {
  const expected = {
-  username: 'presultatus',
+  username: 'presultus',
   prenom: 'Primus',
-  nom: 'Resultatus',
+  nom: 'Resultus',
+  appareilsAffectes: [],
  };
  it('should call usagersDB 1 time', async () => {
   await usagersDM.creerUsager(expected.prenom, expected.nom);
@@ -61,9 +62,9 @@ describe('recupererUsagerParId', () => {
  it('should call usagersDB with the right parameters', async () => {
   const expected = {
    _id: 'supposed to be the _id of a user',
-   username: 'presultatus',
+   username: 'presultus',
    prenom: 'Primus',
-   nom: 'Resultatus',
+   nom: 'Resultus',
    appareilsAffectes: [],
   };
   usagersDB.findUserById.mockImplementation(() => {
@@ -76,9 +77,9 @@ describe('recupererUsagerParId', () => {
  it('should return the correct element from DB', async () => {
   const expected = {
    _id: 'supposed to be the _id of a user',
-   username: 'presultatus',
+   username: 'presultus',
    prenom: 'Primus',
-   nom: 'Resultatus',
+   nom: 'Resultus',
    appareilsAffectes: [],
   };
   usagersDB.findUserById.mockImplementation(() => {
@@ -93,9 +94,9 @@ describe('recupererUsagerParUsername', () => {
  it('should call usagersDB 1 time', async () => {
   const expected = {
    _id: 'supposed to be the _id of a user',
-   username: 'presultatus',
+   username: 'presultus',
    prenom: 'Primus',
-   nom: 'Resultatus',
+   nom: 'Resultus',
    appareilsAffectes: [],
   };
   usagersDB.findByUsername.mockImplementation(() => {
@@ -108,9 +109,9 @@ describe('recupererUsagerParUsername', () => {
  it('should call usagersDB with the right parameters', async () => {
   const expected = {
    _id: 'supposed to be the _id of a user',
-   username: 'presultatus',
+   username: 'presultus',
    prenom: 'Primus',
-   nom: 'Resultatus',
+   nom: 'Resultus',
    appareilsAffectes: [],
   };
   usagersDB.findByUsername.mockImplementation(() => {
@@ -123,9 +124,9 @@ describe('recupererUsagerParUsername', () => {
  it('should return the correct element from DB', async () => {
   const expected = {
    _id: 'supposed to be the _id of a user',
-   username: 'presultatus',
+   username: 'presultus',
    prenom: 'Primus',
-   nom: 'Resultatus',
+   nom: 'Resultus',
    appareilsAffectes: [],
   };
   usagersDB.findByUsername.mockImplementation(() => {
@@ -139,13 +140,13 @@ describe('recupererUsagerParUsername', () => {
 describe('affecterAppareilAUsagerParId', () => {
  const usager = {
   _id: 'supposed to be the _id of a user',
-  username: 'presultatus',
+  username: 'presultus',
   prenom: 'Primus',
-  nom: 'Resultatus',
+  nom: 'Resultus',
   appareilsAffectes: [],
  };
  const appareil = {
-  _id: "ObjectId('1')",
+  _id: "ObjectId('supposed to be the _id of a device')",
   serialNumber: '9992',
   nom: 'Asus Alpha',
   etatDisponible: false,
@@ -172,9 +173,9 @@ describe('affecterAppareilAUsagerParId', () => {
 describe('retirerAppareilAUsagerParId', () => {
  const usager = {
   _id: 'supposed to be the _id of a user',
-  username: 'presultatus',
+  username: 'presultus',
   prenom: 'Primus',
-  nom: 'Resultatus',
+  nom: 'Resultus',
   appareilsAffectes: [],
  };
  const appareil = {

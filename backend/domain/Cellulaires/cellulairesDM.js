@@ -1,16 +1,6 @@
 import cellulairesDB from '../../database/cellulairesDB.js';
 
-const creerCellulaire = async (
- serNb,
- mar,
- mod,
- dateAcqu,
- sys,
- proc,
- mem,
- disq,
- notes
-) => {
+const creerCellulaire = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  const newCellulaire = {
   serialNumber: serNb,
   nom: `${mar} ${mod}`,
@@ -49,7 +39,6 @@ const affecterCellulaire = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await cellulairesDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = false;
-  console.log(ordi);
   await cellulairesDB.updateById(ordi._id, ordi);
  }
 };
@@ -58,7 +47,6 @@ const retirerCellulaire = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await cellulairesDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = true;
-  console.log(ordi);
   await cellulairesDB.updateById(ordi._id, ordi);
  }
 };

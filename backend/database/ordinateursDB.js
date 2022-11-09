@@ -18,7 +18,6 @@ const closeConnection = async () => {
 };
 
 const addOne = async (ordinateur) => {
- console.log('--- ordinateursDB/addOne');
  try {
   const collection = await getCollection();
   await collection.insertOne(ordinateur);
@@ -29,12 +28,22 @@ const addOne = async (ordinateur) => {
 };
 
 const findBySerialNumber = async (serNum) => {
- console.log('--- ordinateursDB/findBySerialNumber');
- console.log(serNum);
  try {
   const collection = await getCollection();
-  const res = await collection.find({}).toArray();
-  const ordinateur = res.filter((ordi) => ordi.serialNumber === serNum);
+  const ordinateur = await collection.find({ serialNumber: serNum }).toArray();
+  if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
+  else return ordinateur[0];
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
+};
+
+const findById = async (id) => {
+ try {
+  const collection = await getCollection();
+  const ordinateur = await collection.find({ _id: ObjectId(id) }).toArray();
   if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
   else return ordinateur[0];
  } catch (e) {
@@ -45,15 +54,10 @@ const findBySerialNumber = async (serNum) => {
 };
 
 const updateById = async (id, ordinateur) => {
- console.log('--- ordinateursDB/updateById');
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: ordinateur }
-  );
-  if (updatedItems.matchedCount == 0)
-   throw new Error('Ordinateur pas trouvé...');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: ordinateur });
+  if (updatedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
  } catch (e) {
   throw e;
  } finally {
@@ -62,7 +66,6 @@ const updateById = async (id, ordinateur) => {
 };
 
 const getAll = async () => {
- console.log('--- ordinateursDB/getAll');
  const collection = await getCollection();
  const ordinateurs = await collection.find({}).toArray();
  await closeConnection();
@@ -71,6 +74,7 @@ const getAll = async () => {
 
 export default {
  findBySerialNumber,
+ findById,
  addOne,
  updateById,
  getAll,

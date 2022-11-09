@@ -30,7 +30,6 @@ const addOne = async (cellulaire) => {
 
 const findBySerialNumber = async (serNum) => {
  console.log('--- cellulairesDB/findBySerialNumber');
- console.log(serNum);
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
@@ -48,12 +47,8 @@ const updateById = async (id, cellulaire) => {
  console.log('--- cellulairesDB/updateById');
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: cellulaire }
-  );
-  if (updatedItems.matchedCount == 0)
-   throw new Error('Cellulaire pas trouvé...');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: cellulaire });
+  if (updatedItems.matchedCount == 0) throw new Error('Cellulaire pas trouvé...');
  } catch (e) {
   throw e;
  } finally {

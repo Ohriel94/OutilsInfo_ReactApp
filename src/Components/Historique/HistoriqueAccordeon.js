@@ -36,17 +36,10 @@ const HistoriqueAccordeon = (props) => {
  const { historique, key } = props;
 
  return (
-  <Accordion key={key}>
-   <AccordionSummary
-    expandIcon={<ExpandMoreIcon />}
-    aria-controls='panel1a-content'
-    id='panel1a-header'>
-    <Typography
-     variant='h5'
-     sx={{ width: '90%' }}>{`${historique.date}`}</Typography>
-    <Typography
-     variant='subtitle2'
-     color='secondary'>{`${historique.entrees.length}`}</Typography>
+  <Accordion key={key + Math.random() * 900000}>
+   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
+    <Typography variant='h5' sx={{ width: '90%' }}>{`${historique.date}`}</Typography>
+    <Typography variant='subtitle2' color='secondary'>{`${historique.entrees.length}`}</Typography>
    </AccordionSummary>
    <AccordionDetails>
     <Grid container>

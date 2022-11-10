@@ -1,9 +1,8 @@
 import ordinateursDB from '../../database/ordinateursDB.js';
 
-const creerOrdinateur = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+const creerOrdinateur = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  const newOrdinateur = {
-  serialNumber: serNb,
-  nom: `${mar} ${mod}`,
+  serialNumber: serNum,
   etatDisponible: true,
   details: {
    marque: mar,
@@ -18,7 +17,13 @@ const creerOrdinateur = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, 
    notes: notes,
   },
  };
- await ordinateursDB.addOne(newOrdinateur);
+ try {
+  const trouve = await ordinateursDB.findBySerialNumber(newOrdinateur.serialNumber);
+  if (trouve === undefined) await ordinateursDB.addOne(newOrdinateur);
+  else throw new Error('This serial number is already in use...');
+ } catch (e) {
+  throw e;
+ }
 };
 
 const recupererOrdinateurs = async () => {
@@ -60,8 +65,19 @@ const retirerOrdinateur = async (serialNumber) => {
  }
 };
 
+const supprimerOrdinateur = async (id) => {
+ try {
+  const trouve = await ordinateursDB.findById(id);
+  if (trouve !== undefined) await ordinateursDB.deleteOne(id);
+  else throw new Error('This serial number is already in use...');
+ } catch (e) {
+  throw e;
+ }
+};
+
 export default {
  creerOrdinateur,
+ supprimerOrdinateur,
  recupererOrdinateurs,
  recupererOrdinateurParSerialNumber,
  recupererOrdinateurParId,

@@ -21,8 +21,9 @@ const addOne = async (ordinateur) => {
  try {
   const collection = await getCollection();
   await collection.insertOne(ordinateur);
-  await closeConnection();
  } catch (e) {
+  throw e;
+ } finally {
   await closeConnection();
  }
 };
@@ -72,10 +73,23 @@ const getAll = async () => {
  return ordinateurs;
 };
 
+const deleteOne = async (id) => {
+ const collection = await getCollection();
+ try {
+  let deletedItems = await collection.deleteOne({ _id: ObjectId(id) }).toArray();
+  if (deletedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
+};
+
 export default {
  findBySerialNumber,
  findById,
  addOne,
+ deleteOne,
  updateById,
  getAll,
 };

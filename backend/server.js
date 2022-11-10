@@ -64,6 +64,11 @@ app.post('/connexion', async (req, res) => {
 //=============== Routes - Cellulaires ===============
 
 //=============== Routes - Moniteurs ===============
+app.get('/moniteurs', async (req, res) => {
+ console.log('----- GET/moniteurs -----');
+ const response = await moniteursDM.recupererMoniteurs();
+ res.send(response);
+});
 
 //=============== Routes - Historiques ===============
 app.get('/historiques', async (req, res) => {
@@ -79,13 +84,53 @@ app.get('/ordinateurs', async (req, res) => {
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
-app.get('/recupererOrdinateur/:appareilID', async (req, res) => {
- console.log('----- GET/recupererOrdinateur -----');
- const appareilID = req.params.appareilID;
+app.get('/recupererOrdinateur/:ordinateurID', async (req, res) => {
+ console.log('----- GET/recupererOrdinateur:ordinateurID -----');
+ const ordinateurID = req.params.ordinateurID;
  try {
-  const response = await ordinateursDM.recupererOrdinateurParId(appareilID);
+  const response = await ordinateursDM.recupererOrdinateurParId(ordinateurID);
   res.send(response);
- } catch (err) {
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
+app.post('/creerOrdinateur', async (req, res) => {
+ console.log('----- POST/creerOrdinateur -----');
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ try {
+  const response = await ordinateursDM.creerOrdinateur(
+   serNum,
+   mar,
+   mod,
+   dateAcqu,
+   sys,
+   proc,
+   mem,
+   disq,
+   notes
+  );
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/supprimerOrdinateur/:ordinateurID', async (req, res) => {
+ console.log('----- POST/supprimerOrdinateur -----');
+ const ordinateurID = req.params.ordinateurID;
+ try {
+  await ordinateursDM.supprimerOrdinateur(ordinateurID);
+  res.sendStatus(202);
+ } catch (e) {
   res.sendStatus(404);
  }
 });
@@ -98,7 +143,7 @@ app.get('/usagers', async (req, res) => {
  try {
   const response = await usagersDM.recupererUsagers();
   res.send(response);
- } catch (err) {
+ } catch (e) {
   res.sendStatus(404);
  }
 });
@@ -109,7 +154,7 @@ app.get('/recupererUsager/:usagerID', async (req, res) => {
  try {
   const response = await usagersDM.recupererUsagerParId(usagerID);
   res.send(response);
- } catch (err) {
+ } catch (e) {
   res.sendStatus(404);
  }
 });

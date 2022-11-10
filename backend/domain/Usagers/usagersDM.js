@@ -1,25 +1,22 @@
-import usagersDB from '../database/usagersDB.js';
-import mongoose from 'mongoose';
+import usagersDB from '../../database/usagersDB.js';
 
 const creerUsager = async (prenom, nom) => {
- console.log('--- usagerDM/creerUsager');
  const username = prenom.substring(0, 1) + nom;
  const newUsager = {
   username: username.toLowerCase(),
   prenom: prenom,
   nom: nom,
+  appareilsAffectes: [],
  };
  await usagersDB.addOne(newUsager);
 };
 
 const recupererUsagers = async () => {
- console.log('--- usagerDM/recupererUsagers');
  const usagers = await usagersDB.getAll();
  return usagers;
 };
 
 const recupererUsagerParId = async (id) => {
- console.log('--- usagerDM/recupererUsagerParId');
  try {
   const usager = await usagersDB.findUserById(id);
   return usager;
@@ -29,7 +26,6 @@ const recupererUsagerParId = async (id) => {
 };
 
 const recupererUsagerParUsername = async (username) => {
- console.log('--- usagerDM/recupererUsagerParUsername');
  try {
   const usager = await usagersDB.findByUsername(username);
   return usager;
@@ -39,9 +35,6 @@ const recupererUsagerParUsername = async (username) => {
 };
 
 const affecterAppareilAUsagerParId = async (usagerId, appareil) => {
- console.log('--- usagerDM/affecterAppareilAUsagerParId');
- console.log(usagerId);
- console.log(appareil);
  try {
   if (appareil !== undefined) {
    let usager = await usagersDB.findUserById(usagerId);
@@ -49,8 +42,6 @@ const affecterAppareilAUsagerParId = async (usagerId, appareil) => {
     (app) => app.serialNumber === appareil.serialNumber
    );
    if (appareilTrouve[0] === undefined) usager.appareilsAffectes.push(appareil);
-   console.log(usager.appareilsAffectes);
-
    await usagersDB.updateById(usagerId, usager);
   }
  } catch (e) {
@@ -59,9 +50,6 @@ const affecterAppareilAUsagerParId = async (usagerId, appareil) => {
 };
 
 const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
- console.log('--- usagerDM/retirerAppareilAUsagerParId');
- console.log(usagerId);
- console.log(appareil);
  try {
   if (appareil !== undefined) {
    let usager = await usagersDB.findUserById(usagerId);
@@ -69,10 +57,7 @@ const retirerAppareilAUsagerParId = async (usagerId, appareil) => {
     (app) => app.serialNumber === appareil.serialNumber
    );
    if (appareilTrouve[0] !== undefined)
-    usager.appareilsAffectes.map((appareil, index) =>
-     usager.appareilsAffectes.splice(index, 1)
-    );
-   console.log(usager.appareilsAffectes);
+    usager.appareilsAffectes.map((appareil, index) => usager.appareilsAffectes.splice(index, 1));
    await usagersDB.updateById(usagerId, usager);
   }
  } catch (e) {

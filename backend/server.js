@@ -1,15 +1,19 @@
 import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import adminsDM from './domain/adminsDM.js';
-import usagersDM from './domain/usagersDM.js';
-import ordinateursDM from './domain/ordinateursDM.js';
-import historiquesDM from './domain/historiquesDM.js';
+import adminsDM from './domain/Administrateurs/adminsDM.js';
+import cellulairesDM from './domain/Cellulaires/cellulairesDM.js';
+import historiquesDM from './domain/Historiques/historiquesDM.js';
+import moniteursDM from './domain/Moniteurs/moniteursDM.js';
+import ordinateursDM from './domain/Ordinateurs/ordinateursDM.js';
+import peripheriquesDM from './domain/Peripheriques/peripheriquesDM.js';
+import usagersDM from './domain/Usagers/usagersDM.js';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+//=============== Routes - Administrateurs ===============
 app.post('/inscription', async (req, res) => {
  console.log('----- POST/incription -----');
  const username = req.body.username;
@@ -26,10 +30,7 @@ app.post('/connexion', async (req, res) => {
  console.log('----- POST/connexion -----');
  const username = req.body.username;
  const password = req.body.password;
- const adventurer = await adminsDM.recupererAdministrateurParNomEtMotDePasse(
-  username,
-  password
- );
+ const adventurer = await adminsDM.recupererAdminParUsernameEtPassword(username, password);
  if (adventurer != undefined) {
   const token = jwt.sign(
    { username, password },
@@ -60,51 +61,58 @@ app.post('/connexion', async (req, res) => {
 //   }
 // };
 
-app.get('/usagers', async (req, res) => {
- console.log('----- GET/usagers -----');
- const response = await usagersDM.recupererUsagers();
+//=============== Routes - Cellulaires ===============
+
+//=============== Routes - Moniteurs ===============
+
+//=============== Routes - Historiques ===============
+app.get('/historiques', async (req, res) => {
+ console.log('----- GET/historiques -----');
+ const response = await historiquesDM.recupererHistoriques();
  res.send(response);
 });
 
-app.get('/recupererUsager*', async (req, res) => {
- console.log('----- GET/recupererUsager -----');
- console.log(req.params);
- const usagerId = req.params.id;
- res.send(usagerId);
- // console.log(usagerId);
- // const response = await usagersDM.recupererUsagerParId(usagerId);
- // res.send(response);
-});
-
+//=============== Routes - Ordinateurs ===============
 app.get('/ordinateurs', async (req, res) => {
  console.log('----- GET/ordinateurs -----');
  const response = await ordinateursDM.recupererOrdinateurs();
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
-app.get('/recupererOrdinateur/:serNum', async (req, res) => {
+app.get('/recupererOrdinateur/:appareilID', async (req, res) => {
  console.log('----- GET/recupererOrdinateur -----');
- const serNum = req.params.serNum;
- const response = await ordinateursDM.recupererOrdinateurParSerialNumber(
-  serNum
- );
- response !== undefined ? res.send(response) : res.sendStatus(404);
+ const appareilID = req.params.appareilID;
+ try {
+  const response = await ordinateursDM.recupererOrdinateurParId(appareilID);
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
 });
 
-app.get('/historiques', async (req, res) => {
- console.log('----- GET/historiquesDM -----');
- const response = await historiquesDM.recupererHistoriques();
- res.send(response);
+//=============== Routes - Peripheriques ===============
+
+//=============== Routes - Usagers ===============
+app.get('/usagers', async (req, res) => {
+ console.log('----- GET/usagers -----');
+ try {
+  const response = await usagersDM.recupererUsagers();
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
 });
 
-app.post('/creerUsager'),
- async (req, res) => {
-  console.log('----- POST/usagersDM -----');
-  const newUsager = req.body;
-  //   newUsager.appareilsAffecter = [];
-  //   console.log('Add Usager');
-  //   console.log(newUsager);
- };
+app.get('/recupererUsager/:usagerID', async (req, res) => {
+ console.log('----- GET/recupererUsager -----');
+ const usagerID = req.params.usagerID;
+ try {
+  const response = await usagersDM.recupererUsagerParId(usagerID);
+  res.send(response);
+ } catch (err) {
+  res.sendStatus(404);
+ }
+});
 
 app.post('/affecterAppareil', async (req, res) => {
  console.log('----- POST/affecterAppareil -----');
@@ -159,6 +167,15 @@ app.post('/retirerAppareil', async (req, res) => {
   res.sendStatus(404);
  }
 });
+
+app.post('/creerUsager'),
+ async (req, res) => {
+  console.log('----- POST/creerUsager -----');
+  const prenom = req.body.prenom;
+  const nom = req.body.nom;
+  usagersDM.creerUsager(prenom, nom);
+  res.sendStatus(200);
+ };
 
 console.log('server starting');
 app.listen(3001);

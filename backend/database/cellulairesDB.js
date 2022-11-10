@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const dbName = 'OutilInventaire';
-const collectionName = 'Ordinateurs';
+const collectionName = 'Cellulaires';
 
 const getCollection = async () => {
  client.connect();
@@ -17,10 +17,11 @@ const closeConnection = async () => {
  await client.close();
 };
 
-const addOne = async (ordinateur) => {
+const addOne = async (cellulaire) => {
+ console.log('--- cellulairesDB/addOne');
  try {
   const collection = await getCollection();
-  await collection.insertOne(ordinateur);
+  await collection.insertOne(cellulaire);
   await closeConnection();
  } catch (e) {
   await closeConnection();
@@ -28,11 +29,13 @@ const addOne = async (ordinateur) => {
 };
 
 const findBySerialNumber = async (serNum) => {
+ console.log('--- cellulairesDB/findBySerialNumber');
  try {
   const collection = await getCollection();
-  const ordinateur = await collection.find({ serialNumber: serNum }).toArray();
-  if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  else return ordinateur[0];
+  const res = await collection.find({}).toArray();
+  const cellulaire = res.filter((ordi) => ordi.serialNumber === serNum);
+  if (cellulaire === undefined) throw new Error('Cellulaire pas trouvé...');
+  else return cellulaire[0];
  } catch (e) {
   throw e;
  } finally {
@@ -40,24 +43,12 @@ const findBySerialNumber = async (serNum) => {
  }
 };
 
-const findById = async (id) => {
- try {
-  const collection = await getCollection();
-  const ordinateur = await collection.find({ _id: ObjectId(id) }).toArray();
-  if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  else return ordinateur[0];
- } catch (e) {
-  throw e;
- } finally {
-  await closeConnection();
- }
-};
-
-const updateById = async (id, ordinateur) => {
+const updateById = async (id, cellulaire) => {
+ console.log('--- cellulairesDB/updateById');
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: ordinateur });
-  if (updatedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: cellulaire });
+  if (updatedItems.matchedCount == 0) throw new Error('Cellulaire pas trouvé...');
  } catch (e) {
   throw e;
  } finally {
@@ -66,15 +57,15 @@ const updateById = async (id, ordinateur) => {
 };
 
 const getAll = async () => {
+ console.log('--- cellulairesDB/getAll');
  const collection = await getCollection();
- const ordinateurs = await collection.find({}).toArray();
+ const cellulaires = await collection.find({}).toArray();
  await closeConnection();
- return ordinateurs;
+ return cellulaires;
 };
 
 export default {
  findBySerialNumber,
- findById,
  addOne,
  updateById,
  getAll,

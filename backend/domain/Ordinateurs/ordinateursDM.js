@@ -1,17 +1,6 @@
-import ordinateursDB from '../database/ordinateursDB.js';
-import mongoose from 'mongoose';
+import ordinateursDB from '../../database/ordinateursDB.js';
 
-const creerOrdinateur = async (
- serNb,
- mar,
- mod,
- dateAcqu,
- sys,
- proc,
- mem,
- disq,
- notes
-) => {
+const creerOrdinateur = async (serNb, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  const newOrdinateur = {
   serialNumber: serNb,
   nom: `${mar} ${mod}`,
@@ -46,11 +35,19 @@ const recupererOrdinateurParSerialNumber = async (serialNumber) => {
  }
 };
 
+const recupererOrdinateurParId = async (id) => {
+ try {
+  const ordinateur = await ordinateursDB.findById(id);
+  return ordinateur;
+ } catch (e) {
+  throw new Error(e);
+ }
+};
+
 const affecterOrdinateur = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = false;
-  console.log(ordi);
   await ordinateursDB.updateById(ordi._id, ordi);
  }
 };
@@ -59,7 +56,6 @@ const retirerOrdinateur = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
   ordi.etatDisponible = true;
-  console.log(ordi);
   await ordinateursDB.updateById(ordi._id, ordi);
  }
 };
@@ -68,6 +64,7 @@ export default {
  creerOrdinateur,
  recupererOrdinateurs,
  recupererOrdinateurParSerialNumber,
+ recupererOrdinateurParId,
  affecterOrdinateur,
  retirerOrdinateur,
 };

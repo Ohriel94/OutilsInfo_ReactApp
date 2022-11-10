@@ -1,37 +1,23 @@
-import historiqueDB from '../database/historiquesDB.js';
-import mongoose from 'mongoose';
+import historiqueDB from '../../database/historiquesDB.js';
 
 const recupererHistoriques = async () => {
- console.log('--- historiqueDM/recupererHistoriques');
  const historique = await historiqueDB.getAll();
  return historique;
 };
 
 const enregistrerAffectationAppareil = async (usager, appareil) => {
- console.log('--- historiqueDM/enregistrerAffectationAppareil');
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(
-   date,
-   appareil,
-   usager._id,
-   `affectation`
-  );
+  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager._id, `affectation`);
   const nouvelleJournee = creerJourneeHistorique(date);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }
 };
 
 const enregistrerRetraitAppareil = async (usager, appareil) => {
- console.log('--- historiqueDM/enregistrerRetraitAppareil');
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(
-   date,
-   appareil,
-   usager._id,
-   `retrait`
-  );
+  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager._id, `retrait`);
   const nouvelleJournee = creerJourneeHistorique(date);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }

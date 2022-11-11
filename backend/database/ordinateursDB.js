@@ -76,7 +76,7 @@ const getAll = async () => {
 const deleteOne = async (id) => {
  const collection = await getCollection();
  try {
-  let deletedItems = await collection.deleteOne({ _id: ObjectId(id) }).toArray();
+  let deletedItems = await collection.deleteOne({ _id: ObjectId(id) });
   if (deletedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
  } catch (e) {
   throw e;

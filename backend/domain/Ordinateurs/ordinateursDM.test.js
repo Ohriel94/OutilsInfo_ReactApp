@@ -8,14 +8,15 @@ beforeEach(async () => {
  ordinateursDB.getAll.mockClear();
  ordinateursDB.addOne.mockClear();
  ordinateursDB.findBySerialNumber.mockClear();
+ ordinateursDB.findById.mockClear();
  ordinateursDB.updateById.mockClear();
+ ordinateursDB.deleteOne.mockClear();
 });
 
 describe('recupererOrdinateurs', () => {
  const expected = [
   {
    serialNumber: '9991',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -23,7 +24,6 @@ describe('recupererOrdinateurs', () => {
   },
   {
    serialNumber: '9992',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -31,7 +31,6 @@ describe('recupererOrdinateurs', () => {
   },
   {
    serialNumber: '9993',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -61,7 +60,6 @@ describe('recupererOrdinateurs', () => {
 describe('creerOrdinateur', () => {
  const expected = {
   serialNumber: '9991',
-  nom: 'Asus Alpha',
   etatDisponible: true,
   details: {
    marque: 'Asus',
@@ -122,7 +120,6 @@ describe('recupererOrdinateurParSerialNumber', () => {
  it('should return the correct elements from DB', async () => {
   const expected = {
    serialNumber: '9992',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -151,7 +148,6 @@ describe('recupererOrdinateurParId', () => {
   const expected = {
    _id: ObjectId('112233aabbcc'),
    serialNumber: '9992',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -174,9 +170,8 @@ describe('affecterOrdinateur', () => {
 
  it('should have been called with the right parameter', async () => {
   const expected = {
-   _id: "ObjectId('1')",
+   _id: ObjectId('112233aabbcc'),
    serialNumber: '9992',
-   nom: 'Asus Alpha',
    etatDisponible: false,
    details: {
     configuration: {},
@@ -184,9 +179,8 @@ describe('affecterOrdinateur', () => {
   };
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
    return {
-    _id: "ObjectId('1')",
+    _id: ObjectId('112233aabbcc'),
     serialNumber: '9992',
-    nom: 'Asus Alpha',
     etatDisponible: true,
     details: {
      configuration: {},
@@ -208,9 +202,8 @@ describe('retirerOrdinateur', () => {
 
  it('should have been called with the right parameter', async () => {
   const expected = {
-   _id: "ObjectId('1')",
+   _id: ObjectId('112233aabbcc'),
    serialNumber: '9992',
-   nom: 'Asus Alpha',
    etatDisponible: true,
    details: {
     configuration: {},
@@ -218,9 +211,8 @@ describe('retirerOrdinateur', () => {
   };
   ordinateursDB.findBySerialNumber.mockImplementation(() => {
    return {
-    _id: "ObjectId('1')",
+    _id: ObjectId('112233aabbcc'),
     serialNumber: '9992',
-    nom: 'Asus Alpha',
     etatDisponible: false,
     details: {
      configuration: {},
@@ -230,5 +222,44 @@ describe('retirerOrdinateur', () => {
   await ordinateursDM.retirerOrdinateur('9992');
   expect(ordinateursDB.findBySerialNumber).toHaveBeenCalledWith('9992');
   expect(ordinateursDB.updateById).toHaveBeenCalledWith(expected._id, expected);
+ });
+
+ it('should have setted ordinateur.etatDisponible to true', async () => {
+  const expected = {
+   _id: ObjectId('112233aabbcc'),
+   serialNumber: '9992',
+   etatDisponible: true,
+   details: {
+    configuration: {},
+   },
+  };
+  const ordinateur = expected;
+  ordinateur.etatDisponible = false;
+  ordinateursDB.addOne(ordinateur);
+  await ordinateursDM.retirerOrdinateur('9992');
+  const actual = await ordinateursDB.findBySerialNumber('9992');
+  expect(actual.etatDisponible).toEqual(expected.etatDisponible);
+ });
+});
+
+describe('supprimerOrdinateur', () => {
+ it('should call ordinateursDB', async () => {
+  await ordinateursDM.supprimerOrdinateur('11223344aabbccdd');
+  expect(ordinateursDB.findById).toHaveBeenCalledTimes(1);
+  expect(ordinateursDB.deleteOne).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  const expected = {
+   _id: ObjectId('112233aabbcc'),
+   serialNumber: '9992',
+   etatDisponible: true,
+   details: {
+    configuration: {},
+   },
+  };
+  await ordinateursDM.supprimerOrdinateur(expected._id);
+  expect(ordinateursDB.findById).toHaveBeenCalledWith(expected._id);
+  expect(ordinateursDB.deleteOne).toHaveBeenCalledWith(expected._id);
  });
 });

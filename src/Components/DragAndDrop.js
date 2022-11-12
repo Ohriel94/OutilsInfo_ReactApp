@@ -161,8 +161,9 @@ const DragAndDrop = (props) => {
   let nom = 'Vide';
   switch (index) {
    case 0:
-    if (usagerChoisi.prenom === undefined || usagerChoisi.nom === undefined) nom = 'Aucun usager choisi';
-    else nom = usagerChoisi.prenom + ' ' + usagerChoisi.nom;
+    usagerChoisi.prenom === undefined || usagerChoisi.nom === undefined
+     ? (nom = 'Aucun usager choisi')
+     : (nom = usagerChoisi.prenom + ' ' + usagerChoisi.nom);
     break;
    case 1:
     nom = 'Ordinateurs';

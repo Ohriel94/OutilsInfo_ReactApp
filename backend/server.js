@@ -85,7 +85,7 @@ app.get('/ordinateurs', async (req, res) => {
 });
 
 app.get('/recupererOrdinateur/:ordinateurID', async (req, res) => {
- console.log('----- GET/recupererOrdinateur:ordinateurID -----');
+ console.log('----- GET/recupererOrdinateur/:ordinateurID -----');
  const ordinateurID = req.params.ordinateurID;
  try {
   const response = await ordinateursDM.recupererOrdinateurParId(ordinateurID);
@@ -149,7 +149,7 @@ app.get('/usagers', async (req, res) => {
 });
 
 app.get('/recupererUsager/:usagerID', async (req, res) => {
- console.log('----- GET/recupererUsager -----');
+ console.log('----- GET/recupererUsager/:usagerID -----');
  const usagerID = req.params.usagerID;
  try {
   const response = await usagersDM.recupererUsagerParId(usagerID);

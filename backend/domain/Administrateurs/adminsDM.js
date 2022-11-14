@@ -14,11 +14,10 @@ const creerAdmin = async (prenom, nom, email, password) => {
   },
  };
  try {
-  const trouve = await adminsDB.findByUsername(newAdmin.pseudo);
-  if (trouve !== undefined && trouve.email === newAdmin.email) await adminsDB.addOne(newAdmin);
+  const trouve = await adminsDB.findByUsername(newAdmin.username);
+  if (trouve === undefined) await adminsDB.addOne(newAdmin);
   else throw new Error('This user has already been added');
  } catch (e) {
-  console.log(e.message);
   throw e;
  }
 };
@@ -29,7 +28,6 @@ const recupererAdminParUsernameEtPassword = async (username, password) => {
   if (admin !== undefined && admin.password === password) return admin;
   else throw new Error('Wrong username or password');
  } catch (e) {
-  console.log(e.message);
   throw e;
  }
 };

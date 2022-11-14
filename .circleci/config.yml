@@ -5,31 +5,32 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/orb-intro/
 
 jobs:
-  check_version:
-    docker:
-      - image: circleci/node:16.13.1
-    steps:
-      - checkout
-      - run: 
-          name: Check node version
-          command: |
-            node -v
-      - run: 
-          name: Install npm dependencies
-          command: |
-            npm i
-  run_tests:
-    docker:
-      - image: circleci/node:16.13.1
-    steps:
-      - checkout
-      - run: 
-          name: Run unit tests
-          command: |
-            cd backend; npm i; npm test
+ run_tests:
+  docker:
+   - image: circleci/node:16.13.1
+  steps:
+   - checkout
+   - run:
+      name: Run Unit Tests
+      command: |
+       cd backend; npm i; npm test
+
+ check_coverage:
+  docker:
+   - image: circleci/node:16.13.1
+  steps:
+   - checkout
+   - run:
+      name: Check Node Version
+      command: |
+       node -v
+   - run:
+      name: Check Code Coverage
+      command: |
+       cd backend; npm i; npm run cover
 
 workflows:
-  run-all-tests:
-    jobs:
-      - check_version
-      - run_tests
+ run-all-tests:
+  jobs:
+   - run_tests
+   - check_coverage

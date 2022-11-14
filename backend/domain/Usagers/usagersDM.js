@@ -3,7 +3,7 @@ import usagersDB from '../../database/usagersDB.js';
 const creerUsager = async (prenom, nom) => {
  const username = prenom.substring(0, 1) + nom;
  const newUsager = {
-  username: username.toLowerCase(),
+  username: username.toUpperCase(),
   prenom: prenom,
   nom: nom,
   appareilsAffectes: [],

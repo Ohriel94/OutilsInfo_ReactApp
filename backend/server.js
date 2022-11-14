@@ -16,10 +16,12 @@ app.use(cors());
 //=============== Routes - Administrateurs ===============
 app.post('/inscription', async (req, res) => {
  console.log('----- POST/incription -----');
- const username = req.body.username;
+ const prenom = req.body.prenom;
+ const nom = req.body.nom;
+ const email = req.body.email;
  const password = req.body.password;
  try {
-  await adminsDM.creerAdmin(username, password);
+  await adminsDM.creerAdmin(prenom, nom, email, password);
   res.sendStatus(200);
  } catch (e) {
   res.sendStatus(400);
@@ -30,7 +32,8 @@ app.post('/connexion', async (req, res) => {
  console.log('----- POST/connexion -----');
  const username = req.body.username;
  const password = req.body.password;
- const adventurer = await adminsDM.recupererAdminParUsernameEtPassword(username, password);
+ const usernameFormatted = username.toUpperCase();
+ const adventurer = await adminsDM.recupererAdminParUsernameEtPassword(usernameFormatted, password);
  if (adventurer != undefined) {
   const token = jwt.sign(
    { username, password },

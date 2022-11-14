@@ -1,16 +1,14 @@
 import { MongoClient, ObjectId } from 'mongodb';
 
 const url = 'mongodb://localhost:27017';
-
 const client = new MongoClient(url);
-const dbUsername = 'tp3';
-const collectionUsername = 'Administrateurs';
+const dbName = 'OutilInventaire';
+const collectionName = 'Administrateurs';
 
 const getCollection = async () => {
  client.connect();
- const db = client.db(dbUsername);
- const collection = db.collection(collectionUsername);
-
+ const db = client.db(dbName);
+ const collection = db.collection(collectionName);
  return collection;
 };
 
@@ -60,9 +58,7 @@ const findByUsername = async (username) => {
 const addOne = async (administrateur) => {
  try {
   const collection = await getCollection();
-
   await collection.insertOne(administrateur);
-
   await closeConnection();
  } catch (e) {
   await closeConnection();
@@ -73,12 +69,8 @@ const updateById = async (id, administrateur) => {
  try {
   const collection = await getCollection();
 
-  let updatedItems = await collection.updateOne(
-   { _id: ObjectId(id) },
-   { $set: administrateur }
-  );
-  if (updatedItems.matchedCount == 0)
-   throw new Error('Administrators not found');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: administrateur });
+  if (updatedItems.matchedCount == 0) throw new Error('Administrators not found');
  } catch (e) {
   throw e;
  } finally {

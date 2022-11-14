@@ -1,12 +1,11 @@
 import adminsDB from '../../database/adminsDB.js';
-import Toolbox from '../Toolbox.js';
 
 const creerAdmin = async (prenom, nom, email, password) => {
  const newAdmin = {
   prenom: prenom,
   nom: nom,
   email: email,
-  username: Toolbox.formaterUsername(prenom, nom),
+  username: formaterUsername(prenom, nom),
   password: password,
   dateCreation: new Date(),
   status: {
@@ -33,6 +32,13 @@ const recupererAdminParUsernameEtPassword = async (username, password) => {
   console.log(e.message);
   throw e;
  }
+};
+
+// ============================= Utilitaires =============================
+
+const formaterUsername = (prenom, nom) => {
+ const username = prenom.substring(0, 1).toUpperCase() + nom.split('-')[1].toUpperCase();
+ return username;
 };
 
 export default {

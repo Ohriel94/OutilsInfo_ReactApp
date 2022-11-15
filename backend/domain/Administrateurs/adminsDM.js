@@ -4,7 +4,7 @@ const creerAdmin = async (prenom, nom, email, password) => {
  const newAdmin = {
   prenom: prenom,
   nom: nom,
-  email: email,
+  email: email.toLowerCase(),
   username: formaterUsername(prenom, nom),
   password: password,
   dateCreation: new Date(),
@@ -14,7 +14,7 @@ const creerAdmin = async (prenom, nom, email, password) => {
   },
  };
  try {
-  const trouve = await adminsDB.findByUsername(newAdmin.username);
+  const trouve = await adminsDB.findByEmail(newAdmin.email);
   if (trouve === undefined) await adminsDB.addOne(newAdmin);
   else throw new Error('This user has already been added');
  } catch (e) {
@@ -22,11 +22,14 @@ const creerAdmin = async (prenom, nom, email, password) => {
  }
 };
 
-const recupererAdminParUsernameEtPassword = async (username, password) => {
+const recupererAdminParEmailEtPassword = async (email, password) => {
+ const emailFormatted = email.toLowerCase();
+
+ console.log(email, password);
  try {
-  const admin = await adminsDB.findByUsername(username);
+  const admin = await adminsDB.findByEmail(emailFormatted);
   if (admin !== undefined && admin.password === password) return admin;
-  else throw new Error('Wrong username or password');
+  else throw new Error('Wrong email or password');
  } catch (e) {
   throw e;
  }
@@ -41,5 +44,5 @@ const formaterUsername = (prenom, nom) => {
 
 export default {
  creerAdmin,
- recupererAdminParUsernameEtPassword,
+ recupererAdminParEmailEtPassword,
 };

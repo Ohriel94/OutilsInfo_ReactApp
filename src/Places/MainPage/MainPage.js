@@ -34,10 +34,9 @@ const drawerZIndex = 0;
 
 const MainPage = (props) => {
  const navigate = useNavigate();
- const [technicien, setTechnicien] = React.useState({
-  pseudo: 'GDERIV',
-  prenom: 'Geralt',
-  nom: 'DeRiv',
+ const [administrateur, setAdministrateur] = React.useState({
+  prenom: 'Adam',
+  nom: 'Bernard',
  });
 
  return (
@@ -69,7 +68,9 @@ const MainPage = (props) => {
      <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
       Main Page
      </Typography>
-     <Typography>Connecté en tant que {technicien.pseudo}</Typography>
+     <Typography>
+      Bonjour {administrateur.prenom} {administrateur.nom}
+     </Typography>
     </Toolbar>
    </AppBar>
    <Drawer

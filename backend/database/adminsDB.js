@@ -41,11 +41,11 @@ const findById = async (id) => {
  }
 };
 
-const findByUsername = async (username) => {
+const findByEmail = async (email) => {
  try {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
-  const trouves = res.filter((admin) => admin.username === username);
+  const trouves = res.filter((admin) => admin.email === email);
   if (trouves === undefined) throw new Error('Administrator not found');
   return trouves[0];
  } catch (e) {
@@ -81,7 +81,7 @@ const updateById = async (id, administrateur) => {
 export default {
  getAll,
  findById,
- findByUsername,
+ findByEmail,
  addOne,
  updateById,
 };

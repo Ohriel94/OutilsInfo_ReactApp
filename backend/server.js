@@ -16,10 +16,12 @@ app.use(cors());
 //=============== Routes - Administrateurs ===============
 app.post('/inscription', async (req, res) => {
  console.log('----- POST/incription -----');
- const username = req.body.username;
+ const prenom = req.body.prenom;
+ const nom = req.body.nom;
+ const email = req.body.email;
  const password = req.body.password;
  try {
-  await adminsDM.creerAdmin(username, password);
+  await adminsDM.creerAdmin(prenom, nom, email, password);
   res.sendStatus(200);
  } catch (e) {
   res.sendStatus(400);
@@ -28,38 +30,41 @@ app.post('/inscription', async (req, res) => {
 
 app.post('/connexion', async (req, res) => {
  console.log('----- POST/connexion -----');
- const username = req.body.username;
+ const email = req.body.email;
  const password = req.body.password;
- const adventurer = await adminsDM.recupererAdminParUsernameEtPassword(username, password);
- if (adventurer != undefined) {
+ const administrateur = await adminsDM.recupererAdminParEmailEtPassword(email, password);
+ if (administrateur != undefined) {
   const token = jwt.sign(
-   { username, password },
+   { email, password },
    '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
   );
   res.send(token);
  } else res.sendStatus(403);
 });
 
-// const authenticate = async (req, res, next) => {
-//   // On ramasse le header d'authorization
-//   const authHeader = req.headers["authorization"];
-//   // On obtient le token à partir du header en enlevant le mot "BEARER"
-//   const token = authHeader && authHeader.split(" ")[1];
-//   // Si aucun token -> unauthorized
-//   if (token == null) return res.sendStatus(401);
+const authenticate = async (req, res, next) => {
+ // On ramasse le header d'authorization
+ const authHeader = req.headers['authorization'];
+ // On obtient le token à partir du header en enlevant le mot "BEARER"
+ const token = authHeader && authHeader.split(' ')[1];
+ // Si aucun token -> unauthorized
+ if (token == null) return res.sendStatus(401);
 
-//   try {
-//     // Vérification du token selon notre secret
-//     const payload = await jwt.verify(token, "000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0");
-//     // Injection du token dans la requête pour demandeur
-//     req.userToken = payload;
-//     // Passage au prochain middleware ou la route demandée
-//     next();
-//   } catch (e) {
-//     // Vérification échouée -> forbidden
-//     return res.sendStatus(403);
-//   }
-// };
+ try {
+  // Vérification du token selon notre secret
+  const payload = await jwt.verify(
+   token,
+   '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
+  );
+  // Injection du token dans la requête pour demandeur
+  req.userToken = payload;
+  // Passage au prochain middleware ou la route demandée
+  next();
+ } catch (e) {
+  // Vérification échouée -> forbidden
+  return res.sendStatus(403);
+ }
+};
 
 //=============== Routes - Cellulaires ===============
 

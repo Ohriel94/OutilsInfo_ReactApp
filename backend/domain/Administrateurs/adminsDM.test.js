@@ -6,30 +6,37 @@ jest.mock('../../database/adminsDB.js');
 beforeEach(() => {
  adminsDB.getAll.mockClear();
  adminsDB.addOne.mockClear();
- adminsDB.findByUsername.mockClear();
+ adminsDB.findByEmail.mockClear();
  adminsDB.findById.mockClear();
  adminsDB.updateById.mockClear();
 });
 
-describe('creerAdmins', () => {
+describe('creerAdmin', () => {
  it('should have been called 1 time', async () => {
   const expected = {
-   username: "Un nom d'utilisateur",
-   password: 'Un mot de passe',
+   prenom: 'Admus',
+   nom: 'Unitus-Testus',
+   email: 'aut@mail.com',
+   password: 'UnMotDePasse',
   };
-  await adminsDM.creerAdmin(expected.username, expected.password);
+  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
   expect(adminsDB.addOne).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
   const expected = {
-   username: "Un nom d'utilisateur",
-   password: 'Un mot de passe',
+   prenom: 'Admus',
+   nom: 'Unitus-Testus',
+   email: 'aut@mail.com',
+   username: 'ATESTUS',
+   password: 'UnMotDePasse',
+   dateCreation: new Date(),
    status: {
     actif: true,
+    admin: true,
    },
   };
-  await adminsDM.creerAdmin(expected.username, expected.password);
+  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
   expect(adminsDB.addOne).toHaveBeenCalledWith(expected);
  });
 });
@@ -37,43 +44,56 @@ describe('creerAdmins', () => {
 describe('recupererAdminParUsernameEtPassword', () => {
  it('should have been called 1 time', async () => {
   const expected = {
-   username: "Un nom d'utilisateur",
-   password: 'Un mot de passe',
+   prenom: 'Admus',
+   nom: 'Unitus-Testus',
+   email: 'aut@mail.com',
+   username: 'ATESTUS',
+   password: 'UnMotDePasse',
+   dateCreation: new Date(),
+   status: {
+    actif: true,
+    admin: true,
+   },
   };
-  await adminsDM.recupererAdminParUsernameEtPassword(
-   expected.username,
-   expected.password
-  );
-  expect(adminsDB.findByUsername).toHaveBeenCalledTimes(1);
+  adminsDB.findByEmail.mockImplementation(() => {
+   return expected;
+  });
+  await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
+  expect(adminsDB.findByEmail).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
   const expected = {
-   username: "Un nom d'utilisateur",
-   password: 'Un mot de passe',
+   prenom: 'Admus',
+   nom: 'Unitus-Testus',
+   email: 'aut@mail.com',
+   username: 'ATESTUS',
+   password: 'UnMotDePasse',
+   dateCreation: new Date(),
+   status: {
+    actif: true,
+    admin: true,
+   },
   };
-  await adminsDM.recupererAdminParUsernameEtPassword(
-   expected.username,
-   expected.password
-  );
-  expect(adminsDB.findByUsername).toHaveBeenCalledWith(expected.username);
+  adminsDB.findByEmail.mockImplementation(() => {
+   return expected;
+  });
+  await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
+  expect(adminsDB.findByEmail).toHaveBeenCalledWith(expected.email);
  });
 
  it('should return the right element from DB', async () => {
   const expected = {
-   username: "Un nom d'utilisateur",
-   password: 'Un mot de passe',
+   email: 'aut@mail.com',
+   password: 'UnMotDePasse',
    status: {
     actif: true,
    },
   };
-  adminsDB.findByUsername.mockImplementation(() => {
+  adminsDB.findByEmail.mockImplementation(() => {
    return expected;
   });
-  const actual = await adminsDM.recupererAdminParUsernameEtPassword(
-   expected.username,
-   expected.password
-  );
+  const actual = await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
   expect(actual).toEqual(expected);
  });
 });

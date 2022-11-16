@@ -37,7 +37,7 @@ describe('recupererUsagers', () => {
 
 describe('creerUsager', () => {
  const expected = {
-  username: 'presultus',
+  username: 'PRESULTUS',
   prenom: 'Primus',
   nom: 'Resultus',
   appareilsAffectes: [],

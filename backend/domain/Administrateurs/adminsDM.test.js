@@ -16,7 +16,7 @@ describe('creerAdmin', () => {
   const expected = {
    prenom: 'Admus',
    nom: 'Unitus-Testus',
-   email: 'aut@mail.com',
+   email: 'abc@testmail.com',
    password: 'UnMotDePasse',
   };
   await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
@@ -27,7 +27,7 @@ describe('creerAdmin', () => {
   const expected = {
    prenom: 'Admus',
    nom: 'Unitus-Testus',
-   email: 'aut@mail.com',
+   email: 'abc@testmail.com',
    username: 'ATESTUS',
    password: 'UnMotDePasse',
    dateCreation: new Date(),
@@ -46,7 +46,7 @@ describe('recupererAdminParUsernameEtPassword', () => {
   const expected = {
    prenom: 'Admus',
    nom: 'Unitus-Testus',
-   email: 'aut@mail.com',
+   email: 'abc@testmail.com',
    username: 'ATESTUS',
    password: 'UnMotDePasse',
    dateCreation: new Date(),
@@ -66,7 +66,7 @@ describe('recupererAdminParUsernameEtPassword', () => {
   const expected = {
    prenom: 'Admus',
    nom: 'Unitus-Testus',
-   email: 'aut@mail.com',
+   email: 'abc@testmail.com',
    username: 'ATESTUS',
    password: 'UnMotDePasse',
    dateCreation: new Date(),
@@ -84,11 +84,8 @@ describe('recupererAdminParUsernameEtPassword', () => {
 
  it('should return the right element from DB', async () => {
   const expected = {
-   email: 'aut@mail.com',
+   email: 'abc@testmail.com',
    password: 'UnMotDePasse',
-   status: {
-    actif: true,
-   },
   };
   adminsDB.findByEmail.mockImplementation(() => {
    return expected;
@@ -96,4 +93,14 @@ describe('recupererAdminParUsernameEtPassword', () => {
   const actual = await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
   expect(actual).toEqual(expected);
  });
+
+ //  it('should throw an excepion if the provided email is wrong', async () => {
+ //   const expected = {
+ //    email: 'abc@testmail.com',
+ //    password: 'UnMotDePasse',
+ //   };
+ //   expect(adminsDM.recupererAdminParEmailEtPassword('bcd@testmail.com', expected.password)).resolves.toThrow(
+ //    'Wrong email'
+ //   );
+ //  });
 });

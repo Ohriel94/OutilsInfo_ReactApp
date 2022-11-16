@@ -23,13 +23,10 @@ const creerAdmin = async (prenom, nom, email, password) => {
 };
 
 const recupererAdminParEmailEtPassword = async (email, password) => {
- const emailFormatted = email.toLowerCase();
-
- console.log(email, password);
+ const emailFormatted = email !== undefined ? email.toLowerCase() : 'undefined@email.com';
  try {
   const admin = await adminsDB.findByEmail(emailFormatted);
-  if (admin !== undefined && admin.password === password) return admin;
-  else throw new Error('Wrong email or password');
+  if (admin !== undefined) if (admin.password === password) return admin;
  } catch (e) {
   throw e;
  }

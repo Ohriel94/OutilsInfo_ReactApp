@@ -1,10 +1,15 @@
 import axios from 'axios';
 import * as React from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { ToastContainer, Flip } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import EcranUsagers from './EcranUsagers';
 import EcranOrdinateurs from './Ordinateurs/EcranOrdinateurs';
 import EcranHistorique from './EcranHistorique';
 import EcranAffectations from './EcranAffectations';
+import EcranAdministrateurs from './EcranAdministrateurs';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,18 +21,12 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
-import HistoryTwoToneIcon from '@mui/icons-material/HistoryTwoTone';
-import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
-import DevicesTwoToneIcon from '@mui/icons-material/DevicesTwoTone';
-import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
-import GroupAddTwoToneIcon from '@mui/icons-material/GroupAddTwoTone';
-import GroupRemoveTwoToneIcon from '@mui/icons-material/GroupRemoveTwoTone';
-import BuildCircleTwoToneIcon from '@mui/icons-material/BuildCircleTwoTone';
-import CreateTwoToneIcon from '@mui/icons-material/CreateTwoTone';
-import { ToastContainer, Flip } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import HistoryIcon from '@mui/icons-material/History';
+import DevicesIcon from '@mui/icons-material/Devices';
+import GroupsIcon from '@mui/icons-material/Groups';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const drawerWidth = 250;
 const drawerZIndex = 0;
@@ -38,6 +37,10 @@ const MainPage = (props) => {
   prenom: 'Adam',
   nom: 'Bernard',
  });
+
+ const logout = () => {
+  navigate('/connexion');
+ };
 
  return (
   <Box
@@ -66,11 +69,11 @@ const MainPage = (props) => {
    >
     <Toolbar>
      <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-      Main Page
-     </Typography>
-     <Typography>
       Bonjour {administrateur.prenom} {administrateur.nom}
      </Typography>
+     <Button color='inherit' onClick={logout}>
+      Logout
+     </Button>
     </Toolbar>
    </AppBar>
    <Drawer
@@ -87,27 +90,35 @@ const MainPage = (props) => {
     <List>
      <ListItem button key={'EcranOrdinateurs'} onClick={() => navigate('appareils')}>
       <ListItemIcon>
-       <DevicesTwoToneIcon />
+       <DevicesIcon />
       </ListItemIcon>
       <ListItemText primary={'Liste des appareils'} />
      </ListItem>
      <ListItem button key={'EcranUsager'} onClick={() => navigate('usagers')}>
       <ListItemIcon>
-       <GroupsTwoToneIcon />
+       <GroupsIcon />
       </ListItemIcon>
       <ListItemText primary={'Liste des usagers'} />
      </ListItem>
      <ListItem button key={'EcranAffectation'} onClick={() => navigate('affectation')}>
       <ListItemIcon>
-       <AddCircleTwoToneIcon />
+       <AddCircleIcon />
       </ListItemIcon>
       <ListItemText primary={'Affecter un appareil'} />
      </ListItem>
+     <Divider />
      <ListItem button key={'EcranHistorique'} onClick={() => navigate('historique')}>
       <ListItemIcon>
-       <HistoryTwoToneIcon />
+       <HistoryIcon />
       </ListItemIcon>
       <ListItemText primary={'Afficher historique'} />
+     </ListItem>
+     <Divider />
+     <ListItem button key={'EcranAdministrateur'} onClick={() => navigate('administrateur')}>
+      <ListItemIcon>
+       <BadgeIcon />
+      </ListItemIcon>
+      <ListItemText primary={'Gerer les droits admins'} />
      </ListItem>
     </List>
    </Drawer>

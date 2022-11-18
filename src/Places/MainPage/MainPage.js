@@ -114,7 +114,7 @@ const MainPage = (props) => {
       <ListItemText primary={'Afficher historique'} />
      </ListItem>
      <Divider />
-     <ListItem button key={'EcranAdministrateur'} onClick={() => navigate('administrateur')}>
+     <ListItem button key={'EcranAdministrateurs'} onClick={() => navigate('administrateurs')}>
       <ListItemIcon>
        <BadgeIcon />
       </ListItemIcon>
@@ -128,6 +128,7 @@ const MainPage = (props) => {
      <Route path='/appareils' element={<EcranOrdinateurs />} />
      <Route path='/historique' element={<EcranHistorique />} />
      <Route path='/affectation' element={<EcranAffectations />} />
+     <Route path='/administrateurs' element={<EcranAdministrateurs />} />
     </Routes>
    </Box>
   </Box>

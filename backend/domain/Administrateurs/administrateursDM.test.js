@@ -1,14 +1,14 @@
-import adminsDM from './adminsDM.js';
-import adminsDB from '../../database/adminsDB.js';
+import administrateursDM from './administrateursDM.js';
+import administrateursDB from '../../database/administrateursDB.js';
 
-jest.mock('../../database/adminsDB.js');
+jest.mock('../../database/administrateursDB.js');
 
 beforeEach(() => {
- adminsDB.getAll.mockClear();
- adminsDB.addOne.mockClear();
- adminsDB.findByEmail.mockClear();
- adminsDB.findById.mockClear();
- adminsDB.updateById.mockClear();
+ administrateursDB.getAll.mockClear();
+ administrateursDB.addOne.mockClear();
+ administrateursDB.findByEmail.mockClear();
+ administrateursDB.findById.mockClear();
+ administrateursDB.updateById.mockClear();
 });
 
 describe('creerAdmin', () => {
@@ -19,8 +19,8 @@ describe('creerAdmin', () => {
    email: 'abc@testmail.com',
    password: 'UnMotDePasse',
   };
-  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
-  expect(adminsDB.addOne).toHaveBeenCalledTimes(1);
+  await administrateursDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
+  expect(administrateursDB.addOne).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
@@ -36,8 +36,8 @@ describe('creerAdmin', () => {
     admin: true,
    },
   };
-  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
-  expect(adminsDB.addOne).toHaveBeenCalledWith(expected);
+  await administrateursDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
+  expect(administrateursDB.addOne).toHaveBeenCalledWith(expected);
  });
 });
 
@@ -55,11 +55,11 @@ describe('recupererAdminParUsernameEtPassword', () => {
     admin: true,
    },
   };
-  adminsDB.findByEmail.mockImplementation(() => {
+  administrateursDB.findByEmail.mockImplementation(() => {
    return expected;
   });
-  await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
-  expect(adminsDB.findByEmail).toHaveBeenCalledTimes(1);
+  await administrateursDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
+  expect(administrateursDB.findByEmail).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
@@ -75,11 +75,11 @@ describe('recupererAdminParUsernameEtPassword', () => {
     admin: true,
    },
   };
-  adminsDB.findByEmail.mockImplementation(() => {
+  administrateursDB.findByEmail.mockImplementation(() => {
    return expected;
   });
-  await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
-  expect(adminsDB.findByEmail).toHaveBeenCalledWith(expected.email);
+  await administrateursDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
+  expect(administrateursDB.findByEmail).toHaveBeenCalledWith(expected.email);
  });
 
  it('should return the right element from DB', async () => {
@@ -87,10 +87,10 @@ describe('recupererAdminParUsernameEtPassword', () => {
    email: 'abc@testmail.com',
    password: 'UnMotDePasse',
   };
-  adminsDB.findByEmail.mockImplementation(() => {
+  administrateursDB.findByEmail.mockImplementation(() => {
    return expected;
   });
-  const actual = await adminsDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
+  const actual = await administrateursDM.recupererAdminParEmailEtPassword(expected.email, expected.password);
   expect(actual).toEqual(expected);
  });
 
@@ -99,7 +99,7 @@ describe('recupererAdminParUsernameEtPassword', () => {
  //    email: 'abc@testmail.com',
  //    password: 'UnMotDePasse',
  //   };
- //   expect(adminsDM.recupererAdminParEmailEtPassword('bcd@testmail.com', expected.password)).resolves.toThrow(
+ //   expect(administrateursDM.recupererAdminParEmailEtPassword('bcd@testmail.com', expected.password)).resolves.toThrow(
  //    'Wrong email'
  //   );
  //  });

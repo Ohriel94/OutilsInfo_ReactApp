@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import adminsDM from './domain/Administrateurs/adminsDM.js';
+import administrateursDM from './domain/Administrateurs/administrateursDM.js';
 import cellulairesDM from './domain/Cellulaires/cellulairesDM.js';
 import historiquesDM from './domain/Historiques/historiquesDM.js';
 import moniteursDM from './domain/Moniteurs/moniteursDM.js';
@@ -13,35 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-//=============== Routes - Administrateurs ===============
-app.post('/inscription', async (req, res) => {
- console.log('----- POST/incription -----');
- const prenom = req.body.prenom;
- const nom = req.body.nom;
- const email = req.body.email;
- const password = req.body.password;
- try {
-  await adminsDM.creerAdmin(prenom, nom, email, password);
-  res.sendStatus(200);
- } catch (e) {
-  res.sendStatus(400);
- }
-});
-
-app.post('/connexion', async (req, res) => {
- console.log('----- POST/connexion -----');
- const email = req.body.email;
- const password = req.body.password;
- const administrateur = await adminsDM.recupererAdminParEmailEtPassword(email, password);
- if (administrateur != undefined) {
-  const token = jwt.sign(
-   { email, password },
-   '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
-  );
-  res.send(token);
- } else res.sendStatus(403);
-});
-
+//=============== AUTHENTIFICATE ===============
 const authenticate = async (req, res, next) => {
  // On ramasse le header d'authorization
  const authHeader = req.headers['authorization'];
@@ -65,6 +37,65 @@ const authenticate = async (req, res, next) => {
   return res.sendStatus(403);
  }
 };
+
+//=============== Routes - Administrateurs ===============
+app.post('/inscription', async (req, res) => {
+ console.log('----- POST/incription -----');
+ const prenom = req.body.prenom;
+ const nom = req.body.nom;
+ const email = req.body.email;
+ const password = req.body.password;
+ try {
+  await administrateursDM.creerAdmin(prenom, nom, email, password);
+  res.sendStatus(200);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/connexion', async (req, res) => {
+ console.log('----- POST/connexion -----');
+ const email = req.body.email;
+ const password = req.body.password;
+ const administrateur = await administrateursDM.recupererAdminParEmailEtPassword(email, password);
+ if (administrateur != undefined) {
+  const token = jwt.sign(
+   { email, password },
+   '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
+  );
+  res.send(token);
+ } else res.sendStatus(403);
+});
+
+app.get('/administrateurs', async (req, res) => {
+ console.log('----- GET/administrateurs -----');
+ try {
+  const response = await administrateursDM.recupererAdministrateurs();
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
+app.post('/creerAdministrateur'),
+ async (req, res) => {
+  console.log('----- POST/creerAdministrateur -----');
+  const prenom = req.body.prenom;
+  const nom = req.body.nom;
+  administrateursDM.creerAdministrateur(prenom, nom);
+  res.sendStatus(200);
+ };
+
+app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
+ console.log('----- GET/recupererAdministrateur/:administrateurID -----');
+ const administrateurID = req.params.administrateurID;
+ try {
+  const response = await administrateursDM.recupererAdministrateurParId(administrateurID);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
 
 //=============== Routes - Cellulaires ===============
 
@@ -153,6 +184,15 @@ app.get('/usagers', async (req, res) => {
  }
 });
 
+app.post('/creerUsager'),
+ async (req, res) => {
+  console.log('----- POST/creerUsager -----');
+  const prenom = req.body.prenom;
+  const nom = req.body.nom;
+  usagersDM.creerUsager(prenom, nom);
+  res.sendStatus(200);
+ };
+
 app.get('/recupererUsager/:usagerID', async (req, res) => {
  console.log('----- GET/recupererUsager/:usagerID -----');
  const usagerID = req.params.usagerID;
@@ -217,15 +257,6 @@ app.post('/retirerAppareil', async (req, res) => {
   res.sendStatus(404);
  }
 });
-
-app.post('/creerUsager'),
- async (req, res) => {
-  console.log('----- POST/creerUsager -----');
-  const prenom = req.body.prenom;
-  const nom = req.body.nom;
-  usagersDM.creerUsager(prenom, nom);
-  res.sendStatus(200);
- };
 
 console.log('server starting');
 app.listen(3001);

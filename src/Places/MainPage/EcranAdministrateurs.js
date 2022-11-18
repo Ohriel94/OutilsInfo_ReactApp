@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import HistoriqueAccordeon from '../../Components/Historique/HistoriqueAccordeon';
+import AdministrateurAccordeon from '../../Components/Administrateurs/AdministrateurAccordeon';
 
 const Usagers = (props) => {
- const [historiques, setHistoriques] = React.useState([]);
+ const [Administrateurs, setAdministrateurs] = React.useState([{ prenom: 'Alpha', nom: 'Beta' }]);
 
  const paperTheme = {
   color: 'success',
@@ -22,17 +22,17 @@ const Usagers = (props) => {
  };
 
  React.useEffect(() => {
-  getHistoriques();
+  getAdministrateurs();
  }, []);
 
- const getHistoriques = () => {
+ const getAdministrateurs = () => {
   const f = async () => {
    try {
-    const getHistoriquesRequest = await axios({
+    const getAdministrateursRequest = await axios({
      method: 'get',
-     url: 'http://localhost:3001/historiques',
+     url: 'http://localhost:3001/administrateurs',
     });
-    setHistoriques(getHistoriquesRequest.data);
+    setAdministrateurs(getAdministrateursRequest.data);
    } catch (e) {
     console.log('Failed to connect ' + e);
    }
@@ -49,15 +49,15 @@ const Usagers = (props) => {
 
  return (
   <React.Fragment>
-   {historiques.map((historique, historiqueKey) => (
+   {Administrateurs.map((Administrateur, AdministrateurKey) => (
     <Grid
      container
-     key={historiqueKey}
+     key={AdministrateurKey}
      style={{
       flexDirection: 'column',
      }}
     >
-     <HistoriqueAccordeon historique={historique} key={historiqueKey} />
+     <AdministrateurAccordeon Administrateur={Administrateur} key={AdministrateurKey} />
     </Grid>
    ))}
   </React.Fragment>

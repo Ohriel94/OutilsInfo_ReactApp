@@ -13,10 +13,10 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import { NoMeetingRoomTwoTone } from '@mui/icons-material';
+import { NoMeetingRoomIcon } from '@mui/icons-material/NoMeetingRoom';
 
 const customStyles = {
  content: {
@@ -58,7 +58,7 @@ const EditerOrdinateur = (props) => {
  return (
   <div>
    <Button variant='outlined' color='primary' size='small' onClick={openModal}>
-    <EditTwoToneIcon />
+    <EditIcon />
    </Button>
    <Modal
     isOpen={modalIsOpen}

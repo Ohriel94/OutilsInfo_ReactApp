@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
+import Switch from '@mui/material/Switch';
 
 const customStyles = {
  content: {
@@ -26,10 +27,12 @@ const customStyles = {
  margin: { mt: '3vh' },
 };
 
-const EditerOrdinateur = (props) => {
- const { ordinateur, handleSubmit, notifier } = props;
+const EditerAdministrateur = (props) => {
+ const { administrateur, handleSubmit, notifier } = props;
  let subtitle = { style: { color: 'ffffff' } };
  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+ const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
  const openModal = () => {
   setIsOpen(true);
@@ -53,27 +56,28 @@ const EditerOrdinateur = (props) => {
     isOpen={modalIsOpen}
     onAfterOpen={afterOpenModal}
     onRequestClose={closeModal}
+    ariaHideApp={false}
     style={customStyles}
     contentLabel='Example Modal'
    >
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
-      <Typography variant='h4'>Mode édition</Typography>
+      <Typography variant='h6'>Mode édition</Typography>
       <br />
-      <Typography variant='h6' sx={customStyles.margin}>
+      <Typography variant='body1' sx={customStyles.margin}>
        Informations génerales
       </Typography>
       <Grid container style={{ flexDirection: 'row' }}>
-       <Grid item xs={2}>
+       <Grid item xs={4}>
         <TextField
          InputLabelProps={{ shrink: true }}
          margin='normal'
          fullWidth
          required
-         label='S/N'
-         name='S/N'
-         id='S/N'
-         defaultValue={ordinateur.serialNumber}
+         label='Username'
+         name='Username'
+         id='Username'
+         defaultValue={administrateur.username}
         />
        </Grid>
        <Grid item xs={4}>
@@ -82,92 +86,39 @@ const EditerOrdinateur = (props) => {
          margin='normal'
          fullWidth
          required
-         label='Marque'
-         name='Marque'
-         id='Marque'
-         defaultValue={ordinateur.details.marque}
+         label='Prenom'
+         name='Prenom'
+         id='Prenom'
+         defaultValue={administrateur.prenom}
         />
        </Grid>
-       <Grid item xs={6}>
+       <Grid item xs={4}>
         <TextField
          InputLabelProps={{ shrink: true }}
          margin='normal'
          fullWidth
          required
-         label='Modele'
-         name='Modele'
-         id='Modele'
-         defaultValue={ordinateur.details.modele}
+         label='Nom'
+         name='Nom'
+         id='Nom'
+         defaultValue={administrateur.nom}
         />
        </Grid>
-       <Typography variant='h6' sx={customStyles.margin}>
-        Spécifications
+       <Typography variant='body1' sx={customStyles.margin}>
+        Status
        </Typography>
-       <Grid container style={{ flexDirection: 'row' }}>
-        <Grid item xs={6}>
-         <TextField
-          InputLabelProps={{ shrink: true }}
-          margin='normal'
-          fullWidth
-          required
-          label='Processeur'
-          name='Processeur'
-          id='Processeur'
-          defaultValue={ordinateur.details.configuration.processeur}
-         />
-        </Grid>
-        <Grid item xs={6}>
-         <TextField
-          InputLabelProps={{ shrink: true }}
-          margin='normal'
-          fullWidth
-          required
-          name='Systeme'
-          label='Système'
-          id='Systeme'
-          defaultValue={ordinateur.details.configuration.systeme}
-         />
-        </Grid>
-        <Grid item xs={6}>
-         <TextField
-          InputLabelProps={{ shrink: true }}
-          margin='normal'
-          fullWidth
-          required
-          name='Memoire'
-          label='Memoire'
-          id='Memoire'
-          defaultValue={ordinateur.details.configuration.memoire}
-         />
-        </Grid>
-        <Grid item xs={6}>
-         <TextField
-          InputLabelProps={{ shrink: true }}
-          margin='normal'
-          fullWidth
-          required
-          name='Disque'
-          label='Disque'
-          id='Disque'
-          defaultValue={ordinateur.details.configuration.disque}
-         />
-        </Grid>
-       </Grid>
        <Grid container>
-        <Typography variant='h6' sx={customStyles.margin}>
-         Notes
-        </Typography>
-        <Grid item xs={12}>
-         <TextField
-          InputLabelProps={{ shrink: true }}
-          margin='dense'
-          fullWidth
-          multiline
-          required
-          name='Notes'
-          id='Notes'
-          defaultValue={ordinateur.details.notes}
-         />
+        <Grid item xs={2}>
+         <Typography variant='caption' align='center' fullwidth='true'>
+          Actif
+         </Typography>
+         <Switch {...label} defaultChecked={true} />
+        </Grid>
+        <Grid item xs={2}>
+         <Typography variant='caption' align='center' fullwidth='true'>
+          Admin
+         </Typography>
+         <Switch {...label} defaultChecked={true} />
         </Grid>
        </Grid>
        <Grid container>
@@ -190,4 +141,4 @@ const EditerOrdinateur = (props) => {
  );
 };
 
-export default EditerOrdinateur;
+export default EditerAdministrateur;

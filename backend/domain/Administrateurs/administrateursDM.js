@@ -39,7 +39,17 @@ const recupererAdminParEmailEtPassword = async (email, password) => {
 
 // ============================= Utilitaires =============================
 const formaterUsername = (prenom, nom) => {
- const username = prenom.substring(0, 1).toUpperCase() + nom.split('-')[1].toUpperCase();
+ let username = '';
+ if (nom.includes('-')) username = prenom.substring(0, 1).toUpperCase() + nom.split('-')[1].toUpperCase();
+ else if (prenom.includes('-'))
+  username =
+   prenom.substring(0, 1).toUpperCase() +
+   prenom
+    .split('-')[1]
+    .substring(0, 1)
+    .toUpperCase() +
+   nom.toUpperCase();
+ else username = prenom.substring(0, 1).toUpperCase() + nom.toUpperCase();
  return username;
 };
 

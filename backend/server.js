@@ -72,6 +72,10 @@ app.get('/administrateurs', async (req, res) => {
  console.log('----- GET/administrateurs -----');
  try {
   const response = await administrateursDM.recupererAdministrateurs();
+  response.map((admin) => {
+   delete admin._id;
+   delete admin.password;
+  });
   res.send(response);
  } catch (e) {
   res.sendStatus(404);
@@ -93,6 +97,25 @@ app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
  try {
   const response = await administrateursDM.recupererAdministrateurParId(administrateurID);
   res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
+app.post('/administrateurs/editerAdmin', async (req, res) => {
+ console.log('----- POST/administrateurs/editerAdmin -----');
+ const nom = req.body.nom;
+ const prenom = req.body.prenom;
+ const username = req.body.username;
+ const email = req.body.email;
+ const status = req.body.status;
+ try {
+  console.log(nom, prenom, username, email, status);
+  console.log(nom !== undefined, prenom !== undefined, username !== undefined, status !== undefined);
+  if (nom !== undefined && prenom !== undefined && username !== undefined && status !== undefined) {
+   await administrateursDM.editerAdministrateur(nom, prenom, username, email, status);
+   res.sendStatus(200);
+  }
  } catch (e) {
   res.sendStatus(404);
  }

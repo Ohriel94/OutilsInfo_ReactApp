@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Axios from 'axios';
 import Modal from 'react-modal';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -28,11 +29,10 @@ const customStyles = {
 };
 
 const EditerAdministrateur = (props) => {
- const { administrateur, handleSubmit, notifier } = props;
+ const { administrateur, notifier } = props;
+ const label = { inputProps: { 'aria-label': 'Switch demo' } };
  let subtitle = { style: { color: 'ffffff' } };
  const [modalIsOpen, setIsOpen] = React.useState(false);
-
- const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
  const openModal = () => {
   setIsOpen(true);
@@ -45,6 +45,22 @@ const EditerAdministrateur = (props) => {
 
  const closeModal = () => {
   setIsOpen(false);
+ };
+
+ const handleSubmit = () => {
+  const f = async () => {
+   try {
+    const postEditerAdminRequest = await Axios({
+     method: 'post',
+     url: 'http://localhost:3001/administrateurs/editerAdmin',
+     data: {},
+    });
+    console.log(postEditerAdminRequest.data);
+   } catch (e) {
+    console.log('Failed to connect ' + e);
+   }
+  };
+  f();
  };
 
  return (
@@ -64,7 +80,7 @@ const EditerAdministrateur = (props) => {
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
       <Typography variant='h6'>Mode édition</Typography>
       <br />
-      <Typography variant='body1' sx={customStyles.margin}>
+      <Typography variant='body1' sx={customStyles.margin} style={customStyles.style}>
        Informations génerales
       </Typography>
       <Grid container style={{ flexDirection: 'row' }}>
@@ -104,26 +120,33 @@ const EditerAdministrateur = (props) => {
          defaultValue={administrateur.nom}
         />
        </Grid>
+       <br />
        <Typography variant='body1' sx={customStyles.margin}>
         Status
        </Typography>
-       <Grid container>
-        <Grid item xs={2}>
-         <Typography variant='caption' align='center' fullwidth='true'>
-          Actif
-         </Typography>
-         <Switch {...label} defaultChecked={true} />
+       <br />
+       {administrateur.status !== undefined ? (
+        <Grid container>
+         <Grid item xs={4} md={1.5}>
+          <Typography variant='caption' align='center'>
+           Actif
+          </Typography>
+          <Switch {...label} id='swActif' defaultChecked={administrateur.status.actif} />
+         </Grid>
+         <Grid item xs={4} md={1.5}>
+          <Typography variant='caption' align='center'>
+           Admin
+          </Typography>
+          <Switch {...label} id='swAdmin' defaultChecked={administrateur.status.admin} />
+         </Grid>
         </Grid>
-        <Grid item xs={2}>
-         <Typography variant='caption' align='center' fullwidth='true'>
-          Admin
-         </Typography>
-         <Switch {...label} defaultChecked={true} />
-        </Grid>
-       </Grid>
+       ) : (
+        <br />
+       )}
+
        <Grid container>
         <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
-         <Button variant='contained' color='success' type='submit' size='small'>
+         <Button variant='contained' color='success' size='small' type='submit' onClick={handleSubmit}>
           Soumettre
          </Button>
         </Grid>

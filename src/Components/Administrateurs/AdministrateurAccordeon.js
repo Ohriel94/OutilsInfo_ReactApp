@@ -1,5 +1,5 @@
 import * as React from 'react';
-import EditerAdministrateur from './EditerAdministrateur';
+import EditerAdmin from './EditerAdmin';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
@@ -28,7 +28,7 @@ const AdministrateurAccordeon = (props) => {
    <AccordionDetails>
     <Grid container>
      <Grid item xs={7} sm={9} sx={componentStyle.sx}>
-      <EditerAdministrateur administrateur={administrateur} />
+      <EditerAdmin administrateur={administrateur} />
      </Grid>
     </Grid>
    </AccordionDetails>

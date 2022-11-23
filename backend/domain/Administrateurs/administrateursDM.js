@@ -37,6 +37,24 @@ const recupererAdminParEmailEtPassword = async (email, password) => {
  }
 };
 
+const editerAdministrateur = async (nom, prenom, username, email, status) => {
+ const usernameFormatted = username.toUpperCase();
+ console.log(nom, prenom, username, email, status);
+ try {
+  const trouve = await administrateursDB.findByEmail(email);
+  const stringifyId = trouve._id.toString();
+  trouve._id = stringifyId;
+  trouve.nom = nom;
+  trouve.prenom = prenom;
+  trouve.username = usernameFormatted;
+  trouve.status = status;
+  console.log(trouve);
+  if (trouve !== undefined) administrateursDB.updateById(trouver._id, trouve);
+ } catch (e) {
+  throw e;
+ }
+};
+
 // ============================= Utilitaires =============================
 const formaterUsername = (prenom, nom) => {
  let username = '';
@@ -57,4 +75,5 @@ export default {
  creerAdmin,
  recupererAdministrateurs,
  recupererAdminParEmailEtPassword,
+ editerAdministrateur,
 };

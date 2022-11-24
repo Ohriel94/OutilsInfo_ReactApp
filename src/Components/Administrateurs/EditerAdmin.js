@@ -6,8 +6,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Switch from '@mui/material/Switch';
+import { padding } from '@mui/system';
 
 const customStyles = {
  content: {
@@ -26,6 +28,12 @@ const customStyles = {
  padding: (0, 2),
  border: 'lightgray solid 1px',
  margin: { mt: '3vh' },
+ box: {
+  border: 'gray solid 1px',
+  justifyContent: 'center',
+  textAlign: 'center',
+  padding: '1vh',
+ },
 };
 
 const EditerAdministrateur = (props) => {
@@ -65,9 +73,9 @@ const EditerAdministrateur = (props) => {
 
  return (
   <div>
-   <Button variant='outlined' color='primary' size='small' onClick={openModal}>
+   <IconButton variant='outlined' color='primary' size='small' onClick={openModal}>
     <EditIcon />
-   </Button>
+   </IconButton>
    <Modal
     isOpen={modalIsOpen}
     onAfterOpen={afterOpenModal}
@@ -76,64 +84,68 @@ const EditerAdministrateur = (props) => {
     style={customStyles}
     contentLabel='Example Modal'
    >
-    <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-     <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
+    <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} style={customStyles.style}>
+     <Grid container style={{ flexDirection: 'column' }} sx={{ width: '80vh', minWidth: '40vh', my: '5vh' }}>
       <Typography variant='h6'>Mode édition</Typography>
       <br />
-      <Typography variant='body1' sx={customStyles.margin} style={customStyles.style}>
-       Informations génerales
-      </Typography>
-      <Grid container style={{ flexDirection: 'row' }}>
-       <Grid item xs={4}>
-        <TextField
-         InputLabelProps={{ shrink: true }}
-         margin='normal'
-         fullWidth
-         required
-         label='Username'
-         name='Username'
-         id='Username'
-         defaultValue={administrateur.username}
-        />
+
+      <Grid container style={customStyles.box}>
+       <Typography variant='body1' sx={customStyles.margin}>
+        Informations génerales
+       </Typography>
+       <Grid container style={{ flexDirection: 'row' }}>
+        <Grid item xs={4} style={{ padding: '1vh' }}>
+         <TextField
+          InputLabelProps={{ shrink: true }}
+          margin='normal'
+          fullWidth
+          required
+          label='Username'
+          name='Username'
+          id='Username'
+          defaultValue={administrateur.username}
+         />
+        </Grid>
+        <Grid item xs={4} style={{ padding: '1vh' }}>
+         <TextField
+          InputLabelProps={{ shrink: true }}
+          margin='normal'
+          fullWidth
+          required
+          label='Prenom'
+          name='Prenom'
+          id='Prenom'
+          defaultValue={administrateur.prenom}
+         />
+        </Grid>
+        <Grid item xs={4} style={{ padding: '1vh' }}>
+         <TextField
+          InputLabelProps={{ shrink: true }}
+          margin='normal'
+          fullWidth
+          required
+          label='Nom'
+          name='Nom'
+          id='Nom'
+          defaultValue={administrateur.nom}
+         />
+        </Grid>
        </Grid>
-       <Grid item xs={4}>
-        <TextField
-         InputLabelProps={{ shrink: true }}
-         margin='normal'
-         fullWidth
-         required
-         label='Prenom'
-         name='Prenom'
-         id='Prenom'
-         defaultValue={administrateur.prenom}
-        />
-       </Grid>
-       <Grid item xs={4}>
-        <TextField
-         InputLabelProps={{ shrink: true }}
-         margin='normal'
-         fullWidth
-         required
-         label='Nom'
-         name='Nom'
-         id='Nom'
-         defaultValue={administrateur.nom}
-        />
-       </Grid>
-       <br />
+      </Grid>
+      <br />
+      <Grid container style={customStyles.box}>
        <Typography variant='body1' sx={customStyles.margin}>
         Status
        </Typography>
-       <br />
        {administrateur.status !== undefined ? (
         <Grid container>
-         <Grid item xs={4} md={1.5}>
+         <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
            Actif
           </Typography>
           <Switch {...label} id='swActif' defaultChecked={administrateur.status.actif} />
          </Grid>
-         <Grid item xs={4} md={1.5}>
+         <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
            Admin
           </Typography>
@@ -143,7 +155,6 @@ const EditerAdministrateur = (props) => {
        ) : (
         <br />
        )}
-
        <Grid container>
         <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
          <Button variant='contained' color='success' size='small' type='submit' onClick={handleSubmit}>
@@ -152,7 +163,7 @@ const EditerAdministrateur = (props) => {
         </Grid>
         <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
          <Button variant='contained' color='error' size='small' onClick={closeModal}>
-          close
+          Quitter
          </Button>
         </Grid>
        </Grid>

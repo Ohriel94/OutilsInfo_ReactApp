@@ -121,6 +121,20 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
  }
 });
 
+app.get('/administrateurs/trouverAdmin', async (req, res) => {
+ console.log('----- POST/administrateurs/editerAdmin -----');
+ const email = req.body.email;
+ try {
+  console.log(email);
+  if (email !== undefined) {
+   await administrateursDM.trouverAdminParEmail(email);
+   res.sendStatus(200);
+  }
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
 //=============== Routes - Cellulaires ===============
 
 //=============== Routes - Moniteurs ===============

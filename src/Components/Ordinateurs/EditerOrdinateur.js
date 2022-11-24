@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -57,9 +58,9 @@ const EditerOrdinateur = (props) => {
 
  return (
   <div>
-   <Button variant='outlined' color='primary' size='small' onClick={openModal}>
+   <IconButton variant='outlined' color='primary' size='small' onClick={openModal}>
     <EditIcon />
-   </Button>
+   </IconButton>
    <Modal
     isOpen={modalIsOpen}
     onAfterOpen={afterOpenModal}
@@ -189,7 +190,7 @@ const EditerOrdinateur = (props) => {
         </Grid>
         <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
          <Button variant='contained' color='error' size='small' onClick={closeModal}>
-          close
+          Quitter
          </Button>
         </Grid>
        </Grid>

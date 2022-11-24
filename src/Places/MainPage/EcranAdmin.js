@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import AdministrateurAccordeon from '../../Components/Administrateurs/AdministrateurAccordeon';
+import AdminAccordeon from '../../Components/Administrateurs/AdminAccordeon';
 
-const EcranAdmins = (props) => {
+const EcranAdmin = (props) => {
  const [admins, setAdmins] = React.useState([{ prenom: 'Alpha', nom: 'Beta' }]);
 
  const paperTheme = {
@@ -61,11 +61,11 @@ const EcranAdmins = (props) => {
       flexDirection: 'column',
      }}
     >
-     <AdministrateurAccordeon administrateur={administrateur} key={administrateurKey} />
+     <AdminAccordeon administrateur={administrateur} key={administrateurKey} />
     </Grid>
    ))}
   </React.Fragment>
  );
 };
 
-export default EcranAdmins;
+export default EcranAdmin;

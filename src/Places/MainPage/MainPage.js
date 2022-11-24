@@ -8,7 +8,7 @@ import EcranUsagers from './EcranUsagers';
 import EcranOrdinateurs from './Ordinateurs/EcranOrdinateurs';
 import EcranHistorique from './EcranHistorique';
 import EcranAffectations from './EcranAffectations';
-import EcranAdministrateurs from './EcranAdministrateurs';
+import EcranAdmin from './EcranAdmin';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -114,7 +114,7 @@ const MainPage = (props) => {
       <ListItemText primary={'Afficher historique'} />
      </ListItem>
      <Divider />
-     <ListItem button key={'EcranAdministrateurs'} onClick={() => navigate('administrateurs')}>
+     <ListItem button key={'EcranAdmin'} onClick={() => navigate('administrateurs')}>
       <ListItemIcon>
        <BadgeIcon />
       </ListItemIcon>
@@ -128,7 +128,7 @@ const MainPage = (props) => {
      <Route path='/appareils' element={<EcranOrdinateurs />} />
      <Route path='/historique' element={<EcranHistorique />} />
      <Route path='/affectation' element={<EcranAffectations />} />
-     <Route path='/administrateurs' element={<EcranAdministrateurs />} />
+     <Route path='/administrateurs' element={<EcranAdmin />} />
     </Routes>
    </Box>
   </Box>

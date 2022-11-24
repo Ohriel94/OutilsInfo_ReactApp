@@ -28,7 +28,7 @@ const recupererAdministrateurs = async () => {
 };
 
 const recupererAdminParEmailEtPassword = async (email, password) => {
- const emailFormatted = email !== undefined ? email.toLowerCase() : 'undefined@email.com';
+ const emailFormatted = email !== undefined ? email.toLowerCase() : undefined;
  try {
   const admin = await administrateursDB.findByEmail(emailFormatted);
   if (admin !== undefined) if (admin.password === password) return admin;
@@ -37,19 +37,30 @@ const recupererAdminParEmailEtPassword = async (email, password) => {
  }
 };
 
+const trouverAdminParEmail = async (email) => {
+ const emailFormatted = email !== undefined ? email.toLowerCase() : undefined;
+ try {
+  const admin = await administrateursDB.findByEmail(emailFormatted);
+  console.log(admin);
+  if (admin !== undefined) return admin;
+ } catch (e) {
+  throw e;
+ }
+};
+
 const editerAdministrateur = async (nom, prenom, username, email, status) => {
  const usernameFormatted = username.toUpperCase();
+ const emailFormatted = email.toLowerCase();
  console.log(nom, prenom, username, email, status);
  try {
-  const trouve = await administrateursDB.findByEmail(email);
-  const stringifyId = trouve._id.toString();
-  trouve._id = stringifyId;
+  const trouve = await administrateursDB.findByEmail(emailFormatted);
+  const stringId = trouve._id.toString();
   trouve.nom = nom;
   trouve.prenom = prenom;
   trouve.username = usernameFormatted;
   trouve.status = status;
   console.log(trouve);
-  if (trouve !== undefined) administrateursDB.updateById(trouver._id, trouve);
+  if (trouve !== undefined) administrateursDB.updateById(stringId, trouve);
  } catch (e) {
   throw e;
  }
@@ -74,6 +85,7 @@ const formaterUsername = (prenom, nom) => {
 export default {
  creerAdmin,
  recupererAdministrateurs,
+ trouverAdminParEmail,
  recupererAdminParEmailEtPassword,
  editerAdministrateur,
 };

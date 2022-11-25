@@ -70,7 +70,7 @@ const Connexion = (props) => {
      />
      <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
       connexion
-     </Button>{' '}
+     </Button>
      <Button fullWidth variant='contained' sx={{ mt: 3, mb: 2 }} onClick={() => navigate('/inscription')}>
       Dont't have an account ? Sign Up !
      </Button>

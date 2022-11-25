@@ -9,14 +9,15 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import EditIcon from '@mui/icons-material/Edit';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import { NoMeetingRoomTwoTone } from '@mui/icons-material';
+import { NoMeetingRoomIcon } from '@mui/icons-material/NoMeetingRoom';
 
 const customStyles = {
  content: {
@@ -57,9 +58,9 @@ const EditerOrdinateur = (props) => {
 
  return (
   <div>
-   <Button variant='outlined' color='primary' size='small' onClick={openModal}>
-    <EditTwoToneIcon />
-   </Button>
+   <IconButton variant='outlined' color='primary' size='small' onClick={openModal}>
+    <EditIcon />
+   </IconButton>
    <Modal
     isOpen={modalIsOpen}
     onAfterOpen={afterOpenModal}
@@ -189,7 +190,7 @@ const EditerOrdinateur = (props) => {
         </Grid>
         <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
          <Button variant='contained' color='error' size='small' onClick={closeModal}>
-          close
+          Quitter
          </Button>
         </Grid>
        </Grid>

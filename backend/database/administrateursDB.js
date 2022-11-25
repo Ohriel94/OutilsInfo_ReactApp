@@ -55,6 +55,20 @@ const findByEmail = async (email) => {
  }
 };
 
+const findByUsername = async (username) => {
+ try {
+  const collection = await getCollection();
+  const res = await collection.find({}).toArray();
+  const trouves = res.filter((admin) => admin.username === username);
+  if (trouves === undefined) throw new Error('Administrator not found');
+  return trouves[0];
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
+};
+
 const addOne = async (administrateur) => {
  try {
   const collection = await getCollection();
@@ -68,7 +82,6 @@ const addOne = async (administrateur) => {
 const updateById = async (id, administrateur) => {
  try {
   const collection = await getCollection();
-
   let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: administrateur });
   if (updatedItems.matchedCount == 0) throw new Error('Administrators not found');
  } catch (e) {
@@ -82,6 +95,7 @@ export default {
  getAll,
  findById,
  findByEmail,
+ findByUsername,
  addOne,
  updateById,
 };

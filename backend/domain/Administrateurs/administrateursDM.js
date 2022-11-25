@@ -51,7 +51,6 @@ const trouverAdminParEmail = async (email) => {
 const editerAdministrateur = async (nom, prenom, username, email, status) => {
  const usernameFormatted = username.toUpperCase();
  const emailFormatted = email.toLowerCase();
- console.log(nom, prenom, username, email, status);
  try {
   const trouve = await administrateursDB.findByEmail(emailFormatted);
   const stringId = trouve._id.toString();

@@ -4,7 +4,7 @@ import axios from 'axios';
 import AdminAccordeon from '../../Components/Administrateurs/AdminAccordeon';
 
 const EcranAdmin = (props) => {
- const [admins, setAdmins] = React.useState([{ prenom: 'Alpha', nom: 'Beta' }]);
+ const [admins, setAdmins] = React.useState([]);
 
  const paperTheme = {
   color: 'success',

@@ -14,6 +14,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const jwtSecret =
+ '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0';
+
 //=============== AUTHENTIFICATE ===============
 const authenticate = async (req, res, next) => {
  // On ramasse le header d'authorization
@@ -25,10 +28,7 @@ const authenticate = async (req, res, next) => {
 
  try {
   // Vérification du token selon notre secret
-  const payload = await jwt.verify(
-   token,
-   '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
-  );
+  const payload = await jwt.verify(token, jwtSecret);
   // Injection du token dans la requête pour demandeur
   req.userToken = payload;
   // Passage au prochain middleware ou la route demandée
@@ -60,11 +60,9 @@ app.post('/connexion', async (req, res) => {
  const password = req.body.password;
  const administrateur = await administrateursDM.recupererAdminParEmailEtPassword(email, password);
  if (administrateur != undefined) {
-  const token = jwt.sign(
-   { email, password },
-   '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0'
-  );
-  res.send(token);
+  const token = jwt.sign({ email, password }, jwtSecret);
+  res.cookie('token', token, { httpOnly: true });
+  res.json(token);
  } else res.sendStatus(403);
 });
 
@@ -110,8 +108,6 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
  const email = req.body.email;
  const status = req.body.status;
  try {
-  console.log(nom, prenom, username, email, status);
-  console.log(nom !== undefined, prenom !== undefined, username !== undefined, status !== undefined);
   if (nom !== undefined && prenom !== undefined && username !== undefined && status !== undefined) {
    await administrateursDM.editerAdministrateur(nom, prenom, username, email, status);
    res.sendStatus(200);

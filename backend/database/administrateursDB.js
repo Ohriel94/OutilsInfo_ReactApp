@@ -80,11 +80,8 @@ const addOne = async (administrateur) => {
 };
 
 const updateById = async (id, administrateur) => {
- console.log(id);
- console.log(administrateur);
  try {
   const collection = await getCollection();
-
   let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: administrateur });
   if (updatedItems.matchedCount == 0) throw new Error('Administrators not found');
  } catch (e) {

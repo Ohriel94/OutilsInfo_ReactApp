@@ -42,6 +42,13 @@ const EditerAdministrateur = (props) => {
  let subtitle = { style: { color: 'ffffff' } };
  const [modalIsOpen, setIsOpen] = React.useState(false);
 
+ const [newAdminInfo, setNewAdminInfo] = React.useState({
+  prenom: '',
+  nom: '',
+  username: '',
+  status: { actif: false, admin: false },
+ });
+
  const openModal = () => {
   setIsOpen(true);
  };
@@ -55,13 +62,36 @@ const EditerAdministrateur = (props) => {
   setIsOpen(false);
  };
 
+ const handleOnChange = (event) => {
+  console.log('handleOnChange : ', event);
+  let data = { ...newAdminInfo };
+  switch (event.target.id) {
+   case 'Prenom':
+    data.prenom = event.target.value;
+    break;
+   case 'Nom':
+    data.nom = event.target.value;
+    break;
+   case 'Username':
+    data.username = event.target.value;
+    break;
+   case 'swActif':
+    data.status.actif = event.target.value;
+    break;
+   case 'swAdmin':
+    data.status.admin = event.target.value;
+    break;
+  }
+  setNewAdminInfo(data);
+ };
+
  const handleSubmit = () => {
   const f = async () => {
    try {
     const postEditerAdminRequest = await Axios({
      method: 'post',
      url: 'http://localhost:3001/administrateurs/editerAdmin',
-     data: {},
+     data: { newAdminInfo },
     });
     console.log(postEditerAdminRequest.data);
    } catch (e) {
@@ -72,7 +102,7 @@ const EditerAdministrateur = (props) => {
  };
 
  return (
-  <div>
+  <Grid>
    <IconButton variant='outlined' color='primary' size='small' onClick={openModal}>
     <EditIcon />
    </IconButton>
@@ -88,11 +118,11 @@ const EditerAdministrateur = (props) => {
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '80vh', minWidth: '40vh', my: '5vh' }}>
       <Typography variant='h6'>Mode édition</Typography>
       <br />
-
       <Grid container style={customStyles.box}>
        <Typography variant='body1' sx={customStyles.margin}>
         Informations génerales
        </Typography>
+       <br />
        <Grid container style={{ flexDirection: 'row' }}>
         <Grid item xs={4} style={{ padding: '1vh' }}>
          <TextField
@@ -104,6 +134,7 @@ const EditerAdministrateur = (props) => {
           name='Username'
           id='Username'
           defaultValue={administrateur.username}
+          onChange={handleOnChange}
          />
         </Grid>
         <Grid item xs={4} style={{ padding: '1vh' }}>
@@ -116,6 +147,7 @@ const EditerAdministrateur = (props) => {
           name='Prenom'
           id='Prenom'
           defaultValue={administrateur.prenom}
+          onChange={handleOnChange}
          />
         </Grid>
         <Grid item xs={4} style={{ padding: '1vh' }}>
@@ -128,6 +160,7 @@ const EditerAdministrateur = (props) => {
           name='Nom'
           id='Nom'
           defaultValue={administrateur.nom}
+          onChange={handleOnChange}
          />
         </Grid>
        </Grid>
@@ -137,19 +170,30 @@ const EditerAdministrateur = (props) => {
        <Typography variant='body1' sx={customStyles.margin}>
         Status
        </Typography>
+       <br />
        {administrateur.status !== undefined ? (
         <Grid container>
          <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
            Actif
           </Typography>
-          <Switch {...label} id='swActif' defaultChecked={administrateur.status.actif} />
+          <Switch
+           {...label}
+           id='swActif'
+           defaultChecked={administrateur.status.actif}
+           onChange={handleOnChange}
+          />
          </Grid>
          <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
            Admin
           </Typography>
-          <Switch {...label} id='swAdmin' defaultChecked={administrateur.status.admin} />
+          <Switch
+           {...label}
+           id='swAdmin'
+           defaultChecked={administrateur.status.admin}
+           onChange={handleOnChange}
+          />
          </Grid>
         </Grid>
        ) : (
@@ -171,7 +215,7 @@ const EditerAdministrateur = (props) => {
      </Grid>
     </Box>
    </Modal>
-  </div>
+  </Grid>
  );
 };
 

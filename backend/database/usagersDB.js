@@ -75,9 +75,9 @@ const getAll = async () => {
 };
 
 export default {
- findUserById,
- findByUsername,
+ getAll,
  addOne,
  updateById,
- getAll,
+ findUserById,
+ findByUsername,
 };

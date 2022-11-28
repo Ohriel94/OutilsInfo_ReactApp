@@ -24,6 +24,8 @@ const getAll = async () => {
   await closeConnection();
   return administrateur;
  } catch (e) {
+  throw e;
+ } finally {
   await closeConnection();
  }
 };

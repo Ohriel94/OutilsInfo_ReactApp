@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
-import administrateursDM from './domain/Administrateurs/administrateursDM.js';
+import adminsDM from './domain/Administrateurs/adminsDM.js';
 import cellulairesDM from './domain/Cellulaires/cellulairesDM.js';
 import historiquesDM from './domain/Historiques/historiquesDM.js';
 import moniteursDM from './domain/Moniteurs/moniteursDM.js';
@@ -47,7 +47,7 @@ app.post('/inscription', async (req, res) => {
  const email = req.body.email;
  const password = req.body.password;
  try {
-  await administrateursDM.creerAdmin(prenom, nom, email, password);
+  await adminsDM.creerAdmin(prenom, nom, email, password);
   res.sendStatus(200);
  } catch (e) {
   res.sendStatus(400);
@@ -58,7 +58,7 @@ app.post('/connexion', async (req, res) => {
  console.log('----- POST/connexion -----');
  const email = req.body.email;
  const password = req.body.password;
- const administrateur = await administrateursDM.recupererAdminParEmailEtPassword(email, password);
+ const administrateur = await adminsDM.recupererAdminParEmailEtPassword(email, password);
  if (administrateur != undefined) {
   const token = jwt.sign({ email, password }, jwtSecret);
   res.cookie('token', token, { httpOnly: true });
@@ -69,7 +69,7 @@ app.post('/connexion', async (req, res) => {
 app.get('/administrateurs', async (req, res) => {
  console.log('----- GET/administrateurs -----');
  try {
-  const response = await administrateursDM.recupererAdministrateurs();
+  const response = await adminsDM.recupererAdministrateurs();
   response.map((admin) => {
    delete admin._id;
    delete admin.password;
@@ -85,7 +85,7 @@ app.post('/creerAdministrateur'),
   console.log('----- POST/creerAdministrateur -----');
   const prenom = req.body.prenom;
   const nom = req.body.nom;
-  administrateursDM.creerAdministrateur(prenom, nom);
+  adminsDM.creerAdministrateur(prenom, nom);
   res.sendStatus(200);
  };
 
@@ -93,7 +93,7 @@ app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
  console.log('----- GET/recupererAdministrateur/:administrateurID -----');
  const administrateurID = req.params.administrateurID;
  try {
-  const response = await administrateursDM.recupererAdministrateurParId(administrateurID);
+  const response = await adminsDM.recupererAdministrateurParId(administrateurID);
   res.send(response);
  } catch (e) {
   res.sendStatus(404);
@@ -109,7 +109,7 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
  const status = req.body.status;
  try {
   if (nom !== undefined && prenom !== undefined && username !== undefined && status !== undefined) {
-   await administrateursDM.editerAdministrateur(nom, prenom, username, email, status);
+   await adminsDM.editerAdministrateur(nom, prenom, username, email, status);
    res.sendStatus(200);
   }
  } catch (e) {
@@ -123,7 +123,7 @@ app.get('/administrateurs/trouverAdmin', async (req, res) => {
  try {
   console.log(email);
   if (email !== undefined) {
-   await administrateursDM.trouverAdminParEmail(email);
+   await adminsDM.trouverAdminParEmail(email);
    res.sendStatus(200);
   }
  } catch (e) {

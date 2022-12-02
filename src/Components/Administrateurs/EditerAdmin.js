@@ -130,6 +130,7 @@ const EditerAdministrateur = (props) => {
           margin='normal'
           fullWidth
           required
+          disabled
           label='Username'
           name='Username'
           id='Username'

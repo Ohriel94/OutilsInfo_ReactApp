@@ -14,8 +14,8 @@ const App = () => {
  return (
   <Fragment>
    <Routes>
-    <Route path='/*' element={token ? <MainPage token={token} /> : <Connexion token={setToken} />} />
-    <Route path='/connexion' element={<Connexion token={setToken} administrateur={setAdministrateur} />} />
+    <Route path='/*' element={token ? <MainPage token={token} /> : <Connexion setToken={setToken} />} />
+    <Route path='/connexion' element={<Connexion setToken={setToken} administrateur={setAdministrateur} />} />
     <Route path='/inscription' element={<Inscription />} />
    </Routes>
   </Fragment>

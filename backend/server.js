@@ -54,16 +54,28 @@ app.post('/inscription', async (req, res) => {
  }
 });
 
-app.post('/connexion', async (req, res) => {
+app.get('/connexion', async (req, res) => {
  console.log('----- POST/connexion -----');
  const email = req.body.email;
  const password = req.body.password;
  const administrateur = await adminsDM.recupererAdminParEmailEtPassword(email, password);
  if (administrateur != undefined) {
   const token = jwt.sign({ email, password }, jwtSecret);
-  res.cookie('token', token, { httpOnly: true });
-  res.json(token);
+  return res
+   .cookie('access_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+   })
+   .status(200)
+   .json({ message: 'Logged in successfully 😊 👌' });
  } else res.sendStatus(403);
+});
+
+app.post('/deconnexion', authenticate, async (req, res) => {
+ return res
+  .clearCookie('access_token')
+  .status(200)
+  .json({ message: 'Successfully logged out 😏 🍀' });
 });
 
 app.get('/administrateurs', async (req, res) => {

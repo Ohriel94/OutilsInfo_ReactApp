@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Connexion = (props) => {
  const navigate = useNavigate();
- const { token } = props;
+ const { setToken } = props;
 
  const handleSubmit = async (event) => {
   event.preventDefault();
@@ -25,7 +25,7 @@ const Connexion = (props) => {
       password: data.get('password'),
      },
     });
-    token(connexionRequest.data);
+    setToken(connexionRequest.data);
     navigate('/mainpage');
    } catch (e) {
     console.log('Failed to connect ' + e);

@@ -18,23 +18,27 @@ const jwtSecret =
  '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0';
 
 //=============== AUTHENTIFICATE ===============
-const authenticate = async (req, res, next) => {
- // On ramasse le header d'authorization
- const authHeader = req.headers['authorization'];
- // On obtient le token à partir du header en enlevant le mot "BEARER"
- const token = authHeader && authHeader.split(' ')[1];
- // Si aucun token -> unauthorized
- if (token == null) return res.sendStatus(401);
+// const authenticate = async (req, res, next) => {
+//  const authToken = req.cookies.access_token;
+//  if (!authToken) return res.sendStatus(401);
+//  try {
+//   const payload = await jwt.verify(token, jwtSecret);
+//   req.userInfos = payload;
+//   return next();
+//  } catch (e) {
+//   return res.sendStatus(403);
+//  }
+// };
 
+const authenticate = async (req, res, next) => {
+ const authHeader = req.headers['authorization'];
+ const token = authHeader && authHeader.split(' ')[1];
+ if (!token) return res.sendStatus(401);
  try {
-  // Vérification du token selon notre secret
   const payload = await jwt.verify(token, jwtSecret);
-  // Injection du token dans la requête pour demandeur
   req.userToken = payload;
-  // Passage au prochain middleware ou la route demandée
   next();
  } catch (e) {
-  // Vérification échouée -> forbidden
   return res.sendStatus(403);
  }
 };
@@ -48,30 +52,29 @@ app.post('/inscription', async (req, res) => {
  const password = req.body.password;
  try {
   await adminsDM.creerAdmin(prenom, nom, email, password);
-  res.sendStatus(200);
+  res.status(200);
  } catch (e) {
-  res.sendStatus(400);
+  res.status(400);
  }
 });
 
 app.get('/connexion', async (req, res) => {
- console.log('----- POST/connexion -----');
+ console.log('----- GET/connexion -----');
  const email = req.body.email;
  const password = req.body.password;
- const administrateur = await adminsDM.recupererAdminParEmailEtPassword(email, password);
+ console.log(email, password);
+ const administrateur = await adminsDM.trouverAdminParEmail(email);
  if (administrateur != undefined) {
-  const token = jwt.sign({ email, password }, jwtSecret);
-  return res
-   .cookie('access_token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-   })
-   .status(200)
-   .json({ message: 'Logged in successfully 😊 👌' });
- } else res.sendStatus(403);
+  if (administrateur.password === password) {
+   const token = jwt.sign({ email, password }, jwtSecret);
+   res.cookie('access_token', token, { httpOnly: true });
+   res.json(token);
+  }
+ } else res.status(403);
 });
 
 app.post('/deconnexion', authenticate, async (req, res) => {
+ console.log('----- POST/deconnexion -----');
  return res
   .clearCookie('access_token')
   .status(200)

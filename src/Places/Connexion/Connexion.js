@@ -14,19 +14,26 @@ const Connexion = (props) => {
  const handleSubmit = async (event) => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
-  // eslint-disable-next-line no-console
   const f = async () => {
    try {
-    const connexionRequest = await axios({
-     method: 'post',
+    await axios({
+     method: 'get',
      url: 'http://localhost:3001/connexion',
      data: {
       email: data.get('email'),
       password: data.get('password'),
      },
+    }).then((response) => {
+     setToken(response.data);
+     navigate('/mainpage');
     });
-    setToken(connexionRequest.data);
-    navigate('/mainpage');
+
+    // const connexionRequest = await axios.get('http://localhost:3001/connexion', {
+    //  data: {
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    //  },
+    // });
    } catch (e) {
     console.log('Failed to connect ' + e);
    }
@@ -69,7 +76,7 @@ const Connexion = (props) => {
       autoComplete='current-password'
      />
      <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-      connexion
+      Connexion
      </Button>
      <Button fullWidth variant='contained' sx={{ mt: 3, mb: 2 }} onClick={() => navigate('/inscription')}>
       Dont't have an account ? Sign Up !

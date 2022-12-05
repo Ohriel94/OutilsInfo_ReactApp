@@ -17,7 +17,7 @@ const Connexion = (props) => {
   const f = async () => {
    try {
     await axios({
-     method: 'get',
+     method: 'post',
      url: 'http://localhost:3001/connexion',
      data: {
       email: data.get('email'),

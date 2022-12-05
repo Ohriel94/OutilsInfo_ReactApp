@@ -58,7 +58,7 @@ app.post('/inscription', async (req, res) => {
  }
 });
 
-app.get('/connexion', async (req, res) => {
+app.post('/connexion', async (req, res) => {
  console.log('----- GET/connexion -----');
  const email = req.body.email;
  const password = req.body.password;

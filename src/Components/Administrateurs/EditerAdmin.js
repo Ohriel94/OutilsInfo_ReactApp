@@ -9,7 +9,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Switch from '@mui/material/Switch';
-import { padding } from '@mui/system';
 
 const customStyles = {
  content: {
@@ -130,6 +129,7 @@ const EditerAdministrateur = (props) => {
           margin='normal'
           fullWidth
           required
+          disabled
           label='Username'
           name='Username'
           id='Username'

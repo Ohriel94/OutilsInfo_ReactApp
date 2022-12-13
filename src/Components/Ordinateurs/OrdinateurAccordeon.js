@@ -1,16 +1,14 @@
 import * as React from 'react';
 import Theme from '../../Ressources/Theme';
 import { ThemeProvider } from '@mui/material/styles';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import EditerOrdinateur from './EditerOrdinateur';
 
 const BGCouleurListe = (etat) => {
@@ -26,7 +24,7 @@ const componentStyle = {
   alignItems: 'center',
   textAlign: 'center',
  },
- sx: { padding: (0, 2), border: 'lightgray solid 1px' },
+ sx: { padding: (0, 1), border: 'lightgray solid 1px' },
 };
 
 const OrdinateurAccordeon = (props) => {
@@ -41,8 +39,7 @@ const OrdinateurAccordeon = (props) => {
      sx={{ backgroundColor: BGCouleurListe(ordinateur.etatDisponible) }}
      expandIcon={<ExpandMoreIcon />}
      aria-controls='panel1a-content'
-     id='panel1a-header'
-    >
+     id='panel1a-header'>
      <Typography variant='h5'>
       {`${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`}
      </Typography>
@@ -91,16 +88,14 @@ const OrdinateurAccordeon = (props) => {
          container
          style={{
           flexDirection: 'row',
-         }}
-        >
+         }}>
          <Grid
           container
           alignItems={'center'}
           textAlign={'center'}
           style={{
            flexDirection: 'column',
-          }}
-         >
+          }}>
           <Grid item xs={3}>
            <Typography variant='h6'>Date</Typography>
           </Grid>

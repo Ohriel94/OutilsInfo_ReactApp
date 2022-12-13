@@ -1,11 +1,11 @@
 import * as React from 'react';
+import axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import axios from 'axios';
 
 const Inscription = () => {
  const navigate = useNavigate();
@@ -24,8 +24,7 @@ const Inscription = () => {
       email: data.get('email'),
       password: data.get('password'),
      },
-    });
-    navigate('login');
+    }).then(navigate('login'));
    } catch (e) {
     console.log(e);
    }
@@ -41,8 +40,7 @@ const Inscription = () => {
      display: 'flex',
      flexDirection: 'column',
      alignItems: 'center',
-    }}
-   >
+    }}>
     <Typography component='h1' variant='h5'>
      Inscription
     </Typography>

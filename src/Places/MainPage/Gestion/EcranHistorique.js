@@ -1,13 +1,7 @@
 import * as React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import UsagerAccordeon from '../../Components/UsagerAccordeon';
-import { NoMeetingRoomTwoTone } from '@mui/icons-material';
-import HistoriqueAccordeon from '../../Components/Historique/HistoriqueAccordeon';
+import HistoriqueAccordeon from '../../../Components/Historique/HistoriqueAccordeon';
 
 const Usagers = (props) => {
  const [historiques, setHistoriques] = React.useState([]);
@@ -38,8 +32,10 @@ const Usagers = (props) => {
     const getHistoriquesRequest = await axios({
      method: 'get',
      url: 'http://localhost:3001/historiques',
+    }).then((response) => {
+     console.log(response.data);
+     setHistoriques(response.data);
     });
-    setHistoriques(getHistoriquesRequest.data);
    } catch (e) {
     console.log('Failed to connect ' + e);
    }

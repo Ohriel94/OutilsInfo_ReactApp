@@ -1,7 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
-import { Grid, Button, Typography, Paper } from '@mui/material';
-import { InfoTwoToneIcon } from '@mui/icons-material';
+import { Grid, Typography, Paper } from '@mui/material';
 
 const BGCouleurListe = (etat) => {
  let couleur = '';

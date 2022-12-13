@@ -1,16 +1,10 @@
 import Axios from 'axios';
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
-import { NoMeetingRoomTwoTone } from '@mui/icons-material';
-import DragAndDrop from '../../Components/DragAndDrop';
+import DragAndDrop from '../../../Components/DragAndDrop';
 
 const Affectation = (props) => {
  const [ordinateurs, setOrdinateurs] = useState([]);

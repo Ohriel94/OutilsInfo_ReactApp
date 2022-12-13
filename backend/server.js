@@ -31,8 +31,11 @@ const jwtSecret =
 // };
 
 const authenticate = async (req, res, next) => {
- const authHeader = req.headers['authorization'];
+ console.log(req.headers);
+ const authHeader = req.headers.authorization;
+ console.log(authHeader);
  const token = authHeader && authHeader.split(' ')[1];
+ console.log(token);
  if (!token) return res.sendStatus(401);
  try {
   const payload = await jwt.verify(token, jwtSecret);
@@ -59,7 +62,7 @@ app.post('/inscription', async (req, res) => {
 });
 
 app.post('/connexion', async (req, res) => {
- console.log('----- GET/connexion -----');
+ console.log('----- POST/connexion -----');
  const email = req.body.email;
  const password = req.body.password;
  console.log(email, password);
@@ -68,17 +71,14 @@ app.post('/connexion', async (req, res) => {
   if (administrateur.password === password) {
    const token = jwt.sign({ email, password }, jwtSecret);
    res.cookie('access_token', token, { httpOnly: true });
-   res.json(token);
+   res.send({ token: token, userInfo: { nom: administrateur.nom, prenom: administrateur.prenom } });
   }
  } else res.status(403);
 });
 
 app.post('/deconnexion', authenticate, async (req, res) => {
  console.log('----- POST/deconnexion -----');
- return res
-  .clearCookie('access_token')
-  .status(200)
-  .json({ message: 'Successfully logged out 😏 🍀' });
+ return res.clearCookie('access_token').status(200).json({ message: 'Successfully logged out' });
 });
 
 app.get('/administrateurs', async (req, res) => {

@@ -9,11 +9,12 @@ import axios from 'axios';
 
 const Connexion = (props) => {
  const navigate = useNavigate();
- const { setToken } = props;
+ const { setToken, setAdmin } = props;
 
  const handleSubmit = async (event) => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
+  console.log(data.get('email'), data.get('password'));
   const f = async () => {
    try {
     await axios({
@@ -24,7 +25,8 @@ const Connexion = (props) => {
       password: data.get('password'),
      },
     }).then((response) => {
-     setToken(response.data);
+     setToken(response.data.token);
+     setAdmin(response.data.userInfo);
      navigate('/mainpage');
     });
 
@@ -49,8 +51,7 @@ const Connexion = (props) => {
      display: 'flex',
      flexDirection: 'column',
      alignItems: 'center',
-    }}
-   >
+    }}>
     <Typography component='h1' variant='h5'>
      Connexion
     </Typography>

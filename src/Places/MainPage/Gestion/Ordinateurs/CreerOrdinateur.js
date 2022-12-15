@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
@@ -34,6 +35,8 @@ const CreerOrdinateur = (props) => {
  const { handleSubmit, notifier } = props;
  let subtitle;
  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+ const navigate = useNavigate();
 
  const openModal = () => {
   setIsOpen(true);
@@ -146,8 +149,12 @@ const CreerOrdinateur = (props) => {
        <Button variant='contained' color='success' type='submit' size='small'>
         Soumettre
        </Button>
-       <Button variant='contained' color='error' size='small' onClick={closeModal}>
-        close
+       <Button
+        variant='contained'
+        color='error'
+        size='small'
+        onClick={() => navigate('/gestion/ordinateurs/*')}>
+        Quitter
        </Button>
       </Grid>
      </Grid>

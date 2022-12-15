@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
 import EcranOrdinateurs from './Gestion/Ordinateurs/EcranOrdinateurs';
 import CreerOrdinateur from './Gestion/Ordinateurs/CreerOrdinateur';
@@ -13,21 +14,28 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
 
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import HistoryIcon from '@mui/icons-material/History';
+import BadgeIcon from '@mui/icons-material/Badge';
 import DevicesIcon from '@mui/icons-material/Devices';
 import GroupsIcon from '@mui/icons-material/Groups';
-import BadgeIcon from '@mui/icons-material/Badge';
+import HistoryIcon from '@mui/icons-material/History';
+import HomeIcon from '@mui/icons-material/Home';
+
+import ArrowRight from '@mui/icons-material/ArrowRight';
 import EditerOrdinateur from './Gestion/Ordinateurs/EditerOrdinateur';
+import IconButton from '@mui/material/IconButton';
+import Settings from '@mui/icons-material/Settings';
+import Tooltip from '@mui/material/Tooltip';
 
 const drawerWidth = 250;
 const drawerZIndex = 0;
@@ -54,7 +62,7 @@ const MainPage = (props) => {
   setSelectedIndex(index);
   switch (index) {
    case 1:
-    navigate('appareils');
+    navigate('gestion/ordinateurs');
     break;
    case 2:
     navigate('usagers');
@@ -84,6 +92,7 @@ const MainPage = (props) => {
    }}>
    <AppBar
     position='fixed'
+    color={'primary'}
     sx={{
      zIndex: drawerZIndex + 1,
     }}>
@@ -104,7 +113,64 @@ const MainPage = (props) => {
     <Toolbar />
     <Divider />
     <List>
-     <Divider>Gestion</Divider>
+     <ListItem component='div' disablePadding>
+      <ListItemButton onClick={() => navigate('/')}>
+       <ListItemIcon>
+        <HomeIcon color='primary' />
+       </ListItemIcon>
+       <ListItemText
+        primary='Menu principal'
+        primaryTypographyProps={{
+         color: 'primary',
+         fontWeight: 'medium',
+         variant: 'h6',
+        }}
+       />
+      </ListItemButton>
+      <Tooltip title='Paramètres'>
+       <IconButton
+        size='large'
+        sx={{
+         '& svg': {
+          color: 'rgba(255,255,255,0.8)',
+          transition: '0.2s',
+          transform: 'translateX(0) rotate(0)',
+         },
+         '&:hover, &:focus': {
+          bgcolor: 'unset',
+          '& svg:first-of-type': {
+           transform: 'translateX(-4px) rotate(-20deg)',
+          },
+          '& svg:last-of-type': {
+           right: 0,
+           opacity: 1,
+          },
+         },
+         '&:after': {
+          content: '""',
+          position: 'absolute',
+          height: '80%',
+          display: 'block',
+          left: 0,
+          width: '1px',
+          bgcolor: 'divider',
+         },
+        }}>
+        <Settings />
+        <ArrowRight sx={{ position: 'absolute', right: 4, opacity: 0 }} />
+       </IconButton>
+      </Tooltip>
+     </ListItem>
+     <Divider>
+      <ListItemText
+       primaryTypographyProps={{
+        color: 'primary',
+        fontWeight: 'medium',
+        variant: 'body2',
+       }}>
+       Gestion
+      </ListItemText>
+     </Divider>
      <ListItemButton
       key={'EcranOrdinateurs'}
       selected={selectedIndex === 1}
@@ -134,7 +200,16 @@ const MainPage = (props) => {
      </ListItemButton>
     </List>
     <List>
-     <Divider>Affectation</Divider>
+     <Divider>
+      <ListItemText
+       primaryTypographyProps={{
+        color: 'primary',
+        fontWeight: 'medium',
+        variant: 'body2',
+       }}>
+       Affectations
+      </ListItemText>
+     </Divider>
      <ListItemButton
       key={'EcranAffectation'}
       selected={selectedIndex === 4}
@@ -146,7 +221,16 @@ const MainPage = (props) => {
      </ListItemButton>
     </List>
     <List>
-     <Divider>Journaux</Divider>
+     <Divider>
+      <ListItemText
+       primaryTypographyProps={{
+        color: 'primary',
+        fontWeight: 'medium',
+        variant: 'body2',
+       }}>
+       Journaux
+      </ListItemText>
+     </Divider>
      <ListItemButton
       key={'EcranHistorique'}
       selected={selectedIndex === 5}
@@ -156,21 +240,33 @@ const MainPage = (props) => {
       </ListItemIcon>
       <ListItemText primary={'Afficher historique'} />
      </ListItemButton>
+     <br />
      <Divider />
-     <ListItemButton key={'Deconnexion'} size='small' onClick={deconnexion}>
-      <ListItemText primary={'Déconnexion'} />
-     </ListItemButton>
+     <br />
+     <ListItem component='div' disablePadding>
+      <ListItemButton sx={{ textAlign: 'center' }}>
+       <ListItemText
+        primary='DÉCONNEXION'
+        onClick={deconnexion}
+        primaryTypographyProps={{
+         color: 'error',
+         fontWeight: 'medium',
+         variant: 'body2',
+        }}
+       />
+      </ListItemButton>
+     </ListItem>
     </List>
    </Drawer>
-   <Box component='main' sx={{ marginY: 0.5, marginLeft: 3.5, marginRight: 0.5 }}>
+   <Box component='main' sx={{ marginY: 0.5, marginLeft: 7, marginRight: 0.5 }}>
     <Routes>
-     <Route path='/usagers' element={<EcranUsagers />} />
-     <Route path='/appareils' element={<EcranOrdinateurs />} />
+     <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs />} />
      <Route path='/gestion/ordinateurs/editer?sn=*' element={<EditerOrdinateur />} />
-     <Route path='/gestion/ordinateurs/ajouter/*' element={<CreerOrdinateur />} />
+     <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdinateur />} />
+     <Route path='/gestion/usagers' element={<EcranUsagers />} />
+     <Route path='/gestion/administrateurs' element={<EcranAdmin />} />
      <Route path='/historique' element={<EcranHistorique />} />
      <Route path='/affectation' element={<EcranAffectations />} />
-     <Route path='/administrateurs' element={<EcranAdmin />} />
     </Routes>
    </Box>
   </Box>

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import Axios from 'axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AWN from 'awesome-notifications';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import CreerOrdinateur from './CreerOrdinateur';
 import OrdinateurAccordeon from '../../../../Components/Ordinateurs/OrdinateurAccordeon';
 
 const EcranOrdinateurs = (props) => {
@@ -21,7 +20,10 @@ const EcranOrdinateurs = (props) => {
   sx: { padding: 1, marginBottom: 0.5, zIndex: 1 },
  };
 
- let notifier = new AWN({ position: 'top-center' });
+ let globalOptions = { icons: { enabled: false } };
+ let nextCallOptions = {};
+
+ let notifier = new AWN(globalOptions);
 
  const handleSubmit = async (event) => {
   event.preventDefault();
@@ -29,7 +31,7 @@ const EcranOrdinateurs = (props) => {
 
   const f = async () => {
    try {
-    const inscrireOrdinateurRequest = await Axios({
+    const inscrireOrdinateurRequest = await axios({
      method: 'post',
      url: 'http://localhost:3001/inscrireOrdinateur',
      data: {
@@ -47,14 +49,16 @@ const EcranOrdinateurs = (props) => {
   f();
  };
 
- const getOrdinateursRequest = () =>
-  Axios({
-   method: 'get',
-   url: 'http://localhost:3001/ordinateurs',
-  }).then((response) => setOrdinateurs(response.data));
+ const getOrdinateursPromise = axios.get('http://localhost:3001/ordinateurs');
 
  React.useEffect(() => {
-  notifier.asyncBlock(getOrdinateursRequest());
+  notifier.asyncBlock(getOrdinateursPromise, (resp) => {
+   console.log(`Nombre d'elements : ${resp.data.length}`);
+   setOrdinateurs(resp.data);
+   notifier.success(`Nombre d'elements : ${resp.data.length}`, nextCallOptions);
+  });
+
+  notifier.modal('test');
  }, []);
 
  return (
@@ -64,7 +68,8 @@ const EcranOrdinateurs = (props) => {
      onClick={() => navigate('/gestion/ordinateurs/ajouter')}
      variant='contained'
      color='primary'
-     size='small'>
+     size='small'
+    >
      Ajouter
     </Button>
    </Box>

@@ -5,9 +5,9 @@ import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
 import EcranOrdinateurs from './Gestion/Ordinateurs/EcranOrdinateurs';
 import CreerOrdinateur from './Gestion/Ordinateurs/CreerOrdinateur';
-import EcranUsagers from './Gestion/EcranUsagers';
-import EcranHistorique from './Gestion/EcranHistorique';
-import EcranAffectations from './Gestion/EcranAffectations';
+import EcranUsagers from './Gestion/Usagers/EcranUsagers';
+import EcranHistorique from './Journaux/EcranHistorique';
+import EcranAffectations from './Affectations/EcranAffectations';
 import EcranAdmin from './Gestion/EcranAdmin';
 
 import AppBar from '@mui/material/AppBar';
@@ -65,10 +65,10 @@ const MainPage = (props) => {
     navigate('gestion/ordinateurs');
     break;
    case 2:
-    navigate('usagers');
+    navigate('gestion/usagers');
     break;
    case 3:
-    navigate('administrateurs');
+    navigate('gestion/administrateurs');
     break;
    case 4:
     navigate('affectation');
@@ -258,7 +258,7 @@ const MainPage = (props) => {
      </ListItem>
     </List>
    </Drawer>
-   <Box component='main' sx={{ marginY: 0.5, marginLeft: 7, marginRight: 0.5 }}>
+   <Box component='main' sx={{ marginY: 0.5, marginLeft: 5, marginRight: 0.5 }}>
     <Routes>
      <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs />} />
      <Route path='/gestion/ordinateurs/editer?sn=*' element={<EditerOrdinateur />} />

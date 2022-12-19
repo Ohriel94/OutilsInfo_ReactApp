@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Axios from 'axios';
 import Button from '@mui/material/Button';
-import UsagerAccordeon from '../../../Components/UsagerAccordeon';
+import UsagerAccordeon from '../../../../Components/UsagerAccordeon';
 
 const Usagers = (props) => {
  const [appareils, setAppareils] = React.useState([]);

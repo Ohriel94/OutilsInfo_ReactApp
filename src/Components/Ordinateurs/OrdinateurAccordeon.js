@@ -78,57 +78,41 @@ const OrdinateurAccordeon = (props) => {
        <Typography variant='body2'>{ordinateur.details.notes}</Typography>
       </Grid>
      </Grid>
-     <Box>
-      <Accordion>
-       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
-        <Typography variant='h5'>Historique des détenteurs</Typography>
-       </AccordionSummary>
-       <AccordionDetails>
-        <Grid
-         container
-         style={{
-          flexDirection: 'row',
-         }}>
-         <Grid
-          container
-          alignItems={'center'}
-          textAlign={'center'}
-          style={{
-           flexDirection: 'column',
-          }}>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Date</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Time</Typography>
-          </Grid>
+     <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
+       <Typography variant='h5'>Historique des détenteurs</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+       <Grid
+        container
+        style={{
+         flexDirection: 'row',
+        }}>
+        <Grid container alignItems={'center'} textAlign={'center'}>
+         <Grid item xs={4}>
+          <Typography variant='h6'>Assigner à</Typography>
          </Grid>
-         <Grid container alignItems={'center'} textAlign={'center'}>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Assigner à</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Début du prêt</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Fin du prêt</Typography>
-          </Grid>
+         <Grid item xs={4}>
+          <Typography variant='h6'>Début du prêt</Typography>
          </Grid>
-         <Grid container alignItems={'center'} textAlign={'center'}>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Detenteur 1</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='subtitle2'>00/00/00</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='subtitle2'>99/99/99</Typography>
-          </Grid>
+         <Grid item xs={4}>
+          <Typography variant='h6'>Fin du prêt</Typography>
          </Grid>
         </Grid>
-       </AccordionDetails>
-      </Accordion>
-     </Box>
+        <Grid container alignItems={'center'} textAlign={'center'}>
+         <Grid item xs={4}>
+          <Typography variant='h6'>Detenteur 1</Typography>
+         </Grid>
+         <Grid item xs={4}>
+          <Typography variant='subtitle2'>Le 00/00/00 à 00:00</Typography>
+         </Grid>
+         <Grid item xs={4}>
+          <Typography variant='subtitle2'>Le 99/99/99 à 00:00</Typography>
+         </Grid>
+        </Grid>
+       </Grid>
+      </AccordionDetails>
+     </Accordion>
     </AccordionDetails>
    </Accordion>
   </ThemeProvider>

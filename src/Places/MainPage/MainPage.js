@@ -3,12 +3,14 @@ import * as React from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
-import EcranOrdinateurs from './Gestion/Ordinateurs/EcranOrdinateurs';
-import CreerOrdinateur from './Gestion/Ordinateurs/CreerOrdinateur';
+import EcranOrdi from './Gestion/Ordinateurs/EcranOrdi';
+import CreerOrdi from './Gestion/Ordinateurs/CreerOrdi';
 import EcranUsagers from './Gestion/Usagers/EcranUsagers';
 import EcranHistorique from './Journaux/EcranHistorique';
 import EcranAffectations from './Affectations/EcranAffectations';
-import EcranAdmin from './Gestion/EcranAdmin';
+import EcranAdmin from './Gestion/Administrateurs/EcranAdmin';
+import EditerAdmin from './Gestion/Administrateurs/EditerAdmin';
+import EditerOrdi from './Gestion/Ordinateurs/EditerOrdi';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -32,7 +34,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import HomeIcon from '@mui/icons-material/Home';
 
 import ArrowRight from '@mui/icons-material/ArrowRight';
-import EditerOrdinateur from './Gestion/Ordinateurs/EditerOrdinateur';
+import EditerOrdinateur from './Gestion/Ordinateurs/EditerOrdi';
 import IconButton from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
 import Tooltip from '@mui/material/Tooltip';
@@ -172,7 +174,7 @@ const MainPage = (props) => {
       </ListItemText>
      </Divider>
      <ListItemButton
-      key={'EcranOrdinateurs'}
+      key={'EcranOrdi'}
       selected={selectedIndex === 1}
       onClick={(event) => handleListItemClick(event, 1)}>
       <ListItemIcon>
@@ -260,11 +262,12 @@ const MainPage = (props) => {
    </Drawer>
    <Box component='main' sx={{ marginY: 0.5, marginLeft: 5, marginRight: 0.5 }}>
     <Routes>
-     <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs />} />
-     <Route path='/gestion/ordinateurs/editer?sn=*' element={<EditerOrdinateur />} />
-     <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdinateur />} />
+     <Route path='/gestion/ordinateurs' element={<EcranOrdi />} />
+     <Route path='/gestion/ordinateurs/editer?sn=*' element={<EditerOrdi />} />
+     <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdi />} />
      <Route path='/gestion/usagers' element={<EcranUsagers />} />
      <Route path='/gestion/administrateurs' element={<EcranAdmin />} />
+     <Route path='/gestion/administrateurs/*' element={<EditerAdmin />} />
      <Route path='/historique' element={<EcranHistorique />} />
      <Route path='/affectation' element={<EcranAffectations />} />
     </Routes>

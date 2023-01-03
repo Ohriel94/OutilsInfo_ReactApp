@@ -17,17 +17,10 @@ const closeConnection = async () => {
 };
 
 const getAll = async () => {
- try {
-  const collection = await getCollection();
-  const res = await collection.find({});
-  const administrateur = await res.toArray();
-  await closeConnection();
-  return administrateur;
- } catch (e) {
-  throw e;
- } finally {
-  await closeConnection();
- }
+ const collection = await getCollection();
+ const admins = await collection.find({}).toArray();
+ await closeConnection();
+ return admins;
 };
 
 const findById = async (id) => {

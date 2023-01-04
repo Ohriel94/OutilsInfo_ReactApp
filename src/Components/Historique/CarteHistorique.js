@@ -36,32 +36,27 @@ const componentStyle = {
 const CarteHistorique = (props) => {
  const { entree, entreeKey } = props;
 
- const getInfos = (idUsager, idAppareil) => {
-  const f = async () => {
-   try {
-    const getUsager = await axios({
-     method: 'get',
-     url: `http://localhost:3001/recupererUsager/` + idUsager,
-    });
-    setUsager(getUsager.data);
+ const getInfos = async (idUsager, idAppareil) => {
+  try {
+   const getUsagerRequest = await axios
+    .get(`http://localhost:3001/recupererUsager/` + idUsager)
+    .then((response) => setUsager({ prenom: response.data.prenom, nom: response.data.nom }));
 
-    const getOrdinateur = await axios({
-     method: 'get',
-     url: 'http://localhost:3001/recupererOrdinateur/' + idAppareil,
-    });
-    setOrdinateur({
-     serialNumber: getOrdinateur.data.serialNumber,
-     nom: `${getOrdinateur.data.details.marque} ${getOrdinateur.data.details.modele}`,
-     systeme: getOrdinateur.data.details.configuration.systeme,
-     processeur: getOrdinateur.data.details.configuration.processeur,
-     memoire: getOrdinateur.data.details.configuration.memoire,
-     disque: getOrdinateur.data.details.configuration.disque,
-    });
-   } catch (e) {
-    console.log('Failed to retrieve user or device : ' + e);
-   }
-  };
-  f();
+   const getOrdinateurRequest = await axios
+    .get('http://localhost:3001/recupererOrdinateur/' + idAppareil)
+    .then((response) =>
+     setOrdinateur({
+      serialNumber: response.data.serialNumber,
+      nom: `${response.data.details.marque} ${response.data.details.modele}`,
+      systeme: response.data.details.configuration.systeme,
+      processeur: response.data.details.configuration.processeur,
+      memoire: response.data.details.configuration.memoire,
+      disque: response.data.details.configuration.disque,
+     })
+    );
+  } catch (e) {
+   console.log('Failed to retrieve user or device : ' + e);
+  }
  };
 
  const [usager, setUsager] = React.useState({});
@@ -80,8 +75,7 @@ const CarteHistorique = (props) => {
     margin: '0.5vh',
     backgroundColor: BGCouleurListe(entree.type),
    }}
-   style={paperTheme.style}
-  >
+   style={paperTheme.style}>
    <Typography variant={'h6'}>{`${usager.prenom} ${usager.nom}`}</Typography>
    <hr />
    <Grid
@@ -92,24 +86,21 @@ const CarteHistorique = (props) => {
     sx={{
      justifyContent: 'center',
      alignItems: 'center',
-    }}
-   >
+    }}>
     <Grid
      textAlign={'center'}
      style={{ height: 'auto', width: '9vh' }}
      xs={4}
      sx={{
       textAlign: 'left',
-     }}
-    >
+     }}>
      <Typography variant={'h6'}>{entree.time}</Typography>
     </Grid>
     <Grid
      xs={8}
      sx={{
       textAlign: 'right',
-     }}
-    >
+     }}>
      <Typography variant='subtitle2'>{`${ordinateur.serialNumber} - ${ordinateur.nom}`}</Typography>
      <Typography variant='subtitle2'>{`${ordinateur.systeme}`}</Typography>
      <Typography variant='subtitle2'>{`${ordinateur.processeur}`}</Typography>

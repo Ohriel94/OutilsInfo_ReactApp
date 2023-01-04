@@ -1,5 +1,6 @@
-import React, { useState, Fragment } from 'react';
 import CSS from './App.css';
+import AWNStyle from './awn-style.css';
+import React, { useState, Fragment } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import MainPage from './Places/MainPage/MainPage';
 import Inscription from './Places/Inscription/Inscription';
@@ -14,6 +15,10 @@ const App = () => {
 
  return (
   <Fragment>
+   <head>
+    <link rel='stylesheet' href='path/to/style.css'></link>
+    <script src='path/to/index.var.js'></script>
+   </head>
    <Routes>
     <Route
      path='/*'
@@ -23,7 +28,6 @@ const App = () => {
     />
     <Route path='/connexion' element={<Connexion setToken={setToken} setAdmin={setAdmin} />} />
     <Route path='/inscription' element={<Inscription />} />
-    <Route path='/gestionOrdinateurs' element={<EcranOrdinateurs />} token={token} />
    </Routes>
   </Fragment>
  );

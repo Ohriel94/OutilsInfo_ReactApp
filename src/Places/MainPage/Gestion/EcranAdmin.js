@@ -5,6 +5,7 @@ import AdminAccordeon from '../../../Components/Administrateurs/AdminAccordeon';
 
 const EcranAdmin = (props) => {
  const [admins, setAdmins] = React.useState([]);
+ const { token, notifier } = props;
 
  const paperTheme = {
   color: 'success',
@@ -21,35 +22,13 @@ const EcranAdmin = (props) => {
   variant: 'contained',
  };
 
+ const getAdminsRequest = axios.get('http://localhost:3001/administrateurs');
+
  React.useEffect(() => {
-  getAdmins();
+  notifier.asyncBlock(getAdminsRequest, (resp) => {
+   setAdmins(resp.data);
+  });
  }, []);
-
- const getAdmins = () => {
-  const f = async () => {
-   try {
-    const getAdminsRequest = await axios({
-     method: 'get',
-     url: 'http://localhost:3001/administrateurs',
-    });
-    console.log(getAdminsRequest.data);
-    setAdmins(getAdminsRequest.data);
-    return getAdminsRequest.data;
-   } catch (e) {
-    console.log('Failed to connect ' + e);
-   }
-  };
-  f();
- };
-
- const BGCouleurListe = (etat) => {
-  let couleur = '';
-  if (etat === 'affectation') couleur = '#67b56f';
-  else couleur = '#b55353';
-  return couleur;
- };
-
- console.log(admins);
 
  return (
   <React.Fragment>

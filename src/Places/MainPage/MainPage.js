@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as React from 'react';
+import AWN from 'awesome-notifications';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
@@ -14,8 +15,6 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -43,7 +42,13 @@ const drawerZIndex = 0;
 const MainPage = (props) => {
  const token = props.token;
  const admin = props.admin;
+
  const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+ let globalOptions = { icons: { enabled: false } };
+ let nextCallOptions = {};
+
+ let notifier = new AWN(globalOptions);
 
  const navigate = useNavigate();
 
@@ -258,15 +263,21 @@ const MainPage = (props) => {
      </ListItem>
     </List>
    </Drawer>
-   <Box component='main' sx={{ marginY: 0.5, marginLeft: 5, marginRight: 0.5 }}>
+   <Box component='main' sx={{ marginY: 0.5, marginLeft: 7, marginRight: 0.5 }}>
     <Routes>
-     <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs />} />
-     <Route path='/gestion/ordinateurs/editer?sn=*' element={<EditerOrdinateur />} />
-     <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdinateur />} />
-     <Route path='/gestion/usagers' element={<EcranUsagers />} />
-     <Route path='/gestion/administrateurs' element={<EcranAdmin />} />
-     <Route path='/historique' element={<EcranHistorique />} />
-     <Route path='/affectation' element={<EcranAffectations />} />
+     <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs notifier={notifier} token={token} />} />
+     <Route
+      path='/gestion/ordinateurs/editer?sn=*'
+      element={<EditerOrdinateur notifier={notifier} token={token} />}
+     />
+     <Route
+      path='/gestion/ordinateurs/ajouter'
+      element={<CreerOrdinateur notifier={notifier} token={token} />}
+     />
+     <Route path='/gestion/usagers' element={<EcranUsagers notifier={notifier} token={token} />} />
+     <Route path='/gestion/administrateurs' element={<EcranAdmin notifier={notifier} token={token} />} />
+     <Route path='/historique' element={<EcranHistorique notifier={notifier} token={token} />} />
+     <Route path='/affectation' element={<EcranAffectations notifier={notifier} token={token} />} />
     </Routes>
    </Box>
   </Box>

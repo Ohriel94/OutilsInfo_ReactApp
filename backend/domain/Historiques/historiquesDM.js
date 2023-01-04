@@ -8,7 +8,7 @@ const recupererHistoriques = async () => {
 const enregistrerAffectationAppareil = async (usager, appareil) => {
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager._id, `affectation`);
+  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager, `affectation`);
   const nouvelleJournee = creerJourneeHistorique(date);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }
@@ -17,7 +17,7 @@ const enregistrerAffectationAppareil = async (usager, appareil) => {
 const enregistrerRetraitAppareil = async (usager, appareil) => {
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager._id, `retrait`);
+  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager, `retrait`);
   const nouvelleJournee = creerJourneeHistorique(date);
   await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
  }
@@ -30,12 +30,13 @@ const creerJourneeHistorique = (date) => {
  return nouvelleJournee;
 };
 
-const creerEntreeHistorique = (date, appareil, idUsager, operation) => {
+const creerEntreeHistorique = (date, appareil, usager, operation) => {
  const nouvelleEntree = {
   time: formaterHeure(date),
   type: operation,
   appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-  idUsager: idUsager,
+  usager: `${usager.prenom} ${usager.nom}`,
+  idUsager: usager._id,
   idAppareil: appareil._id,
  };
  return nouvelleEntree;

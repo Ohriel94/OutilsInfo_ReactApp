@@ -13,7 +13,7 @@ const getCollection = async () => {
 };
 
 const closeConnection = async () => {
- client.close();
+ await client.close();
 };
 
 const getAll = async () => {

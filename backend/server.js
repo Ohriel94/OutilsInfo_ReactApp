@@ -18,18 +18,6 @@ const jwtSecret =
  '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0';
 
 //=============== AUTHENTIFICATE ===============
-// const authenticate = async (req, res, next) => {
-//  const authToken = req.cookies.access_token;
-//  if (!authToken) return res.sendStatus(401);
-//  try {
-//   const payload = await jwt.verify(token, jwtSecret);
-//   req.userInfos = payload;
-//   return next();
-//  } catch (e) {
-//   return res.sendStatus(403);
-//  }
-// };
-
 const authenticate = async (req, res, next) => {
  console.log(req.headers);
  const authHeader = req.headers.authorization;
@@ -261,12 +249,12 @@ app.post('/affecterAppareil', async (req, res) => {
   if (usager !== undefined && appareil !== undefined) {
    delete usager.id;
    delete usager.label;
-   delete usager.title;
    delete appareil.id;
    delete appareil.title;
    delete appareil.etatDisponible;
    delete appareil.details.notes;
-
+   console.log(usager);
+   console.log(appareil);
    console.log(`Affecter a l'usager...`);
    await usagersDM.affecterAppareilAUsagerParId(usager._id, appareil);
    console.log(`Rendre l'ordinateur indisponible...`);

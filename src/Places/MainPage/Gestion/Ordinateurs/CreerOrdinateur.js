@@ -1,6 +1,7 @@
 import * as React from 'react';
+import axios from 'axios';
+import AWN from 'awesome-notifications';
 import { useNavigate } from 'react-router-dom';
-import Axios from 'axios';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import Theme from '../../../../Ressources/Theme';
@@ -32,23 +33,34 @@ const componentStyle = {
 };
 
 const CreerOrdinateur = (props) => {
- const { handleSubmit, notifier } = props;
+ const { notifier } = props;
  let subtitle;
  const [modalIsOpen, setIsOpen] = React.useState(false);
 
  const navigate = useNavigate();
 
- const openModal = () => {
-  setIsOpen(true);
- };
+ const handleSubmit = async (event) => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
 
- const afterOpenModal = () => {
-  // references are now sync'd and can be accessed.
-  subtitle.style.color = '#f00';
- };
-
- const closeModal = () => {
-  setIsOpen(false);
+  const f = async () => {
+   try {
+    const inscrireOrdinateurRequest = await axios({
+     method: 'post',
+     url: 'http://localhost:3001/inscrireOrdinateur',
+     data: {
+      id: parseInt(data.get('id')),
+      prenom: data.get('prenom'),
+      nom: data.get('nom'),
+      adresse: data.get('adresse'),
+      motDePasse: data.get('motDePasse'),
+     },
+    });
+   } catch (e) {
+    console.log('Failed to connect ' + e);
+   }
+  };
+  f();
  };
 
  return (

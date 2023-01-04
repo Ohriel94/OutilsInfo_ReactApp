@@ -5,7 +5,7 @@ import HistoriqueAccordeon from '../../../Components/Historique/HistoriqueAccord
 
 const Usagers = (props) => {
  const [historiques, setHistoriques] = React.useState([]);
- const { token, niveau, setNiveau } = props;
+ const { token } = props;
 
  const paperTheme = {
   color: 'success',
@@ -29,10 +29,7 @@ const Usagers = (props) => {
  const getHistoriques = () => {
   const f = async () => {
    try {
-    const getHistoriquesRequest = await axios({
-     method: 'get',
-     url: 'http://localhost:3001/historiques',
-    }).then((response) => {
+    const getHistoriquesRequest = await axios.get('http://localhost:3001/historiques').then((response) => {
      console.log(response.data);
      setHistoriques(response.data);
     });

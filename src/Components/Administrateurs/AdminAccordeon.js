@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Theme from '../../Ressources/Theme';
 import { ThemeProvider } from '@mui/material/styles';
-import EditerAdmin from './EditerAdmin';
+import EditerAdmin from '../../Places/MainPage/Gestion/Administrateurs/EditerAdmin';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';

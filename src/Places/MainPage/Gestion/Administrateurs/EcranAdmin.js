@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import AdminAccordeon from '../../../Components/Administrateurs/AdminAccordeon';
+import AdminAccordeon from '../../../../Components/Administrateurs/AdminAccordeon';
 
 const EcranAdmin = (props) => {
  const [admins, setAdmins] = React.useState([]);
@@ -33,14 +33,7 @@ const EcranAdmin = (props) => {
  return (
   <React.Fragment>
    {admins.map((administrateur, administrateurKey) => (
-    <Grid
-     container
-     key={administrateurKey}
-     style={{
-      flexDirection: 'column',
-     }}>
-     <AdminAccordeon administrateur={administrateur} key={administrateurKey} />
-    </Grid>
+    <AdminAccordeon administrateur={administrateur} key={administrateurKey} />
    ))}
   </React.Fragment>
  );

@@ -5,7 +5,6 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import MainPage from './Places/MainPage/MainPage';
 import Inscription from './Places/Inscription/Inscription';
 import Connexion from './Places/Connexion/Connexion';
-import EcranOrdinateurs from './Places/MainPage/Gestion/Ordinateurs/EcranOrdinateurs';
 
 const App = () => {
  const navigate = useNavigate();

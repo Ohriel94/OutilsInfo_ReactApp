@@ -4,12 +4,14 @@ import AWN from 'awesome-notifications';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
-import EcranOrdinateurs from './Gestion/Ordinateurs/EcranOrdinateurs';
-import CreerOrdinateur from './Gestion/Ordinateurs/CreerOrdinateur';
+import EcranOrdi from './Gestion/Ordinateurs/EcranOrdi';
+import CreerOrdi from './Gestion/Ordinateurs/CreerOrdi';
 import EcranUsagers from './Gestion/Usagers/EcranUsagers';
 import EcranHistorique from './Journaux/EcranHistorique';
 import EcranAffectations from './Affectations/EcranAffectations';
-import EcranAdmin from './Gestion/EcranAdmin';
+import EcranAdmin from './Gestion/Administrateurs/EcranAdmin';
+import EditerAdmin from './Gestion/Administrateurs/EditerAdmin';
+import EditerOrdi from './Gestion/Ordinateurs/EditerOrdi';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -31,7 +33,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import HomeIcon from '@mui/icons-material/Home';
 
 import ArrowRight from '@mui/icons-material/ArrowRight';
-import EditerOrdinateur from './Gestion/Ordinateurs/EditerOrdinateur';
+import EditerOrdinateur from './Gestion/Ordinateurs/EditerOrdi';
 import IconButton from '@mui/material/IconButton';
 import Settings from '@mui/icons-material/Settings';
 import Tooltip from '@mui/material/Tooltip';
@@ -177,7 +179,7 @@ const MainPage = (props) => {
       </ListItemText>
      </Divider>
      <ListItemButton
-      key={'EcranOrdinateurs'}
+      key={'EcranOrdi'}
       selected={selectedIndex === 1}
       onClick={(event) => handleListItemClick(event, 1)}>
       <ListItemIcon>

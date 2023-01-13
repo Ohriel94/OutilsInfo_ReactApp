@@ -6,12 +6,12 @@ import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 
 import EcranOrdi from './Gestion/Ordinateurs/EcranOrdi';
 import CreerOrdi from './Gestion/Ordinateurs/CreerOrdi';
+import EditerOrdi from './Gestion/Ordinateurs/EditerOrdi';
 import EcranUsagers from './Gestion/Usagers/EcranUsagers';
 import EcranHistorique from './Journaux/EcranHistorique';
 import EcranAffectations from './Affectations/EcranAffectations';
 import EcranAdmin from './Gestion/Administrateurs/EcranAdmin';
 import EditerAdmin from './Gestion/Administrateurs/EditerAdmin';
-import EditerOrdi from './Gestion/Ordinateurs/EditerOrdi';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -267,15 +267,12 @@ const MainPage = (props) => {
    </Drawer>
    <Box component='main' sx={{ marginY: 0.5, marginLeft: 7, marginRight: 0.5 }}>
     <Routes>
-     <Route path='/gestion/ordinateurs' element={<EcranOrdinateurs notifier={notifier} token={token} />} />
+     <Route path='/gestion/ordinateurs' element={<EcranOrdi notifier={notifier} token={token} />} />
      <Route
       path='/gestion/ordinateurs/editer?sn=*'
-      element={<EditerOrdinateur notifier={notifier} token={token} />}
+      element={<EditerOrdi notifier={notifier} token={token} />}
      />
-     <Route
-      path='/gestion/ordinateurs/ajouter'
-      element={<CreerOrdinateur notifier={notifier} token={token} />}
-     />
+     <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdi notifier={notifier} token={token} />} />
      <Route path='/gestion/usagers' element={<EcranUsagers notifier={notifier} token={token} />} />
      <Route path='/gestion/administrateurs' element={<EcranAdmin notifier={notifier} token={token} />} />
      <Route path='/historique' element={<EcranHistorique notifier={notifier} token={token} />} />

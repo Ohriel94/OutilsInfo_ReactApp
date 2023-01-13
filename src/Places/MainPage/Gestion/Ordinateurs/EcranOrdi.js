@@ -41,7 +41,7 @@ const EcranOrdinateurs = (props) => {
    </Box>
    <Box sx={{ marginTop: 8 }}>
     {ordinateurs.map((ordinateur, ordinateurKey) => (
-     <OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} />
+     <OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} notifier={notifier} />
     ))}
    </Box>
   </React.Fragment>

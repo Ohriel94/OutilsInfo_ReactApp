@@ -1,42 +1,42 @@
-import historiquesDB from '../../database/historiquesDB.js';
-import detenteursDB from '../../database/detenteursDB.js';
-
-const recupererHistoriques = async () => {
- const historiques = await historiquesDB.getAll();
- return historiques;
-};
+import detenteurDB from '../../database/detenteursDB.js';
 
 const recupererDetenteurs = async () => {
- const detenteurs = await detenteursDB.getAll();
- return detenteurs;
+ const detenteur = await detenteurDB.getAll();
+ return detenteur;
+};
+
+const recupererDetenteursParAppareil = async (idAppareil) => {
+ const detenteurs = await detenteurDB.getAll();
+ const listeDetenteurs = detenteurs.filter((detenteur) => detenteur.idAppareil === idAppareil);
+ return listeDetenteurs;
 };
 
 const enregistrerAffectationAppareil = async (usager, appareil) => {
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager, `affectation`);
-  const nouvelleJournee = creerJourneeHistorique(date);
-  await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
+  const nouvelleEntree = creerEntreeDetenteur(date, appareil, usager, `affectation`);
+  const nouvelleJournee = creerJourneeDetenteur(date);
+  await ajouterEntreeDetenteur(nouvelleJournee, nouvelleEntree);
  }
 };
 
 const enregistrerRetraitAppareil = async (usager, appareil) => {
  const date = new Date();
  if (usager._id !== undefined && appareil._id !== undefined) {
-  const nouvelleEntree = creerEntreeHistorique(date, appareil, usager, `retrait`);
-  const nouvelleJournee = creerJourneeHistorique(date);
-  await ajouterEntreeHistorique(nouvelleJournee, nouvelleEntree);
+  const nouvelleEntree = creerEntreeDetenteur(date, appareil, usager, `retrait`);
+  const nouvelleJournee = creerJourneeDetenteur(date);
+  await ajouterEntreeDetenteur(nouvelleJournee, nouvelleEntree);
  }
 };
 
 //=============== Utilitaires ===============
 
-const creerJourneeHistorique = (date) => {
+const creerJourneeDetenteur = (date) => {
  const nouvelleJournee = { date: formaterDate(date), entrees: [] };
  return nouvelleJournee;
 };
 
-const creerEntreeHistorique = (date, appareil, usager, operation) => {
+const creerEntreeDetenteur = (date, appareil, usager, operation) => {
  const nouvelleEntree = {
   time: formaterHeure(date),
   type: operation,
@@ -48,14 +48,14 @@ const creerEntreeHistorique = (date, appareil, usager, operation) => {
  return nouvelleEntree;
 };
 
-const ajouterEntreeHistorique = async (nouvelleJournee, nouvelleEntree) => {
- const journeeTrouvee = await historiquesDB.findByDate(nouvelleJournee.date);
+const ajouterEntreeDetenteur = async (nouvelleJournee, nouvelleEntree) => {
+ const journeeTrouvee = await detenteurDB.findByDate(nouvelleJournee.date);
  if (journeeTrouvee !== undefined) {
   journeeTrouvee.entrees.push(nouvelleEntree);
-  await historiquesDB.updateById(journeeTrouvee._id, journeeTrouvee);
+  await detenteurDB.updateById(journeeTrouvee._id, journeeTrouvee);
  } else {
   nouvelleJournee.entrees.push(nouvelleEntree);
-  await historiquesDB.addOne(nouvelleJournee);
+  await detenteurDB.addOne(nouvelleJournee);
  }
 };
 
@@ -82,14 +82,14 @@ const formaterDate = (date) => {
 };
 
 export default {
- recupererHistoriques,
  recupererDetenteurs,
+ recupererDetenteursParAppareil,
  enregistrerAffectationAppareil,
  enregistrerRetraitAppareil,
  formaterA2Digits,
  formaterHeure,
- creerEntreeHistorique,
+ creerEntreeDetenteur,
  formaterDate,
- creerJourneeHistorique,
- ajouterEntreeHistorique,
+ creerJourneeDetenteur,
+ ajouterEntreeDetenteur,
 };

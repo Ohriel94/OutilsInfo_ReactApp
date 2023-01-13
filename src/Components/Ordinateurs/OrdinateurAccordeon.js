@@ -9,7 +9,9 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import EditerOrdinateur from './EditerOrdinateur';
+import HistoDetenteurs from '../Historique/HistoDetenteurs';
 
 const BGCouleurListe = (etat) => {
  let couleur = '';
@@ -29,6 +31,8 @@ const componentStyle = {
 
 const OrdinateurAccordeon = (props) => {
  const navigate = useNavigate();
+
+ const [detenteurs, setDetenteurs] = React.useState([]);
 
  const { ordinateur, handleSubmit, notifier } = props;
 
@@ -83,34 +87,12 @@ const OrdinateurAccordeon = (props) => {
        <Typography variant='h5'>Historique des détenteurs</Typography>
       </AccordionSummary>
       <AccordionDetails>
-       <Grid
-        container
-        style={{
-         flexDirection: 'row',
-        }}>
-        <Grid container alignItems={'center'} textAlign={'center'}>
-         <Grid item xs={4}>
-          <Typography variant='h6'>Assigner à</Typography>
-         </Grid>
-         <Grid item xs={4}>
-          <Typography variant='h6'>Début du prêt</Typography>
-         </Grid>
-         <Grid item xs={4}>
-          <Typography variant='h6'>Fin du prêt</Typography>
-         </Grid>
-        </Grid>
-        <Grid container alignItems={'center'} textAlign={'center'}>
-         <Grid item xs={4}>
-          <Typography variant='h6'>Detenteur 1</Typography>
-         </Grid>
-         <Grid item xs={4}>
-          <Typography variant='subtitle2'>Le 00/00/00 à 00:00</Typography>
-         </Grid>
-         <Grid item xs={4}>
-          <Typography variant='subtitle2'>Le 99/99/99 à 00:00</Typography>
-         </Grid>
-        </Grid>
-       </Grid>
+       <HistoDetenteurs
+        idAppareil={ordinateur._id}
+        notifier={notifier}
+        detenteurs={detenteurs}
+        setDetenteurs={setDetenteurs}
+       />
       </AccordionDetails>
      </Accordion>
     </AccordionDetails>

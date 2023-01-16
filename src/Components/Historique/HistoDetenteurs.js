@@ -1,5 +1,5 @@
 import * as React from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -16,19 +16,6 @@ const BGCouleurListe = (etat) => {
  return couleur;
 };
 
-const aucunsDetenteurs = {
- debut: {
-  date: '',
-  heure: '',
- },
- fin: {
-  date: '',
-  heure: '',
- },
- idAppareil: '',
- idUsager: '',
-};
-
 const componentStyle = {
  style: {
   justifyContent: 'center',
@@ -42,17 +29,24 @@ const HistoDetenteurs = (props) => {
  const { idAppareil, detenteurs, setDetenteurs, notifier } = props;
  const navigate = useNavigate();
 
- const getListeDetenteursRequest = axios.get(`http://localhost:3001/listeDetenteurs`, {
-  params: { idAppareil: idAppareil },
- });
+ const getListeDetenteursRequest = (idAppareil) => {
+  const f = async () => {
+   try {
+    const getAdministrateursRequest = await Axios({
+     method: 'get',
+     url: `http://localhost:3001/listeDetenteurs/?idAppareil=` + idAppareil,
+    });
+    setDetenteurs(getAdministrateursRequest.data);
+   } catch (e) {
+    console.log('Failed to connect ' + e);
+   }
+  };
+  f();
+ };
 
  React.useEffect(() => {
   console.log('idAppareil : ', idAppareil);
-  idAppareil === undefined
-   ? setDetenteurs(aucunsDetenteurs)
-   : notifier.asyncBlock(getListeDetenteursRequest, (resp) => {
-      setDetenteurs(resp.data);
-     });
+  if (idAppareil !== undefined) getListeDetenteursRequest();
  });
 
  const afficherDetenteurs = () => {

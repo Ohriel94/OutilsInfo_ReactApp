@@ -158,24 +158,16 @@ app.get('/detenteurs', async (req, res) => {
 });
 
 app.get('/listeDetenteurs/:idAppareil?', async (req, res) => {
- console.log('----- GET /detenteurs -----');
- const idAppareil = req.params.idAppareil;
- const aucunsDetenteurs = [
-  {
-   debut: {
-    date: '',
-    heure: '',
-   },
-   fin: {
-    date: '',
-    heure: '',
-   },
-   idAppareil: '',
-   idUsager: '',
-  },
- ];
- const response = await detenteursDM.recupererDetenteursParAppareil(idAppareil);
- response !== undefined ? res.send(response) : res.send(aucunsDetenteurs);
+ console.log('----- GET /listeDetenteurs/:idAppareil? -----');
+ const idAppareil = req.query.idAppareil;
+ console.log(req.query);
+ let response;
+ if (req.query.idAppareil === undefined) {
+  response = sendStatus(404);
+ } else {
+  response = await historiquesDM.recupererDetenteursParAppareil(idAppareil);
+ }
+ res.send(response);
 });
 
 //=============== Routes - Ordinateurs ===============

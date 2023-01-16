@@ -87,12 +87,12 @@ const OrdinateurAccordeon = (props) => {
        <Typography variant='h5'>Historique des détenteurs</Typography>
       </AccordionSummary>
       <AccordionDetails>
-       <HistoDetenteurs
+       {/* <HistoDetenteurs
         idAppareil={ordinateur._id}
         notifier={notifier}
         detenteurs={detenteurs}
         setDetenteurs={setDetenteurs}
-       />
+       /> */}
       </AccordionDetails>
      </Accordion>
     </AccordionDetails>

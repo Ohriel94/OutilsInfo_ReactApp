@@ -1,13 +1,49 @@
 import historiquesDB from '../../database/historiquesDB.js';
-import detenteursDB from '../../database/detenteursDB.js';
 
 const recupererHistoriques = async () => {
  const historiques = await historiquesDB.getAll();
  return historiques;
 };
 
-const recupererDetenteurs = async () => {
- const detenteurs = await detenteursDB.getAll();
+const recupererDetenteursParAppareil = async (idAppareil) => {
+ const detenteurs = [];
+ const historiques = await historiquesDB.getAll();
+ historiques.map((journee) => {
+  let entreeDetenteur;
+  journee.entrees.map((entree) => {
+   if (entree.idAppareil === idAppareil) {
+    switch (entree.type) {
+     case 'affectation':
+      entreeDetenteur = {
+       appareil: { id: idAppareil, nom: entree.appareil },
+       detenteur: [
+        {
+         id: entree.idUsager,
+         nom: entree.usager,
+         periode: { debut: { idHistorique: journee._id, date: journee.date, heure: entree.time } },
+        },
+       ],
+      };
+      detenteurs.push(entreeDetenteur);
+      break;
+     case 'retrait':
+      if (detenteurs.filter((detenteur) => detenteur.appareil.id === idAppareil)[0])
+       entreeDetenteur = {
+        appareil: { id: idAppareil, nom: entree.appareil },
+        detenteur: [
+         {
+          id: entree.idUsager,
+          nom: entree.usager,
+          periode: { fin: { idHistorique: journee._id, date: journee.date, heure: entree.time } },
+         },
+        ],
+       };
+      break;
+    }
+    detenteurs.push(entreeDetenteur);
+   }
+  });
+ });
  return detenteurs;
 };
 
@@ -83,7 +119,7 @@ const formaterDate = (date) => {
 
 export default {
  recupererHistoriques,
- recupererDetenteurs,
+ recupererDetenteursParAppareil,
  enregistrerAffectationAppareil,
  enregistrerRetraitAppareil,
  formaterA2Digits,

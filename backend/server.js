@@ -157,7 +157,7 @@ app.get('/detenteurs', async (req, res) => {
  res.send(response);
 });
 
-app.get('/listeDetenteurs/:idAppareil?', async (req, res) => {
+app.get('/listeDetenteurs/:idAppareil', async (req, res) => {
  console.log('----- GET /listeDetenteurs/:idAppareil? -----');
  const idAppareil = req.query.idAppareil;
  console.log(req.query);
@@ -252,6 +252,7 @@ app.post('/creerUsager'),
 
 app.get('/recupererUsager/:usagerID', async (req, res) => {
  console.log('----- GET /recupererUsager/:usagerID -----');
+ console.log(req.params);
  const usagerID = req.params.usagerID;
  try {
   const response = await usagersDM.recupererUsagerParId(usagerID);

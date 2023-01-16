@@ -34,7 +34,8 @@ const HistoDetenteurs = (props) => {
    try {
     const getAdministrateursRequest = await Axios({
      method: 'get',
-     url: `http://localhost:3001/listeDetenteurs/?idAppareil=` + idAppareil,
+     url: `http://localhost:3001/listeDetenteurs/`,
+     params: { idAppareil: idAppareil },
     });
     setDetenteurs(getAdministrateursRequest.data);
    } catch (e) {

@@ -33,30 +33,36 @@ const componentStyle = {
  sx: { padding: (0, 2) },
 };
 
+let startTime;
+setInterval(function () {
+ if (!startTime) {
+  startTime = Date.now();
+ }
+ console.log((Date.now() - startTime) / 1000);
+}, 100);
+
 const CarteHistorique = (props) => {
  const { entree, entreeKey } = props;
 
  const getInfos = async (idUsager, idAppareil) => {
-  try {
-   const getUsagerRequest = await axios
-    .get(`http://localhost:3001/recupererUsager/` + idUsager)
-    .then((response) => setUsager({ prenom: response.data.prenom, nom: response.data.nom }));
+  const getUsagerRequest = await axios
+   .get(`http://localhost:3001/recupererUsager/` + idUsager)
+   .then((response) => setUsager({ prenom: response.data.prenom, nom: response.data.nom }))
+   .catch((error) => console.log('Failed to retrieve user : ' + error));
 
-   const getOrdinateurRequest = await axios
-    .get('http://localhost:3001/recupererOrdinateur/' + idAppareil)
-    .then((response) =>
-     setOrdinateur({
-      serialNumber: response.data.serialNumber,
-      nom: `${response.data.details.marque} ${response.data.details.modele}`,
-      systeme: response.data.details.configuration.systeme,
-      processeur: response.data.details.configuration.processeur,
-      memoire: response.data.details.configuration.memoire,
-      disque: response.data.details.configuration.disque,
-     })
-    );
-  } catch (e) {
-   console.log('Failed to retrieve user or device : ' + e);
-  }
+  const getOrdinateurRequest = await axios
+   .get('http://localhost:3001/recupererOrdinateur/' + idAppareil)
+   .then((response) =>
+    setOrdinateur({
+     serialNumber: response.data.serialNumber,
+     nom: `${response.data.details.marque} ${response.data.details.modele}`,
+     systeme: response.data.details.configuration.systeme,
+     processeur: response.data.details.configuration.processeur,
+     memoire: response.data.details.configuration.memoire,
+     disque: response.data.details.configuration.disque,
+    })
+   )
+   .catch((error) => console.log('Failed to retrieve device : ' + error));
  };
 
  const [usager, setUsager] = React.useState({});

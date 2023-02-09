@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import axios from 'axios';
+import Axios from 'axios';
 
 const Connexion = (props) => {
  const navigate = useNavigate();
+ const AuthContext = React.createContext();
+
  const { setToken, setAdmin } = props;
 
  const handleSubmit = async (event) => {
@@ -17,7 +19,7 @@ const Connexion = (props) => {
   console.log(data.get('email'), data.get('password'));
   const f = async () => {
    try {
-    await axios({
+    await Axios({
      method: 'post',
      url: 'http://localhost:3001/connexion',
      data: {
@@ -30,7 +32,7 @@ const Connexion = (props) => {
      navigate('/mainpage');
     });
 
-    // const connexionRequest = await axios.get('http://localhost:3001/connexion', {
+    // const connexionRequest = await Axios.get('http://localhost:3001/connexion', {
     //  data: {
     //   email: data.get('email'),
     //   password: data.get('password'),

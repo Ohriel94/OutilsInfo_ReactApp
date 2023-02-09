@@ -49,6 +49,24 @@ const recupererOrdinateurParId = async (id) => {
  }
 };
 
+const editerOrdinateur = async (id, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+ try {
+  const trouve = await ordinateursDB.findById(id);
+  if (trouve !== undefined) trouve.serialNumber = serNum;
+  trouve.details.marque = mar;
+  trouve.details.modele = mod;
+  trouve.details.dateAcquisition = dateAcqu;
+  trouve.details.configuration.systeme = sys;
+  trouve.details.configuration.processeur = proc;
+  trouve.details.configuration.memoire = mem;
+  trouve.details.configuration.disque = disq;
+  trouve.details.notes = notes;
+  await ordinateursDB.updateById(trouve._id, trouve);
+ } catch (e) {
+  throw new Error(e);
+ }
+};
+
 const affecterOrdinateur = async (serialNumber) => {
  if (serialNumber != undefined) {
   const ordi = await ordinateursDB.findBySerialNumber(serialNumber);
@@ -77,6 +95,7 @@ const supprimerOrdinateur = async (id) => {
 
 export default {
  creerOrdinateur,
+ editerOrdinateur,
  supprimerOrdinateur,
  recupererOrdinateurs,
  recupererOrdinateurParSerialNumber,

@@ -18,6 +18,9 @@ app.use(cors());
 const jwtSecret =
  '000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0';
 
+jwt.secret = jwtSecret;
+jwt.algorithms = ['HS256'];
+
 //=============== AUTHENTIFICATE ===============
 const authenticate = async (req, res, next) => {
  console.log(req.headers);
@@ -60,7 +63,7 @@ app.post('/connexion', async (req, res) => {
   if (administrateur.password === password) {
    const token = jwt.sign({ email, password }, jwtSecret);
    res.cookie('access_token', token, { httpOnly: true });
-   res.send({ token: token, userInfo: { nom: administrateur.nom, prenom: administrateur.prenom } });
+   res.json({ token: token, userInfo: { nom: administrateur.nom, prenom: administrateur.prenom } });
   }
  } else res.status(403);
 });
@@ -179,7 +182,7 @@ app.get('/ordinateurs', async (req, res) => {
 
 app.get('/recupererOrdinateur/:ordinateurID', async (req, res) => {
  console.log('----- GET /recupererOrdinateur/:ordinateurID -----');
- const ordinateurID = req.params.ordinateurID;
+ const ordinateurID = req.params.id;
  try {
   const response = await ordinateursDM.recupererOrdinateurParId(ordinateurID);
   res.send(response);
@@ -201,6 +204,38 @@ app.post('/creerOrdinateur', async (req, res) => {
  const notes = req.body.notes;
  try {
   const response = await ordinateursDM.creerOrdinateur(
+   serNum,
+   mar,
+   mod,
+   dateAcqu,
+   sys,
+   proc,
+   mem,
+   disq,
+   notes
+  );
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/editerAppareil', async (req, res) => {
+ console.log('----- POST /editerAppareil -----');
+ const id = req.body.id;
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ console.log(req.body);
+ try {
+  const result = await ordinateursDM.editerOrdinateur(
+   id,
    serNum,
    mar,
    mod,

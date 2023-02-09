@@ -30,7 +30,7 @@ const EcranOrdinateurs = (props) => {
 
  return (
   <React.Fragment>
-   <Box sx={componentStyle.sx} position='fixed'>
+   <Box sx={componentStyle.sx}>
     <Button
      onClick={() => navigate('/gestion/ordinateurs/ajouter')}
      variant='contained'
@@ -39,7 +39,7 @@ const EcranOrdinateurs = (props) => {
      Ajouter
     </Button>
    </Box>
-   <Box sx={{ marginTop: 8 }}>
+   <Box sx={{ marginTop: 2 }}>
     {ordinateurs.map((ordinateur, ordinateurKey) => (
      <OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} notifier={notifier} />
     ))}

@@ -1,4 +1,5 @@
-import axios from 'axios';
+import Config from '../../config.json';
+import Axios from 'axios';
 import * as React from 'react';
 import AWN from 'awesome-notifications';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -54,8 +55,23 @@ const MainPage = (props) => {
 
  const navigate = useNavigate();
 
+ Axios.interceptors.request.use(
+  (config) => {
+   const { origin } = new URL(Config.url);
+   const allowedOrigins = [Config.apiUrl];
+   const token = localStorage.getItem('token');
+   if (allowedOrigins.includes(origin)) {
+    config.headers.authorization = `Bearer ${token}`;
+   }
+   return config;
+  },
+  (error) => {
+   return Promise.reject(error);
+  }
+ );
+
  const deconnexion = async () => {
-  await axios({
+  await Axios({
    method: 'post',
    url: 'http://localhost:3001/deconnexion',
    headers: {
@@ -268,10 +284,7 @@ const MainPage = (props) => {
    <Box component='main' sx={{ marginY: 0.5, marginLeft: 7, marginRight: 0.5 }}>
     <Routes>
      <Route path='/gestion/ordinateurs' element={<EcranOrdi notifier={notifier} token={token} />} />
-     <Route
-      path='/gestion/ordinateurs/editer?sn=*'
-      element={<EditerOrdi notifier={notifier} token={token} />}
-     />
+     <Route path='/gestion/ordinateurs/editer' element={<EditerOrdi notifier={notifier} token={token} />} />
      <Route path='/gestion/ordinateurs/ajouter' element={<CreerOrdi notifier={notifier} token={token} />} />
      <Route path='/gestion/usagers' element={<EcranUsagers notifier={notifier} token={token} />} />
      <Route path='/gestion/administrateurs' element={<EcranAdmin notifier={notifier} token={token} />} />

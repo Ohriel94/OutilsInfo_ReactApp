@@ -38,7 +38,6 @@ setInterval(function () {
  if (!startTime) {
   startTime = Date.now();
  }
- console.log((Date.now() - startTime) / 1000);
 }, 100);
 
 const CarteHistorique = (props) => {

@@ -45,11 +45,12 @@ app.post('/inscription', async (req, res) => {
  const nom = req.body.nom;
  const email = req.body.email;
  const password = req.body.password;
+ const flags = req.body.flags;
  try {
-  await adminsDM.creerAdmin(prenom, nom, email, password);
-  res.status(200);
+  await adminsDM.creerAdmin(prenom, nom, email, password, flags);
+  res.sendStatus(200);
  } catch (e) {
-  res.status(400);
+  res.sendStatus(400);
  }
 });
 
@@ -65,12 +66,12 @@ app.post('/connexion', async (req, res) => {
    res.cookie('access_token', token, { httpOnly: true });
    res.json({ token: token, userInfo: { nom: administrateur.nom, prenom: administrateur.prenom } });
   }
- } else res.status(403);
+ } else res.sendStatus(403);
 });
 
 app.post('/deconnexion', authenticate, async (req, res) => {
  console.log('----- POST /deconnexion -----');
- return res.clearCookie('access_token').status(200).json({ message: 'Successfully logged out' });
+ return res.clearCookie('access_token').sendStatus(200).json({ message: 'Successfully logged out' });
 });
 
 app.get('/administrateurs', async (req, res) => {
@@ -78,7 +79,6 @@ app.get('/administrateurs', async (req, res) => {
  try {
   const response = await adminsDM.recupererAdministrateurs();
   response.map((admin) => {
-   delete admin._id;
    delete admin.password;
   });
   res.send(response);
@@ -87,14 +87,32 @@ app.get('/administrateurs', async (req, res) => {
  }
 });
 
-app.post('/creerAdministrateur'),
- async (req, res) => {
-  console.log('----- POST /creerAdministrateur -----');
-  const prenom = req.body.prenom;
-  const nom = req.body.nom;
-  adminsDM.creerAdministrateur(prenom, nom);
+app.post('/creerAdmin', async (req, res) => {
+ console.log('----- POST /creerAdmin -----');
+ const prenom = req.body.prenom;
+ const nom = req.body.nom;
+ const email = req.body.email;
+ const courriel = req.body.courriel;
+ const flags = req.body.flags;
+ try {
+  await adminsDM.creerAdmin(prenom, nom, email, courriel, flags);
   res.sendStatus(200);
- };
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/administrateur/supprimer', async (req, res) => {
+ console.log('----- POST /administrateur/supprimer/:id -----');
+ console.log(req.query);
+ const id = req.query;
+ try {
+  const response = await adminsDM.supprimerAdmin(id);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
 
 app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
  console.log('----- GET /recupererAdministrateur/:administrateurID -----');
@@ -113,10 +131,10 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
  const prenom = req.body.prenom;
  const username = req.body.username;
  const email = req.body.email;
- const status = req.body.status;
+ const sendStatus = req.body.sendStatus;
  try {
-  if (nom !== undefined && prenom !== undefined && username !== undefined && status !== undefined) {
-   await adminsDM.editerAdministrateur(nom, prenom, username, email, status);
+  if (nom !== undefined && prenom !== undefined && username !== undefined && sendStatus !== undefined) {
+   await adminsDM.editerAdministrateur(nom, prenom, username, email, sendStatus);
    res.sendStatus(200);
   }
  } catch (e) {
@@ -125,7 +143,7 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
 });
 
 app.get('/administrateurs/trouverAdmin', async (req, res) => {
- console.log('----- POST /administrateurs/editerAdmin -----');
+ console.log('----- POST /administrateurs/trouverAdmin -----');
  const email = req.body.email;
  try {
   console.log(email);
@@ -161,7 +179,7 @@ app.get('/detenteurs', async (req, res) => {
 });
 
 app.get('/listeDetenteurs/:idAppareil', async (req, res) => {
- console.log('----- GET /listeDetenteurs/:idAppareil? -----');
+ console.log('----- GET /listeDetenteurs/:idAppareil -----');
  const idAppareil = req.query.idAppareil;
  console.log(req.query);
  let response;

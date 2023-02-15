@@ -42,7 +42,6 @@ const CreerOrdinateur = (props) => {
  const handleSubmit = async (event) => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
-
   const f = async () => {
    try {
     const inscrireOrdinateurRequest = await axios({

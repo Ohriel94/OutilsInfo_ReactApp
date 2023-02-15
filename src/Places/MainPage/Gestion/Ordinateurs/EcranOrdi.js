@@ -1,5 +1,5 @@
 import * as React from 'react';
-import axios from 'axios';
+import Axios from 'axios';
 import AWN from 'awesome-notifications';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const EcranOrdinateurs = (props) => {
   sx: { padding: 1, marginBottom: 0.5, zIndex: 1 },
  };
 
- const getOrdinateursRequest = axios.get('http://localhost:3001/ordinateurs');
+ const getOrdinateursRequest = Axios.get('http://localhost:3001/ordinateurs');
 
  React.useEffect(() => {
   notifier.asyncBlock(getOrdinateursRequest, (resp) => {

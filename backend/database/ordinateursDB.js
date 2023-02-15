@@ -86,10 +86,10 @@ const deleteOne = async (id) => {
 };
 
 export default {
+ getAll,
  findBySerialNumber,
  findById,
  addOne,
  deleteOne,
  updateById,
- getAll,
 };

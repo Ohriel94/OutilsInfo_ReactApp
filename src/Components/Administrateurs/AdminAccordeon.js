@@ -38,8 +38,8 @@ const AdministrateurAccordeon = (props) => {
     </AccordionSummary>
     <AccordionDetails>
      <Grid container>
-      <Grid item xs={7} sm={9} sx={componentStyle.sx}>
-       {administrateur.status !== undefined ? (
+      <Grid item xs={12} sx={componentStyle.sx}>
+       {administrateur.flags !== undefined ? (
         <Grid container>
          <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
@@ -48,8 +48,8 @@ const AdministrateurAccordeon = (props) => {
           <Switch
            {...label}
            id='swActif'
-           defaultChecked={administrateur.status.actif}
-           onChange={(newStatus) => (administrateur.status.actif = newStatus)}
+           defaultChecked={administrateur.flags.actif}
+           onChange={(newState) => (administrateur.flags.actif = newState)}
           />
          </Grid>
          <Grid item xs={4} md={2}>
@@ -59,8 +59,8 @@ const AdministrateurAccordeon = (props) => {
           <Switch
            {...label}
            id='swAdmin'
-           defaultChecked={administrateur.status.admin}
-           onChange={(newStatus) => (administrateur.status.admin = newStatus)}
+           defaultChecked={administrateur.flags.admin}
+           onChange={(newState) => (administrateur.flags.admin = newState)}
           />
          </Grid>
         </Grid>

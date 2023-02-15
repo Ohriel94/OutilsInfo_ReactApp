@@ -52,16 +52,18 @@ const recupererOrdinateurParId = async (id) => {
 const editerOrdinateur = async (id, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
  try {
   const trouve = await ordinateursDB.findById(id);
-  if (trouve !== undefined) trouve.serialNumber = serNum;
-  trouve.details.marque = mar;
-  trouve.details.modele = mod;
-  trouve.details.dateAcquisition = dateAcqu;
-  trouve.details.configuration.systeme = sys;
-  trouve.details.configuration.processeur = proc;
-  trouve.details.configuration.memoire = mem;
-  trouve.details.configuration.disque = disq;
-  trouve.details.notes = notes;
-  await ordinateursDB.updateById(trouve._id, trouve);
+  if (trouve !== undefined) {
+   if (serNum !== trouve.serialNumber) trouve.serialNumber = serNum;
+   if (mar !== trouve.details.marque) trouve.details.marque = mar;
+   if (mod !== trouve.details.modele) trouve.details.modele = mod;
+   if (dateAcqu !== trouve.details.dateAcquisition) trouve.details.dateAcquisition = dateAcqu;
+   if (sys !== trouve.details.configuration.systeme) trouve.details.configuration.systeme = sys;
+   if (proc !== trouve.details.configuration.processeur) trouve.details.configuration.processeur = proc;
+   if (mem !== trouve.details.configuration.memoire) trouve.details.configuration.memoire = mem;
+   if (disq !== trouve.details.configuration.disque) trouve.details.configuration.disque = disq;
+   if (notes !== trouve.details.notes) trouve.details.notes = notes;
+   await ordinateursDB.updateById(trouve._id, trouve);
+  }
  } catch (e) {
   throw new Error(e);
  }

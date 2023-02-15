@@ -1,11 +1,20 @@
 import * as React from 'react';
+import axios from 'axios';
+import AWN from 'awesome-notifications';
+import { useNavigate } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
+import Theme from '../../../../Ressources/Theme';
+import { ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import Switch from '@mui/material/Switch';
 
 const customStyles = {
  content: {
@@ -18,142 +27,133 @@ const customStyles = {
  },
 };
 
-const CreerOrdinateur = (props) => {
- const { handleSubmit, notifier } = props;
+const componentStyle = {
+ style: {
+  background: '0971f1',
+ },
+ sx: { padding: 1, marginBottom: 0.5, zIndex: 1 },
+};
+
+const CreerAdmin = (props) => {
+ const { notifier } = props;
  let subtitle;
  const [modalIsOpen, setIsOpen] = React.useState(false);
 
- const openModal = () => {
-  setIsOpen(true);
+ const navigate = useNavigate();
+
+ const label = { inputProps: { 'aria-label': 'Switch' } };
+
+ let administrateur = {
+  prenom: '',
+  nom: '',
+  email: '',
+  password: '',
+  flags: {
+   actif: true,
+   admin: false,
+  },
  };
 
- const afterOpenModal = () => {
-  // references are now sync'd and can be accessed.
-  subtitle.style.color = '#f00';
+ const handleSubmit = async (event) => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  const f = async () => {
+   try {
+    const inscrireAdministrateurRequest = await axios({
+     method: 'post',
+     url: 'http://localhost:3001/creerAdmin',
+     data: {
+      prenom: data.get('prenom'),
+      nom: data.get('nom'),
+      email: data.get('email'),
+      motDePasse: data.get('password'),
+      flags: administrateur.flags,
+     },
+    });
+   } catch (e) {
+    console.log('Failed to connect ' + e);
+   }
+  };
+  f();
  };
 
- const closeModal = () => {
-  setIsOpen(false);
- };
+ React.useEffect(() => {
+  administrateur = {
+   prenom: '',
+   nom: '',
+   email: '',
+   password: '',
+   flags: {
+    actif: true,
+    admin: false,
+   },
+  };
+ }, []);
 
  return (
-  <div>
-   <Button variant='outlined' color='primary' size='small' onClick={openModal}>
-    <EditIcon />
-   </Button>
-   <Modal
-    isOpen={modalIsOpen}
-    onAfterOpen={afterOpenModal}
-    onRequestClose={closeModal}
-    style={customStyles}
-    contentLabel='Example Modal'
-   >
-    <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-     <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
-      <Typography variant='h4'>Mode édition</Typography>
-      <br />
-      <Typography variant='h6'>Informations génerales</Typography>
+  <React.Fragment>
+   <Box sx={componentStyle.sx} position='fixed' component='form' onSubmit={handleSubmit} noValidate>
+    <Grid container style={{ flexDirection: 'column' }} sx={{ my: '5vh' }}>
+     <Typography variant='h4'>Créer un administrateur</Typography>
+     <br />
+     <Typography variant='h6'>Informations génerales</Typography>
+     <Grid container style={{ flexDirection: 'row' }}>
+      <Grid item xs={6}>
+       <TextField margin='normal' fullWidth required label='Prenom' name='prenom' />
+      </Grid>
+      <Grid item xs={6}>
+       <TextField margin='normal' fullWidth required label='Nom' name='nom' />
+      </Grid>
+      <Typography variant='h6'>Identifications</Typography>
       <Grid container style={{ flexDirection: 'row' }}>
-       <Grid item xs={2}>
-        <TextField margin='normal' fullWidth required id='S/N' label='S/N' name='S/N' autoComplete='S/N' />
-       </Grid>
-       <Grid item xs={4}>
-        <TextField
-         margin='normal'
-         fullWidth
-         required
-         id='Marque'
-         label='Marque'
-         name='Marque'
-         autoComplete='Marque'
-        />
+       <Grid item xs={6}>
+        <TextField margin='normal' fullWidth required label='Courriel' name='email' />
        </Grid>
        <Grid item xs={6}>
-        <TextField
-         margin='normal'
-         fullWidth
-         required
-         id='Modele'
-         label='Modele'
-         name='Modele'
-         autoComplete='Modele'
-        />
+        <TextField margin='normal' fullWidth required label='Password' name='password' type='password' />
        </Grid>
-       <Typography variant='h6'>Spécifications</Typography>
-       <Grid container style={{ flexDirection: 'row' }}>
-        <Grid item xs={6}>
-         <TextField
-          margin='normal'
-          fullWidth
-          required
-          id='Processeur'
-          label='Processeur'
-          name='Processeur'
-          autoComplete='Processeur'
+       <br />
+       <Typography variant='h6'>Flags</Typography>
+       <Grid container item xs={12}>
+        <Grid item xs={4} md={2}>
+         <Typography variant='caption' align='center'>
+          Actif
+         </Typography>
+         <Switch
+          {...label}
+          defaultChecked={administrateur.flags.actif}
+          onChange={(event) => (administrateur.flags.actif = event.target.checked)}
          />
         </Grid>
-        <Grid item xs={6}>
-         <TextField
-          margin='normal'
-          fullWidth
-          required
-          name='Systeme'
-          label='Système'
-          type='Systeme'
-          id='Systeme'
-          autoComplete='Systeme'
+        <Grid item xs={4} md={2}>
+         <Typography variant='caption' align='center'>
+          Admin
+         </Typography>
+         <Switch
+          {...label}
+          defaultChecked={administrateur.flags.admin}
+          onChange={(event) => (administrateur.flags.admin = event.target.checked)}
          />
         </Grid>
-        <Grid item xs={6}>
-         <TextField
-          margin='normal'
-          fullWidth
-          required
-          name='Memoire'
-          label='Memoire'
-          type='Mémoire'
-          id='Memoire'
-         />
-        </Grid>
-        <Grid item xs={6}>
-         <TextField
-          margin='normal'
-          fullWidth
-          required
-          name='Disque'
-          label='Disque'
-          type='Disque'
-          id='Disque'
-         />
-        </Grid>
-       </Grid>
-       <Grid container>
-        <Grid item xs={6}>
-         <TextField
-          margin='normal'
-          fullWidth
-          required
-          name='Quantite'
-          label='Quantité'
-          type='Quantite'
-          id='Quantite'
-         />
-        </Grid>
-       </Grid>
-       <Grid container>
-        <Button variant='contained' color='success' type='submit' size='small'>
-         Soumettre
-        </Button>
-        <Button variant='contained' color='error' size='small' onClick={closeModal}>
-         close
-        </Button>
        </Grid>
       </Grid>
+      <Grid container>
+       <Button variant='contained' color='success' type='submit' size='small'>
+        Soumettre
+       </Button>
+       <Button
+        variant='contained'
+        color='error'
+        size='small'
+        onClick={() => navigate('/gestion/administrateurs')}>
+        Quitter
+       </Button>
+      </Grid>
      </Grid>
-    </Box>
-   </Modal>
-  </div>
+    </Grid>
+   </Box>
+  </React.Fragment>
  );
 };
 
-export default CreerOrdinateur;
+export default CreerAdmin;

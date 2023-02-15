@@ -46,11 +46,13 @@ const EditerOrdinateur = (props) => {
   const systeme = data.get('systeme');
   const memoire = data.get('memoire');
   const disque = data.get('disque');
+  const dateAcqu = data.get('dateAcquisition');
   const notes = data.get('notes');
 
-  console.log(serialNumber, marque, modele, processeur, systeme, memoire, disque, notes);
+  console.log(serialNumber, marque, modele, processeur, systeme, memoire, disque, dateAcqu, notes);
 
   console.log(`editerAppareil()`);
+
   const f = async () => {
    try {
     const editDeviceRequest = await Axios({
@@ -65,9 +67,11 @@ const EditerOrdinateur = (props) => {
       systeme: systeme,
       memoire: memoire,
       disque: disque,
+      dateAcquisition: dateAcqu,
       notes: notes,
      },
     });
+    notifier.success();
    } catch (e) {
     console.log('Failed to connect ' + e);
    }
@@ -102,7 +106,11 @@ const EditerOrdinateur = (props) => {
     contentLabel='EditerOrdinateur'>
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '80vh', margin: '1vh' }}>
-      <Typography variant='h4'>Mode édition</Typography>
+      <Grid container style={{ flexDirection: 'row' }}>
+       <Typography variant='h4'>Mode édition</Typography>
+       <Typography variant='h4'> | </Typography>
+       <Typography variant='subtitle2'>{ordinateur._id}</Typography>
+      </Grid>
       <br />
       <Typography variant='h6' sx={customStyles.margin}>
        Informations génerales
@@ -155,14 +163,14 @@ const EditerOrdinateur = (props) => {
          fullWidth
          required
          label="Date d'aquisition"
-         name='dateAqui'
+         name='dateAcquisition'
          id='dateAqui'
          type='date'
-         defaultValue={ordinateur.details.dateAcquisition}
+         min='2001-01-01'
+         value={ordinateur.details.dateAcquisition}
         />
        </Grid>
       </Grid>
-
       <Grid container style={{ flexDirection: 'row' }}>
        <Typography variant='h6' sx={customStyles.margin}>
         Spécifications

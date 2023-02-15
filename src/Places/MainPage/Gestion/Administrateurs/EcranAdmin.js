@@ -1,8 +1,15 @@
 import * as React from 'react';
-import axios from 'axios';
+import Axios from 'axios';
+import AWN from 'awesome-notifications';
+import { useNavigate } from 'react-router-dom';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+
 import AdminAccordeon from '../../../../Components/Administrateurs/AdminAccordeon';
 
 const EcranAdmin = (props) => {
+ const navigate = useNavigate();
  const [admins, setAdmins] = React.useState([]);
  const { token, notifier } = props;
 
@@ -21,7 +28,7 @@ const EcranAdmin = (props) => {
   variant: 'contained',
  };
 
- const getAdminsRequest = axios.get('http://localhost:3001/administrateurs');
+ const getAdminsRequest = Axios.get('http://localhost:3001/administrateurs');
 
  React.useEffect(() => {
   notifier.asyncBlock(getAdminsRequest, (resp) => {
@@ -31,6 +38,13 @@ const EcranAdmin = (props) => {
 
  return (
   <React.Fragment>
+   <Button
+    onClick={() => navigate('/gestion/administrateurs/ajouter')}
+    variant='contained'
+    color='primary'
+    size='small'>
+    Ajouter
+   </Button>
    {admins.map((administrateur, administrateurKey) => (
     <AdminAccordeon administrateur={administrateur} key={administrateurKey} />
    ))}

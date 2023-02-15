@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Modal from 'react-modal';
 import Box from '@mui/material/Box';
@@ -8,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Switch from '@mui/material/Switch';
 
 const customStyles = {
@@ -45,8 +47,10 @@ const EditerAdministrateur = (props) => {
   prenom: '',
   nom: '',
   username: '',
-  status: { actif: false, admin: false },
+  flags: { actif: false, admin: false },
  });
+
+ const navigate = useNavigate();
 
  const openModal = () => {
   setIsOpen(true);
@@ -84,6 +88,15 @@ const EditerAdministrateur = (props) => {
   setNewAdminInfo(data);
  };
 
+ const deleteAdmin = async (id) => {
+  console.log(id);
+  const deleteRequest = await Axios({
+   method: 'post',
+   url: 'http://localhost:3001/administrateur/supprimer',
+   params: { id: id },
+  });
+ };
+
  const handleSubmit = () => {
   const f = async () => {
    try {
@@ -111,11 +124,25 @@ const EditerAdministrateur = (props) => {
     onRequestClose={closeModal}
     ariaHideApp={false}
     style={customStyles}
-    contentLabel='Example Modal'
-   >
+    contentLabel='Example Modal'>
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }} style={customStyles.style}>
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '80vh', minWidth: '40vh', my: '5vh' }}>
-      <Typography variant='h6'>Mode édition</Typography>
+      <Grid container style={{ flexDirection: 'row' }}>
+       <Grid item xs={10}>
+        <Typography variant='h6'>Mode édition</Typography>
+       </Grid>
+       <Grid item xs={2}>
+        <IconButton
+         color='error'
+         onClick={() => {
+          deleteAdmin(administrateur._id);
+          closeModal();
+          navigate('/gestion/administrateurs');
+         }}>
+         <DeleteForeverIcon />
+        </IconButton>
+       </Grid>
+      </Grid>
       <br />
       <Grid container style={customStyles.box}>
        <Typography variant='body1' sx={customStyles.margin}>
@@ -171,7 +198,7 @@ const EditerAdministrateur = (props) => {
         Status
        </Typography>
        <br />
-       {administrateur.status !== undefined ? (
+       {administrateur.flags !== undefined ? (
         <Grid container>
          <Grid item xs={4} md={2}>
           <Typography variant='caption' align='center'>
@@ -180,7 +207,7 @@ const EditerAdministrateur = (props) => {
           <Switch
            {...label}
            id='swActif'
-           defaultChecked={administrateur.status.actif}
+           defaultChecked={administrateur.flags.actif}
            onChange={handleOnChange}
           />
          </Grid>
@@ -191,7 +218,7 @@ const EditerAdministrateur = (props) => {
           <Switch
            {...label}
            id='swAdmin'
-           defaultChecked={administrateur.status.admin}
+           defaultChecked={administrateur.flags.admin}
            onChange={handleOnChange}
           />
          </Grid>

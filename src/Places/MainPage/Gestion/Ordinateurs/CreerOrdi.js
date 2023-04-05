@@ -44,15 +44,20 @@ const CreerOrdinateur = (props) => {
   const data = new FormData(event.currentTarget);
   const f = async () => {
    try {
-    const inscrireOrdinateurRequest = await axios({
+    const creerOrdinateurRequest = await axios({
      method: 'post',
-     url: 'http://localhost:3001/inscrireOrdinateur',
+     url: 'http://localhost:3001/creerOrdinateur',
      data: {
-      id: parseInt(data.get('id')),
-      prenom: data.get('prenom'),
-      nom: data.get('nom'),
-      adresse: data.get('adresse'),
-      motDePasse: data.get('motDePasse'),
+      qte: parseInt(data.get('quantite')),
+      serNum: parseInt(data.get('serialNumber')),
+      mar: data.get('marque'),
+      mod: data.get('modele'),
+      dateAcqu: data.get('dateAcquisition'),
+      sys: data.get('systeme'),
+      proc: data.get('processeur'),
+      mem: parseInt(data.get('memoire')),
+      disq: parseInt(data.get('disque')),
+      notes: data.get('notes'),
      },
     });
    } catch (e) {

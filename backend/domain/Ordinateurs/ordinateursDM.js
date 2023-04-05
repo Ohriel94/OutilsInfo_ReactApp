@@ -17,13 +17,46 @@ const creerOrdinateur = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq,
    notes: notes,
   },
  };
+ const trouve = await ordinateursDB.findBySerialNumber(newOrdinateur.serialNumber);
  try {
-  const trouve = await ordinateursDB.findBySerialNumber(newOrdinateur.serialNumber);
   if (trouve === undefined) await ordinateursDB.addOne(newOrdinateur);
   else throw new Error('This serial number is already in use...');
  } catch (e) {
   throw e;
  }
+};
+
+const creerOrdinateurs = async (qte, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+ let arr = [];
+ for (let i = 0; i < qte; i++) {
+  const trouve = await ordinateursDB.findBySerialNumber(serNum + i);
+  console.log('Found : ', trouve);
+  if (trouve === undefined) {
+   arr.push({
+    serialNumber: serNum,
+    type: 'Laptop',
+    etatDisponible: true,
+    details: {
+     marque: mar,
+     modele: mod,
+     dateAcquisition: dateAcqu,
+     configuration: {
+      systeme: sys,
+      processeur: proc,
+      memoire: mem,
+      disque: disq,
+     },
+     notes: notes,
+    },
+    piecesJointes: {
+     factures: [],
+    },
+   });
+  }
+ }
+ console.log('[OrdDM] Length :', arr.length);
+ const result = await ordinateursDB.addMany(arr);
+ console.log('[OrdDM] Result :', result);
 };
 
 const recupererOrdinateurs = async () => {
@@ -97,6 +130,7 @@ const supprimerOrdinateur = async (id) => {
 
 export default {
  creerOrdinateur,
+ creerOrdinateurs,
  editerOrdinateur,
  supprimerOrdinateur,
  recupererOrdinateurs,

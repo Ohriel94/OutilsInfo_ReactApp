@@ -8,6 +8,7 @@ import detenteursDM from './domain/Historiques/detenteursDM.js';
 import historiquesDM from './domain/Historiques/historiquesDM.js';
 import moniteursDM from './domain/Moniteurs/moniteursDM.js';
 import ordinateursDM from './domain/Ordinateurs/ordinateursDM.js';
+import appareilsDM from './domain/Appareils/appareilsDM.js';
 import peripheriquesDM from './domain/Peripheriques/peripheriquesDM.js';
 import usagersDM from './domain/Usagers/usagersDM.js';
 
@@ -40,7 +41,7 @@ const authenticate = async (req, res, next) => {
 
 //=============== Routes - Administrateurs ===============
 app.post('/inscription', async (req, res) => {
- console.log('----- POST /incription -----');
+ console.log('[SERV] POST/incription');
  const prenom = req.body.prenom;
  const nom = req.body.nom;
  const email = req.body.email;
@@ -55,7 +56,7 @@ app.post('/inscription', async (req, res) => {
 });
 
 app.post('/connexion', async (req, res) => {
- console.log('----- POST /connexion -----');
+ console.log('[SERV] POST/connexion');
  const email = req.body.email;
  const password = req.body.password;
  console.log(email, password);
@@ -70,12 +71,12 @@ app.post('/connexion', async (req, res) => {
 });
 
 app.post('/deconnexion', authenticate, async (req, res) => {
- console.log('----- POST /deconnexion -----');
+ console.log('[SERV] POST/deconnexion');
  return res.clearCookie('access_token').sendStatus(200).json({ message: 'Successfully logged out' });
 });
 
 app.get('/administrateurs', async (req, res) => {
- console.log('----- GET /administrateurs -----');
+ console.log('[SERV] GET/administrateurs');
  try {
   const response = await adminsDM.recupererAdministrateurs();
   response.map((admin) => {
@@ -88,7 +89,7 @@ app.get('/administrateurs', async (req, res) => {
 });
 
 app.post('/creerAdmin', async (req, res) => {
- console.log('----- POST /creerAdmin -----');
+ console.log('[SERV] POST/creerAdmin');
  const prenom = req.body.prenom;
  const nom = req.body.nom;
  const email = req.body.email;
@@ -103,7 +104,7 @@ app.post('/creerAdmin', async (req, res) => {
 });
 
 app.post('/administrateur/supprimer', async (req, res) => {
- console.log('----- POST /administrateur/supprimer/:id -----');
+ console.log('[SERV] POST/administrateur/supprimer/:id');
  console.log(req.query);
  const id = req.query;
  try {
@@ -115,7 +116,7 @@ app.post('/administrateur/supprimer', async (req, res) => {
 });
 
 app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
- console.log('----- GET /recupererAdministrateur/:administrateurID -----');
+ console.log('[SERV] GET/recupererAdministrateur/:administrateurID');
  const administrateurID = req.params.administrateurID;
  try {
   const response = await adminsDM.recupererAdministrateurParId(administrateurID);
@@ -126,7 +127,7 @@ app.get('/recupererAdministrateur/:administrateurID', async (req, res) => {
 });
 
 app.post('/administrateurs/editerAdmin', async (req, res) => {
- console.log('----- POST /administrateurs/editerAdmin -----');
+ console.log('[SERV] POST/administrateurs/editerAdmin');
  const nom = req.body.nom;
  const prenom = req.body.prenom;
  const username = req.body.username;
@@ -143,7 +144,7 @@ app.post('/administrateurs/editerAdmin', async (req, res) => {
 });
 
 app.get('/administrateurs/trouverAdmin', async (req, res) => {
- console.log('----- POST /administrateurs/trouverAdmin -----');
+ console.log('[SERV] POST/administrateurs/trouverAdmin');
  const email = req.body.email;
  try {
   console.log(email);
@@ -160,26 +161,26 @@ app.get('/administrateurs/trouverAdmin', async (req, res) => {
 
 //=============== Routes - Moniteurs ===============
 app.get('/moniteurs', async (req, res) => {
- console.log('----- GET /moniteurs -----');
+ console.log('[SERV] GET/moniteurs');
  const response = await moniteursDM.recupererMoniteurs();
  res.send(response);
 });
 
 //=============== Routes - Historiques ===============
 app.get('/historiques', async (req, res) => {
- console.log('----- GET /historiques -----');
+ console.log('[SERV] GET/historiques');
  const response = await historiquesDM.recupererHistoriques();
  res.send(response);
 });
 
 app.get('/detenteurs', async (req, res) => {
- console.log('----- GET /detenteurs -----');
+ console.log('[SERV] GET/detenteurs');
  const response = await historiquesDM.recupererDetenteurs();
  res.send(response);
 });
 
 app.get('/listeDetenteurs/:idAppareil', async (req, res) => {
- console.log('----- GET /listeDetenteurs/:idAppareil -----');
+ console.log('[SERV] GET/listeDetenteurs/:idAppareil');
  const idAppareil = req.query.idAppareil;
  console.log(req.query);
  let response;
@@ -191,15 +192,129 @@ app.get('/listeDetenteurs/:idAppareil', async (req, res) => {
  res.send(response);
 });
 
+//=============== Routes - Appareils ===============
+app.get('/appareils', async (req, res) => {
+ console.log('[SERV] GET/appareils');
+ const response = await appareilsDM.recupererAppareils();
+ response !== undefined ? res.send(response) : res.sendStatus(404);
+});
+
+app.get('/recupererAppareil/:appareilID', async (req, res) => {
+ console.log('[SERV] GET/recupererAppareil/:appareilID');
+ const appareilID = req.params.id;
+ try {
+  const response = await appareilsDM.recupererAppareilParId(appareilID);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
+app.post('/creerAppareil', async (req, res) => {
+ console.log('[SERV] POST/creerAppareil');
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ try {
+  const response = await appareilsDM.creerAppareil(serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes);
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/creerAppareils', async (req, res) => {
+ console.log('[SERV] POST/creerAppareils');
+ const qte = req.body.qte;
+ const type = req.body.type;
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ try {
+  const response = await appareilsDM.creerAppareils(
+   qte,
+   type,
+   serNum,
+   mar,
+   mod,
+   dateAcqu,
+   sys,
+   proc,
+   mem,
+   disq,
+   notes
+  );
+  console.log(response);
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/editerAppareil', async (req, res) => {
+ console.log('[SERV] POST/editerAppareil');
+ const id = req.body.id;
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ console.log(req.body);
+ try {
+  const result = await appareilsDM.editerAppareil(
+   id,
+   serNum,
+   mar,
+   mod,
+   dateAcqu,
+   sys,
+   proc,
+   mem,
+   disq,
+   notes
+  );
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
+app.post('/supprimerAppareil/:appareilID', async (req, res) => {
+ console.log('[SERV] POST/supprimerAppareil');
+ const appareilID = req.params.appareilID;
+ try {
+  await appareilsDM.supprimerAppareil(appareilID);
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
 //=============== Routes - Ordinateurs ===============
 app.get('/ordinateurs', async (req, res) => {
- console.log('----- GET /ordinateurs -----');
+ console.log('[SERV] GET/ordinateurs');
  const response = await ordinateursDM.recupererOrdinateurs();
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
 app.get('/recupererOrdinateur/:ordinateurID', async (req, res) => {
- console.log('----- GET /recupererOrdinateur/:ordinateurID -----');
+ console.log('[SERV] GET/recupererOrdinateur/:ordinateurID');
  const ordinateurID = req.params.id;
  try {
   const response = await ordinateursDM.recupererOrdinateurParId(ordinateurID);
@@ -210,7 +325,7 @@ app.get('/recupererOrdinateur/:ordinateurID', async (req, res) => {
 });
 
 app.post('/creerOrdinateur', async (req, res) => {
- console.log('----- POST /creerOrdinateur -----');
+ console.log('[SERV] POST/creerOrdinateur');
  const serNum = req.body.serialNumber;
  const mar = req.body.marque;
  const mod = req.body.modele;
@@ -238,8 +353,40 @@ app.post('/creerOrdinateur', async (req, res) => {
  }
 });
 
+app.post('/creerOrdinateurs', async (req, res) => {
+ console.log('[SERV] POST/creerOrdinateurs');
+ const qte = req.body.qte;
+ const serNum = req.body.serialNumber;
+ const mar = req.body.marque;
+ const mod = req.body.modele;
+ const dateAcqu = req.body.dateAcquisition;
+ const sys = req.body.systeme;
+ const proc = req.body.processeur;
+ const mem = req.body.memoire;
+ const disq = req.body.disque;
+ const notes = req.body.notes;
+ try {
+  const response = await ordinateursDM.creerOrdinateurs(
+   qte,
+   serNum,
+   mar,
+   mod,
+   dateAcqu,
+   sys,
+   proc,
+   mem,
+   disq,
+   notes
+  );
+  console.log(response);
+  res.sendStatus(202);
+ } catch (e) {
+  res.sendStatus(400);
+ }
+});
+
 app.post('/editerAppareil', async (req, res) => {
- console.log('----- POST /editerAppareil -----');
+ console.log('[SERV] POST/editerAppareil');
  const id = req.body.id;
  const serNum = req.body.serialNumber;
  const mar = req.body.marque;
@@ -271,7 +418,7 @@ app.post('/editerAppareil', async (req, res) => {
 });
 
 app.post('/supprimerOrdinateur/:ordinateurID', async (req, res) => {
- console.log('----- POST /supprimerOrdinateur -----');
+ console.log('[SERV] POST/supprimerOrdinateur');
  const ordinateurID = req.params.ordinateurID;
  try {
   await ordinateursDM.supprimerOrdinateur(ordinateurID);
@@ -285,7 +432,7 @@ app.post('/supprimerOrdinateur/:ordinateurID', async (req, res) => {
 
 //=============== Routes - Usagers ===============
 app.get('/usagers', async (req, res) => {
- console.log('----- GET /usagers -----');
+ console.log('[SERV] GET/usagers');
  try {
   const response = await usagersDM.recupererUsagers();
   res.send(response);
@@ -296,7 +443,7 @@ app.get('/usagers', async (req, res) => {
 
 app.post('/creerUsager'),
  async (req, res) => {
-  console.log('----- POST /creerUsager -----');
+  console.log('[SERV] POST/creerUsager');
   const prenom = req.body.prenom;
   const nom = req.body.nom;
   usagersDM.creerUsager(prenom, nom);
@@ -304,7 +451,7 @@ app.post('/creerUsager'),
  };
 
 app.get('/recupererUsager/:usagerID', async (req, res) => {
- console.log('----- GET /recupererUsager/:usagerID -----');
+ console.log('[SERV] GET/recupererUsager/:usagerID');
  console.log(req.params);
  const usagerID = req.params.usagerID;
  try {
@@ -316,7 +463,7 @@ app.get('/recupererUsager/:usagerID', async (req, res) => {
 });
 
 app.post('/affecterAppareil', async (req, res) => {
- console.log('----- POST /affecterAppareil -----');
+ console.log('[SERV] POST/affecterAppareil');
  const usager = req.body.usager;
  const appareil = req.body.appareil;
  try {
@@ -343,7 +490,7 @@ app.post('/affecterAppareil', async (req, res) => {
 });
 
 app.post('/retirerAppareil', async (req, res) => {
- console.log('----- POST /retirerAppareil -----');
+ console.log('[SERV] POST/retirerAppareil');
  const usager = req.body.usager;
  const appareil = req.body.appareil;
  try {

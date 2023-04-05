@@ -3,12 +3,12 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 
 import adminsDM from './domain/Administrateurs/adminsDM.js';
+import appareilsDM from './domain/Appareils/appareilsDM.js';
 import cellulairesDM from './domain/Cellulaires/cellulairesDM.js';
 import detenteursDM from './domain/Historiques/detenteursDM.js';
 import historiquesDM from './domain/Historiques/historiquesDM.js';
 import moniteursDM from './domain/Moniteurs/moniteursDM.js';
 import ordinateursDM from './domain/Ordinateurs/ordinateursDM.js';
-import appareilsDM from './domain/Appareils/appareilsDM.js';
 import peripheriquesDM from './domain/Peripheriques/peripheriquesDM.js';
 import usagersDM from './domain/Usagers/usagersDM.js';
 

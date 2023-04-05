@@ -1,22 +1,28 @@
 import appareilsDB from '../../database/appareilsDB.js';
 
-const creerAppareil = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
- const newAppareil = {
-  serialNumber: serNum,
-  etatDisponible: true,
-  details: {
-   marque: mar,
-   modele: mod,
-   dateAcquisition: dateAcqu,
-   configuration: {
-    systeme: sys,
-    processeur: proc,
-    memoire: mem,
-    disque: disq,
-   },
-   notes: notes,
+function Appareil(type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) {
+ console.log('[CTOR] Appareil : ', type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes);
+ this.serialNumber = serNum;
+ this.type = type;
+ this.etatDisponible = true;
+ this.details = {
+  marque: mar,
+  modele: mod,
+  dateAcquisition: dateAcqu,
+  configuration: {
+   systeme: sys,
+   processeur: proc,
+   memoire: mem,
+   disques: [...disq],
   },
+  notes: notes,
+  piecesJointes: {},
  };
+}
+
+const creerAppareil = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+ const newAppareil = new Appareil(type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes);
+
  const trouve = await appareilsDB.findBySerialNumber(newAppareil.serialNumber);
  try {
   if (trouve === undefined) await appareilsDB.addOne(newAppareil);
@@ -26,31 +32,15 @@ const creerAppareil = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, n
  }
 };
 
-const creerAppareils = async (qte, typ, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+const creerAppareils = async (qte, type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+ console.log('[AppDM] creerAppareils');
  let quantite = qte === undefined ? 1 : qte;
  let arr = [];
  for (let i = 0; i < quantite; i++) {
   const trouve = await appareilsDB.findBySerialNumber(serNum + i);
-  console.log('Found : ', trouve._id);
+  console.log('Is item ', parseInt(serNum + i), ' new ? ', trouve === undefined);
   if (trouve === undefined) {
-   arr.push({
-    serialNumber: serNum + i,
-    type: typ,
-    etatDisponible: true,
-    details: {
-     marque: mar,
-     modele: mod,
-     dateAcquisition: dateAcqu,
-     configuration: {
-      systeme: sys,
-      processeur: proc,
-      memoire: mem,
-      disques: [...disq],
-     },
-     notes: notes,
-    },
-    piecesJointes: {},
-   });
+   arr.push(new Appareil(type, serNum + i, mar, mod, dateAcqu, sys, proc, mem, disq, notes));
   }
  }
  console.log('[AppDM] Length :', arr.length);

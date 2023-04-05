@@ -1,27 +1,59 @@
 import appareilsDB from '../../database/appareilsDB.js';
 
-function Appareil(type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) {
- console.log('[CTOR] Appareil : ', type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes);
- this.serialNumber = serNum;
+function Appareil(
+ type,
+ serNum,
+ marque,
+ modele,
+ dateAcqu,
+ dateAnno,
+ dateSort,
+ os,
+ cpu,
+ gpu,
+ memoire,
+ stockages,
+ notes
+) {
+ console.log(
+  '[CTOR-Appareil] - ',
+  type,
+  serNum,
+  marque,
+  modele,
+  dateAcqu,
+  dateAnno,
+  dateSort,
+  os,
+  cpu,
+  gpu,
+  memoire,
+  stockages,
+  notes
+ );
  this.type = type;
+ this.serialNumber = serNum;
  this.etatDisponible = true;
  this.details = {
-  marque: mar,
-  modele: mod,
+  marque: marque,
+  modele: modele,
   dateAcquisition: dateAcqu,
+  dateAnnonce: dateAnno,
+  dateSortie: dateSort,
   configuration: {
-   systeme: sys,
-   processeur: proc,
-   memoire: mem,
-   disques: [...disq],
+   os: os,
+   cpu: cpu,
+   gpu: gpu,
+   memoire: memoire,
+   stockages: [...stockages],
   },
   notes: notes,
   piecesJointes: {},
  };
 }
 
-const creerAppareil = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
- const newAppareil = new Appareil(type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes);
+const creerAppareil = async (serNum, mar, mod, dateAcqu, os, proc, mem, disq, notes) => {
+ const newAppareil = new Appareil(type, serNum, mar, mod, dateAcqu, os, proc, mem, disq, notes);
 
  const trouve = await appareilsDB.findBySerialNumber(newAppareil.serialNumber);
  try {
@@ -32,7 +64,22 @@ const creerAppareil = async (serNum, mar, mod, dateAcqu, sys, proc, mem, disq, n
  }
 };
 
-const creerAppareils = async (qte, type, serNum, mar, mod, dateAcqu, sys, proc, mem, disq, notes) => {
+const creerAppareils = async (
+ qte,
+ type,
+ serNum,
+ marque,
+ modele,
+ dateAcqu,
+ dateAnno,
+ dateSort,
+ os,
+ cpu,
+ gpu,
+ memoire,
+ stockages,
+ notes
+) => {
  console.log('[AppDM] creerAppareils');
  let quantite = qte === undefined ? 1 : qte;
  let arr = [];
@@ -40,7 +87,23 @@ const creerAppareils = async (qte, type, serNum, mar, mod, dateAcqu, sys, proc, 
   const trouve = await appareilsDB.findBySerialNumber(serNum + i);
   console.log('Is item ', parseInt(serNum + i), ' new ? ', trouve === undefined);
   if (trouve === undefined) {
-   arr.push(new Appareil(type, serNum + i, mar, mod, dateAcqu, sys, proc, mem, disq, notes));
+   arr.push(
+    new Appareil(
+     type,
+     serNum + i,
+     marque,
+     modele,
+     dateAcqu,
+     dateAnno,
+     dateSort,
+     os,
+     cpu,
+     gpu,
+     memoire,
+     stockages,
+     notes
+    )
+   );
   }
  }
  console.log('[AppDM] Length :', arr.length);

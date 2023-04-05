@@ -234,26 +234,32 @@ app.post('/creerAppareils', async (req, res) => {
  const qte = req.body.qte;
  const type = req.body.type;
  const serNum = req.body.serialNumber;
- const mar = req.body.marque;
- const mod = req.body.modele;
+ const marque = req.body.marque;
+ const modele = req.body.modele;
  const dateAcqu = req.body.dateAcquisition;
- const sys = req.body.systeme;
- const proc = req.body.processeur;
- const mem = req.body.memoire;
- const disq = req.body.disque;
+ const dateAnno = req.body.dateAnnonce;
+ const dateSort = req.body.dateSortie;
+ const sys = req.body.os;
+ const cpu = req.body.cpu;
+ const gpu = req.body.gpu;
+ const memoire = req.body.memoire;
+ const stockages = req.body.stockages;
  const notes = req.body.notes;
  try {
   const response = await appareilsDM.creerAppareils(
    qte,
    type,
    serNum,
-   mar,
-   mod,
+   marque,
+   modele,
    dateAcqu,
+   dateAnno,
+   dateSort,
    sys,
-   proc,
-   mem,
-   disq,
+   cpu,
+   gpu,
+   memoire,
+   stockages,
    notes
   );
   console.log(response);

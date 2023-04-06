@@ -17,18 +17,31 @@ function Appareil(
 ) {
  console.log(
   '[CTOR-Appareil] - ',
+  'Type: ',
   type,
+  ', SN: ',
   serNum,
+  ', Marq: ',
   marque,
+  ', Mode: ',
   modele,
+  ', DAqu: ',
   dateAcqu,
+  ', DAnn: ',
   dateAnno,
+  ', DSor: ',
   dateSort,
+  ', OS: ',
   os,
+  ', CPU: ',
   cpu,
+  ', GPU: ',
   gpu,
+  ', Memo: ',
   memoire,
+  ', STKG: ',
   stockages,
+  ', Note: ',
   notes
  );
  this.type = type;
@@ -90,7 +103,7 @@ const creerAppareils = async (
    arr.push(
     new Appareil(
      type,
-     serNum + i,
+     parseInt(serNum) + i,
      marque,
      modele,
      dateAcqu,
@@ -99,7 +112,7 @@ const creerAppareils = async (
      os,
      cpu,
      gpu,
-     memoire,
+     parseInt(memoire),
      stockages,
      notes
     )

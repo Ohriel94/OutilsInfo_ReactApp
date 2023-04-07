@@ -63,7 +63,7 @@ const findByType = async (type) => {
 const findBySerialNumber = async (serNum) => {
  try {
   const collection = await getCollection();
-  const appareils = await collection.find({ serialNumber: serNum }).toArray();
+  const appareils = await collection.find({ serialNumber: parseInt(serNum) }).toArray();
   if (appareils === undefined) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
   else return appareils[0];
  } catch (e) {

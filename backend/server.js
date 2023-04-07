@@ -280,6 +280,17 @@ app.get('/recupererAppareil/id?:id', async (req, res) => {
  }
 });
 
+app.get('/recupererAppareil/serialNumber?:serialNumber', async (req, res) => {
+ console.log('[SERV] GET/recupererAppareil/serialNumber?:serialNumber');
+ const serialNumber = req.query.serialNumber;
+ try {
+  const response = await appareilsDM.recupererAppareilParSerialNumber(serialNumber);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
 app.post('/editerAppareil', async (req, res) => {
  console.log('[SERV] POST/editerAppareil');
  const id = req.body.id;

@@ -8,6 +8,9 @@ beforeEach(async () => {
  appareilsDB.getAll.mockClear();
  appareilsDB.addOne.mockClear();
  appareilsDB.addMany.mockClear();
+ appareilsDB.findById.mockClear();
+ appareilsDB.findBySerialNumber.mockClear();
+ appareilsDB.findByType.mockClear();
  appareilsDB.updateById.mockClear();
  appareilsDB.deleteOne.mockClear();
 });
@@ -277,6 +280,56 @@ describe('recupererAppareilsParType', () => {
   {
    type: 'Ordinateur',
    serialNumber: 9991,
+   details: {
+    configuration: {},
+    notes: '',
+    piecesJointes: {},
+   },
+  },
+  {
+   type: 'Cellulaire',
+   serialNumber: 9992,
+   details: {
+    configuration: {},
+    notes: '',
+    piecesJointes: {},
+   },
+  },
+  {
+   type: 'Ordinateur',
+   serialNumber: 9993,
+   details: {
+    configuration: {},
+    notes: '',
+    piecesJointes: {},
+   },
+  },
+ ];
+ it('should call appareilsDB 1 time', async () => {
+  await appareilsDM.recupererAppareilsParType('Cellulaire');
+  expect(appareilsDB.findByType).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  await appareilsDM.recupererAppareilsParType('Cellulaire');
+  expect(appareilsDB.findByType).toHaveBeenCalledWith('Cellulaire');
+ });
+
+ it('should return the correct elements from DB', async () => {
+  appareilsDB.findByType.mockImplementation(() => {
+   return expected[1];
+  });
+  const actual = await appareilsDM.recupererAppareilsParType('Cellulaire');
+  expect(actual).toEqual(expected[1]);
+ });
+});
+
+describe('recupererAppareilParId', () => {
+ const expected = [
+  {
+   _id: 'ABC123',
+   type: 'Ordinateur',
+   serialNumber: 0,
    etatDisponible: true,
    details: {
     marque: 'Asus',
@@ -296,8 +349,9 @@ describe('recupererAppareilsParType', () => {
    },
   },
   {
+   _id: 'DEF456',
    type: 'Cellulaire',
-   serialNumber: 9992,
+   serialNumber: 1,
    etatDisponible: true,
    details: {
     marque: 'Samsung',
@@ -316,43 +370,62 @@ describe('recupererAppareilsParType', () => {
     piecesJointes: {},
    },
   },
+ ];
+ it('should call appareilsDB 1 time', async () => {
+  await appareilsDM.recupererAppareilParId('ABC123');
+  expect(appareilsDB.findById).toHaveBeenCalledTimes(1);
+ });
+
+ it('should have been called with the right parameter', async () => {
+  await appareilsDM.recupererAppareilParId('ABC123');
+  expect(appareilsDB.findById).toHaveBeenCalledWith('ABC123');
+ });
+
+ it('should return the correct elements from DB', async () => {
+  appareilsDB.findById.mockImplementation(() => {
+   return expected[0];
+  });
+  const actual = await appareilsDM.recupererAppareilParId(expected[0]._id);
+  expect(actual).toEqual(expected[0]);
+ });
+});
+
+describe('recupererAppareilParSerialNumber', () => {
+ const expected = [
   {
    type: 'Ordinateur',
-   serialNumber: 9993,
-   etatDisponible: true,
+   serialNumber: 0,
    details: {
-    marque: 'Asus',
-    modele: 'Alpha',
-    dateAcquisition: '01/01/2000',
-    dateAnnonce: '01/01/2000',
-    dateSortie: '01/01/2000',
-    configuration: {
-     os: 'Windows 10 64x',
-     cpu: 'intel core i7-1165G7 @ 2.80Ghz',
-     gpu: 'Prototype HK7880 64GB',
-     memoire: 16,
-     stockages: [256, 2000, 2000],
-    },
+    configuration: {},
+    notes: '',
+    piecesJointes: {},
+   },
+  },
+  {
+   type: 'Cellulaire',
+   serialNumber: 1,
+   details: {
+    configuration: {},
     notes: '',
     piecesJointes: {},
    },
   },
  ];
  it('should call appareilsDB 1 time', async () => {
-  await appareilsDM.recupererAppareilsParType('Cellulaire');
-  expect(appareilsDB.findByType).toHaveBeenCalledTimes(1);
+  await appareilsDM.recupererAppareilParSerialNumber(0);
+  expect(appareilsDB.findBySerialNumber).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameter', async () => {
-  await appareilsDM.recupererAppareilsParType('Cellulaire');
-  expect(appareilsDB.findByType).toHaveBeenCalledWith('Cellulaire');
+  await appareilsDM.recupererAppareilParSerialNumber(0);
+  expect(appareilsDB.findBySerialNumber).toHaveBeenCalledWith(0);
  });
 
  it('should return the correct elements from DB', async () => {
-  appareilsDB.findByType.mockImplementation(() => {
-   return expected;
+  appareilsDB.findBySerialNumber.mockImplementation(() => {
+   return expected[1];
   });
-  const actual = await appareilsDM.recupererAppareilsParType('Cellulaire');
+  const actual = await appareilsDM.recupererAppareilParSerialNumber(expected[1].serialNumber);
   expect(actual).toEqual(expected[1]);
  });
 });

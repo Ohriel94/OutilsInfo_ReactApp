@@ -17,6 +17,13 @@ const closeConnection = async () => {
  await client.close();
 };
 
+const getAll = async () => {
+ const collection = await getCollection();
+ const appareils = await collection.find({}).toArray();
+ await closeConnection();
+ return appareils;
+};
+
 const addOne = async (appareil) => {
  try {
   const collection = await getCollection();
@@ -40,10 +47,10 @@ const addMany = async (appareils) => {
  }
 };
 
-const findByType = async (typ) => {
+const findByType = async (type) => {
  try {
   const collection = await getCollection();
-  const appareils = await collection.find({ type: typ }).toArray();
+  const appareils = await collection.find({ type: type }).toArray();
   if (appareils === undefined) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
   else return appareils;
  } catch (e) {
@@ -89,13 +96,6 @@ const updateById = async (id, appareil) => {
  } finally {
   await closeConnection();
  }
-};
-
-const getAll = async () => {
- const collection = await getCollection();
- const appareils = await collection.find({}).toArray();
- await closeConnection();
- return appareils;
 };
 
 const deleteOne = async (id) => {

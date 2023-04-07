@@ -1,68 +1,79 @@
 import appareilsDB from '../../database/appareilsDB.js';
 
-function Appareil(
- type,
- serNum,
- marque,
- modele,
- dateAcqu,
- dateAnno,
- dateSort,
- os,
- cpu,
- gpu,
- memoire,
- stockages,
- notes
-) {
- console.log(
-  '[CTOR-Appareil] - ',
-  'Type: ',
+class Ordinateur {
+ constructor(
   type,
-  ', SN: ',
   serNum,
-  ', Marq: ',
   marque,
-  ', Mode: ',
   modele,
-  ', DAqu: ',
   dateAcqu,
-  ', DAnn: ',
   dateAnno,
-  ', DSor: ',
   dateSort,
-  ', OS: ',
   os,
-  ', CPU: ',
   cpu,
-  ', GPU: ',
   gpu,
-  ', Memo: ',
   memoire,
-  ', STKG: ',
   stockages,
-  ', Note: ',
   notes
- );
- this.type = type;
- this.serialNumber = serNum;
- this.etatDisponible = true;
- this.details = {
-  marque: marque,
-  modele: modele,
-  dateAcquisition: dateAcqu,
-  dateAnnonce: dateAnno,
-  dateSortie: dateSort,
-  configuration: {
-   os: os,
-   cpu: cpu,
-   gpu: gpu,
-   memoire: memoire,
-   stockages: [...stockages],
-  },
-  notes: notes,
-  piecesJointes: {},
- };
+ ) {
+  this.type = type;
+  this.serialNumber = serNum;
+  this.etatDisponible = true;
+  this.details = {
+   marque: marque,
+   modele: modele,
+   dateAcquisition: dateAcqu,
+   dateAnnonce: dateAnno,
+   dateSortie: dateSort,
+   configuration: {
+    os: os,
+    cpu: cpu,
+    gpu: gpu,
+    memoire: memoire,
+    stockages: [...stockages],
+   },
+   notes: notes,
+   piecesJointes: {},
+  };
+ }
+}
+
+class Cellulaire {
+ constructor(
+  type,
+  serNum,
+  marque,
+  modele,
+  dateAcqu,
+  dateAnno,
+  dateSort,
+  os,
+  cpu,
+  gpu,
+  memoire,
+  stockages,
+  notes
+ ) {
+  this.type = type;
+  this.serialNumber = serNum;
+  this.etatDisponible = true;
+  this.details = {
+   marque: marque,
+   modele: modele,
+   dateAcquisition: dateAcqu,
+   dateAnnonce: dateAnno,
+   dateSortie: dateSort,
+   configuration: {
+    os: os,
+    cpu: cpu,
+    gpu: gpu,
+    memoire: memoire,
+    stockages: [...stockages],
+   },
+   notes: notes,
+   piecesJointes: {},
+  };
+ }
 }
 
 const creerAppareil = async (serNum, mar, mod, dateAcqu, os, proc, mem, disq, notes) => {
@@ -100,23 +111,46 @@ const creerAppareils = async (
   const trouve = await appareilsDB.findBySerialNumber(serNum + i);
   console.log('Is item ', parseInt(serNum + i), ' new ? ', trouve === undefined);
   if (trouve === undefined) {
-   arr.push(
-    new Appareil(
-     type,
-     parseInt(serNum) + i,
-     marque,
-     modele,
-     dateAcqu,
-     dateAnno,
-     dateSort,
-     os,
-     cpu,
-     gpu,
-     parseInt(memoire),
-     stockages,
-     notes
-    )
-   );
+   switch (type) {
+    case 'Ordinateur':
+     arr.push(
+      new Ordinateur(
+       type,
+       parseInt(serNum) + i,
+       marque,
+       modele,
+       dateAcqu,
+       dateAnno,
+       dateSort,
+       os,
+       cpu,
+       gpu,
+       parseInt(memoire),
+       stockages,
+       notes
+      )
+     );
+     break;
+    case 'Cellulaire':
+     arr.push(
+      new Cellulaire(
+       type,
+       parseInt(serNum) + i,
+       marque,
+       modele,
+       dateAcqu,
+       dateAnno,
+       dateSort,
+       os,
+       cpu,
+       gpu,
+       parseInt(memoire),
+       stockages,
+       notes
+      )
+     );
+     break;
+   }
   }
  }
  console.log('[AppDM] Length :', arr.length);
@@ -129,10 +163,10 @@ const recupererAppareils = async () => {
  return appareils;
 };
 
-const recupererAppareilParType = async (type) => {
+const recupererAppareilsParType = async (type) => {
  try {
-  const appareil = await appareilsDB.findByType(type);
-  return appareil;
+  const appareils = await appareilsDB.findByType(type);
+  return appareils;
  } catch (e) {
   throw new Error(e);
  }
@@ -208,7 +242,7 @@ export default {
  editerAppareil,
  supprimerAppareil,
  recupererAppareils,
- recupererAppareilParType,
+ recupererAppareilsParType,
  recupererAppareilParSerialNumber,
  recupererAppareilParId,
  affecterAppareil,

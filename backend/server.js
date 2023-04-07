@@ -199,17 +199,6 @@ app.get('/appareils', async (req, res) => {
  response !== undefined ? res.send(response) : res.sendStatus(404);
 });
 
-app.get('/recupererAppareil/:appareilID', async (req, res) => {
- console.log('[SERV] GET/recupererAppareil/:appareilID');
- const appareilID = req.params.id;
- try {
-  const response = await appareilsDM.recupererAppareilParId(appareilID);
-  res.send(response);
- } catch (e) {
-  res.sendStatus(404);
- }
-});
-
 app.post('/creerAppareil', async (req, res) => {
  console.log('[SERV] POST/creerAppareil');
  const serNum = req.body.serialNumber;
@@ -266,6 +255,28 @@ app.post('/creerAppareils', async (req, res) => {
   res.sendStatus(202);
  } catch (e) {
   res.sendStatus(400);
+ }
+});
+
+app.get('/recupererAppareil/type?:type', async (req, res) => {
+ console.log('[SERV] GET/recupererOrdinateur/:type');
+ const type = req.query.type;
+ try {
+  const response = await appareilsDM.recupererAppareilsParType(type);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
+ }
+});
+
+app.get('/recupererAppareil/id?:id', async (req, res) => {
+ console.log('[SERV] GET/recupererAppareil/id?:id');
+ const id = req.query.id;
+ try {
+  const response = await appareilsDM.recupererAppareilParId(id);
+  res.send(response);
+ } catch (e) {
+  res.sendStatus(404);
  }
 });
 

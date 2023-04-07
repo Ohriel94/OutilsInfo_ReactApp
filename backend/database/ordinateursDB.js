@@ -17,6 +17,13 @@ const closeConnection = async () => {
  await client.close();
 };
 
+const getAll = async () => {
+ const collection = await getCollection();
+ const ordinateurs = await collection.find({}).toArray();
+ await closeConnection();
+ return ordinateurs;
+};
+
 const addOne = async (ordinateur) => {
  try {
   const collection = await getCollection();
@@ -76,13 +83,6 @@ const updateById = async (id, ordinateur) => {
  } finally {
   await closeConnection();
  }
-};
-
-const getAll = async () => {
- const collection = await getCollection();
- const ordinateurs = await collection.find({}).toArray();
- await closeConnection();
- return ordinateurs;
 };
 
 const deleteOne = async (id) => {

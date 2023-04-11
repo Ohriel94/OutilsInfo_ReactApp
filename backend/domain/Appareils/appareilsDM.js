@@ -6,8 +6,8 @@ function Appareil(
  marque,
  modele,
  dateAcqu,
- dateAnno,
  dateSort,
+ dateAnno,
  os,
  cpu,
  gpu,
@@ -22,8 +22,8 @@ function Appareil(
   marque,
   modele,
   dateAcqu,
-  dateAnno,
   dateSort,
+  dateAnno,
   os,
   cpu,
   gpu,
@@ -190,6 +190,7 @@ const supprimerAppareil = async (id) => {
 };
 
 export default {
+ Appareil,
  creerAppareil,
  creerAppareils,
  editerAppareil,

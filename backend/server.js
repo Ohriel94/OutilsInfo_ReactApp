@@ -237,9 +237,9 @@ app.post('/creerAppareils', async (req, res) => {
  const marque = req.body.marque;
  const modele = req.body.modele;
  const dateAcqu = req.body.dateAcquisition;
- const dateAnno = req.body.dateAnnonce;
  const dateSort = req.body.dateSortie;
- const sys = req.body.os;
+ const dateAnno = req.body.dateAnnonce;
+ const os = req.body.os;
  const cpu = req.body.cpu;
  const gpu = req.body.gpu;
  const memoire = req.body.memoire;
@@ -253,9 +253,9 @@ app.post('/creerAppareils', async (req, res) => {
    marque,
    modele,
    dateAcqu,
-   dateAnno,
    dateSort,
-   sys,
+   dateAnno,
+   os,
    cpu,
    gpu,
    memoire,

@@ -103,20 +103,20 @@ describe('creerEntreeDetenteur', () => {
   serialNumber: 9999,
   details: { marque: 'Asus', modele: 'Alpha' },
  };
+ const usager = {
+  _id: 'supose to be the _id of the user',
+  nom: 'Bernard',
+  prenom: 'Adam',
+ };
 
  it('should have been called 1 time', () => {
-  detenteursDM.creerEntreeDetenteur(date, appareil, 'supose to be the _id of the user', 'operation');
+  detenteursDM.creerEntreeDetenteur(date, appareil, usager, 'operation');
   expect(detenteursDM.creerEntreeDetenteur).toHaveBeenCalledTimes(1);
  });
 
  it('should have been called with the right parameters', async () => {
-  await detenteursDM.creerEntreeDetenteur(date, appareil, 'supose to be the _id of the user', 'operation');
-  expect(detenteursDM.creerEntreeDetenteur).toHaveBeenCalledWith(
-   date,
-   appareil,
-   'supose to be the _id of the user',
-   'operation'
-  );
+  await detenteursDM.creerEntreeDetenteur(date, appareil, usager, 'operation');
+  expect(detenteursDM.creerEntreeDetenteur).toHaveBeenCalledWith(date, appareil, usager, 'operation');
  });
 
  it('should return the correct object', () => {
@@ -124,10 +124,11 @@ describe('creerEntreeDetenteur', () => {
    time: '12:05:08',
    type: 'operation',
    appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-   idUsager: 'supose to be the _id of the user',
+   usager: `${usager.prenom} ${usager.nom}`,
+   idUsager: `${usager._id}`,
    idAppareil: `${appareil._id}`,
   };
-  const actual = detenteursDM.creerEntreeDetenteur(date, appareil, expected.idUsager, 'operation');
+  const actual = detenteursDM.creerEntreeDetenteur(date, appareil, usager, 'operation');
   expect(actual).toEqual(expected);
  });
 });
@@ -177,15 +178,15 @@ describe('ajouterEntreeDetenteur', () => {
   serialNumber: 9999,
   details: { marque: 'Asus', modele: 'Alpha' },
  };
+ const usager = {
+  _id: 'supose to be the _id of the user',
+  nom: 'Bernard',
+  prenom: 'Adam',
+ };
 
  it('should have been called 1 time', async () => {
   const date = new Date();
-  const entree = detenteursDM.creerEntreeDetenteur(
-   date,
-   appareil,
-   'supose to be the _id of the user',
-   'operation'
-  );
+  const entree = detenteursDM.creerEntreeDetenteur(date, appareil, usager, 'operation');
   const journee = detenteursDM.creerJourneeDetenteur(date);
   await detenteursDM.ajouterEntreeDetenteur(journee, entree);
   expect(detenteursDB.findByDate).toHaveBeenCalledTimes(1);
@@ -201,17 +202,13 @@ describe('ajouterEntreeDetenteur', () => {
      time: detenteursDM.formaterHeure(date),
      type: 'operation',
      appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
-     idUsager: 'supose to be the _id of the user',
+     usager: `${usager.prenom} ${usager.nom}`,
+     idUsager: `${usager._id}`,
      idAppareil: `${appareil._id}`,
     },
    ],
   };
-  const entree = detenteursDM.creerEntreeDetenteur(
-   date,
-   appareil,
-   'supose to be the _id of the user',
-   'operation'
-  );
+  const entree = detenteursDM.creerEntreeDetenteur(date, appareil, usager, 'operation');
   const journee = detenteursDM.creerJourneeDetenteur(date);
   await detenteursDM.ajouterEntreeDetenteur(journee, entree);
   expect(detenteursDB.findByDate).toHaveBeenCalledWith(journee.date);
@@ -222,11 +219,15 @@ describe('ajouterEntreeDetenteur', () => {
 });
 
 describe('enregistrerAffectationAppareil', () => {
- const usager = { _id: 'supose to be the _id of the user' };
  const appareil = {
   _id: 'supose to be the _id of the device',
   serialNumber: '9999',
   details: { marque: 'Asus', modele: 'Alpha' },
+ };
+ const usager = {
+  _id: 'supose to be the _id of the user',
+  nom: 'Bernard',
+  prenom: 'Adam',
  };
 
  it('should call detenteursDB 1 time', async () => {
@@ -240,8 +241,9 @@ describe('enregistrerAffectationAppareil', () => {
    date: detenteursDM.formaterDate(date),
    entrees: [
     {
-     appareil: '9999 - Asus Alpha',
-     idAppareil: 'supose to be the _id of the device',
+     appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
+     usager: `${usager.prenom} ${usager.nom}`,
+     idAppareil: appareil._id,
      idUsager: usager._id,
      time: detenteursDM.formaterHeure(date),
      type: 'affectation',
@@ -272,8 +274,9 @@ describe('enregistrerRetraitAppareil', () => {
    date: detenteursDM.formaterDate(date),
    entrees: [
     {
-     appareil: '9999 - Asus Alpha',
-     idAppareil: 'supose to be the _id of the device',
+     appareil: `${appareil.serialNumber} - ${appareil.details.marque} ${appareil.details.modele}`,
+     usager: `${usager.prenom} ${usager.nom}`,
+     idAppareil: appareil._id,
      idUsager: usager._id,
      time: detenteursDM.formaterHeure(date),
      type: 'retrait',

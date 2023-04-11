@@ -7,7 +7,7 @@ const creerAdmin = async (prenom, nom, email, password, flags) => {
   email: email.toLowerCase(),
   username: formaterUsername(prenom, nom),
   password: password,
-  dateCreation: new Date(),
+  dateCreation: '2020-01-01',
   flags: flags,
  };
  const trouver = await trouverAdminParUsername(newAdmin.username);

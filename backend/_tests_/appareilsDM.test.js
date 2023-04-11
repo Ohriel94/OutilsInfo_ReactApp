@@ -14,7 +14,54 @@ beforeEach(async () => {
  appareilsDB.deleteOne.mockClear();
 });
 
-describe('Appareil', () => {
+describe('Constructeur Ordinateur', () => {
+ const expected = {
+  type: 'Cellulaire',
+  serialNumber: 9991,
+  etatDisponible: true,
+  details: {
+   marque: 'Dell',
+   modele: 'Vostro 5502',
+   dateAcquisition: '2020-01-01',
+   dateSortie: '2015-01-01',
+   dateAnnonce: '2010-01-01',
+   configuration: {
+    os: 'Windows 10 64x',
+    cpu: 'intel core i7-1165G7 @ 2.80Ghz',
+    gpu: 'nVidia RX3060 12GB',
+    memoire: 16,
+    stockages: [512, 2000],
+   },
+   notes: '',
+   piecesJointes: {},
+  },
+ };
+ let appareil = new appareilsDM.Cellulaire(
+  expected.type,
+  expected.serialNumber,
+  expected.details.marque,
+  expected.details.modele,
+  expected.details.dateAcquisition,
+  expected.details.dateSortie,
+  expected.details.dateAnnonce,
+  expected.details.configuration.os,
+  expected.details.configuration.cpu,
+  expected.details.configuration.gpu,
+  expected.details.configuration.memoire,
+  expected.details.configuration.stockages,
+  expected.details.notes
+ );
+
+ it('should be defined', () => {
+  expect(appareil).toBeDefined();
+ });
+
+ it('should return the right element', () => {
+  expect(appareil).toEqual(expected);
+ });
+});
+
+describe('Constructeur Ordinateur', () => {
  const expected = {
   type: 'Ordinateur',
   serialNumber: 9991,
@@ -36,7 +83,7 @@ describe('Appareil', () => {
    piecesJointes: {},
   },
  };
- let appareil = new appareilsDM.Appareil(
+ let appareil = new appareilsDM.Ordinateur(
   expected.type,
   expected.serialNumber,
   expected.details.marque,

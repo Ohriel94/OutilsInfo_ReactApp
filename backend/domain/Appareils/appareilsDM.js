@@ -1,22 +1,7 @@
 import appareilsDB from '../../database/appareilsDB.js';
 
-function Appareil(
- type,
- serNum,
- marque,
- modele,
- dateAcqu,
- dateSort,
- dateAnno,
- os,
- cpu,
- gpu,
- memoire,
- stockages,
- notes
-) {
- console.log(
-  '[CTOR-Appareil] - ',
+class Ordinateur {
+ constructor(
   type,
   serNum,
   marque,
@@ -30,26 +15,65 @@ function Appareil(
   memoire,
   stockages,
   notes
- );
- this.type = type;
- this.serialNumber = serNum;
- this.etatDisponible = true;
- this.details = {
-  marque: marque,
-  modele: modele,
-  dateAcquisition: dateAcqu,
-  dateAnnonce: dateAnno,
-  dateSortie: dateSort,
-  configuration: {
-   os: os,
-   cpu: cpu,
-   gpu: gpu,
-   memoire: memoire,
-   stockages: [...stockages],
-  },
-  notes: notes,
-  piecesJointes: {},
- };
+ ) {
+  this.type = type;
+  this.serialNumber = serNum;
+  this.etatDisponible = true;
+  this.details = {
+   marque: marque,
+   modele: modele,
+   dateAcquisition: dateAcqu,
+   dateAnnonce: dateAnno,
+   dateSortie: dateSort,
+   configuration: {
+    os: os,
+    cpu: cpu,
+    gpu: gpu,
+    memoire: memoire,
+    stockages: [...stockages],
+   },
+   notes: notes,
+   piecesJointes: {},
+  };
+ }
+}
+
+class Cellulaire {
+ constructor(
+  type,
+  serNum,
+  marque,
+  modele,
+  dateAcqu,
+  dateSort,
+  dateAnno,
+  os,
+  cpu,
+  gpu,
+  memoire,
+  stockages,
+  notes
+ ) {
+  this.type = type;
+  this.serialNumber = serNum;
+  this.etatDisponible = true;
+  this.details = {
+   marque: marque,
+   modele: modele,
+   dateAcquisition: dateAcqu,
+   dateAnnonce: dateAnno,
+   dateSortie: dateSort,
+   configuration: {
+    os: os,
+    cpu: cpu,
+    gpu: gpu,
+    memoire: memoire,
+    stockages: [...stockages],
+   },
+   notes: notes,
+   piecesJointes: {},
+  };
+ }
 }
 
 const creerAppareil = async (serNum, mar, mod, dateAcqu, os, proc, mem, disq, notes) => {
@@ -60,6 +84,7 @@ const creerAppareil = async (serNum, mar, mod, dateAcqu, os, proc, mem, disq, no
   if (trouve === undefined) await appareilsDB.addOne(newAppareil);
   else throw new Error('This serial number is already in use...');
  } catch (e) {
+  console.error(e);
   throw e;
  }
 };
@@ -80,35 +105,54 @@ const creerAppareils = async (
  stockages,
  notes
 ) => {
- console.log('[AppDM] creerAppareils');
  let quantite = qte === undefined ? 1 : qte;
  let arr = [];
  for (let i = 0; i < quantite; i++) {
   const trouve = await appareilsDB.findBySerialNumber(serNum + i);
-  console.log('Is item ', parseInt(serNum + i), ' new ? ', trouve === undefined);
   if (trouve === undefined) {
-   arr.push(
-    new Appareil(
-     type,
-     serNum + i,
-     marque,
-     modele,
-     dateAcqu,
-     dateAnno,
-     dateSort,
-     os,
-     cpu,
-     gpu,
-     memoire,
-     stockages,
-     notes
-    )
-   );
+   switch (type) {
+    case 'Ordinateur':
+     arr.push(
+      new Ordinateur(
+       type,
+       parseInt(serNum) + i,
+       marque,
+       modele,
+       dateAcqu,
+       dateAnno,
+       dateSort,
+       os,
+       cpu,
+       gpu,
+       parseInt(memoire),
+       stockages,
+       notes
+      )
+     );
+     break;
+    case 'Cellulaire':
+     arr.push(
+      new Cellulaire(
+       type,
+       parseInt(serNum) + i,
+       marque,
+       modele,
+       dateAcqu,
+       dateAnno,
+       dateSort,
+       os,
+       cpu,
+       gpu,
+       parseInt(memoire),
+       stockages,
+       notes
+      )
+     );
+     break;
+   }
   }
  }
- console.log('[AppDM] Length :', arr.length);
  const result = await appareilsDB.addMany(arr);
- console.log('[AppDM] Result :', result);
 };
 
 const recupererAppareils = async () => {
@@ -116,10 +160,10 @@ const recupererAppareils = async () => {
  return appareils;
 };
 
-const recupererAppareilParType = async (type) => {
+const recupererAppareilsParType = async (type) => {
  try {
-  const appareil = await appareilsDB.findByType(type);
-  return appareil;
+  const appareils = await appareilsDB.findByType(type);
+  return appareils;
  } catch (e) {
   throw new Error(e);
  }
@@ -190,13 +234,14 @@ const supprimerAppareil = async (id) => {
 };
 
 export default {
- Appareil,
+ Cellulaire,
+ Ordinateur,
  creerAppareil,
  creerAppareils,
  editerAppareil,
  supprimerAppareil,
  recupererAppareils,
- recupererAppareilParType,
+ recupererAppareilsParType,
  recupererAppareilParSerialNumber,
  recupererAppareilParId,
  affecterAppareil,

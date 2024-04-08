@@ -1,4 +1,4 @@
-import ordinateursDB from '../../database/ordinateursDB-MySql.js';
+import ordinateursDB from '../../database/ordinateursDB.js';
 
 const creerOrdinateur = async (
 	serNum,

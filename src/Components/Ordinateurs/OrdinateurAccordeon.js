@@ -1,17 +1,17 @@
 import * as React from 'react';
 import Theme from '../../Ressources/Theme';
 import { ThemeProvider } from '@mui/material/styles';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+
 import EditerOrdinateur from './EditerOrdinateur';
+import HistoDetenteurs from '../Historique/HistoDetenteurs';
 
 const BGCouleurListe = (etat) => {
  let couleur = '';
@@ -26,11 +26,13 @@ const componentStyle = {
   alignItems: 'center',
   textAlign: 'center',
  },
- sx: { padding: (0, 2), border: 'lightgray solid 1px' },
+ sx: { padding: (0, 1), border: 'lightgray solid 1px' },
 };
 
 const OrdinateurAccordeon = (props) => {
  const navigate = useNavigate();
+
+ const [detenteurs, setDetenteurs] = React.useState([]);
 
  const { ordinateur, handleSubmit, notifier } = props;
 
@@ -41,8 +43,7 @@ const OrdinateurAccordeon = (props) => {
      sx={{ backgroundColor: BGCouleurListe(ordinateur.etatDisponible) }}
      expandIcon={<ExpandMoreIcon />}
      aria-controls='panel1a-content'
-     id='panel1a-header'
-    >
+     id='panel1a-header'>
      <Typography variant='h5'>
       {`${ordinateur.serialNumber} - ${ordinateur.details.marque} ${ordinateur.details.modele}`}
      </Typography>
@@ -81,59 +82,19 @@ const OrdinateurAccordeon = (props) => {
        <Typography variant='body2'>{ordinateur.details.notes}</Typography>
       </Grid>
      </Grid>
-     <Box>
-      <Accordion>
-       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
-        <Typography variant='h5'>Historique des détenteurs</Typography>
-       </AccordionSummary>
-       <AccordionDetails>
-        <Grid
-         container
-         style={{
-          flexDirection: 'row',
-         }}
-        >
-         <Grid
-          container
-          alignItems={'center'}
-          textAlign={'center'}
-          style={{
-           flexDirection: 'column',
-          }}
-         >
-          <Grid item xs={3}>
-           <Typography variant='h6'>Date</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Time</Typography>
-          </Grid>
-         </Grid>
-         <Grid container alignItems={'center'} textAlign={'center'}>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Assigner à</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Début du prêt</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Fin du prêt</Typography>
-          </Grid>
-         </Grid>
-         <Grid container alignItems={'center'} textAlign={'center'}>
-          <Grid item xs={3}>
-           <Typography variant='h6'>Detenteur 1</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='subtitle2'>00/00/00</Typography>
-          </Grid>
-          <Grid item xs={3}>
-           <Typography variant='subtitle2'>99/99/99</Typography>
-          </Grid>
-         </Grid>
-        </Grid>
-       </AccordionDetails>
-      </Accordion>
-     </Box>
+     <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls='panel1a-content' id='panel1a-header'>
+       <Typography variant='h5'>Historique des détenteurs</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+       {/* <HistoDetenteurs
+        idAppareil={ordinateur._id}
+        notifier={notifier}
+        detenteurs={detenteurs}
+        setDetenteurs={setDetenteurs}
+       /> */}
+      </AccordionDetails>
+     </Accordion>
     </AccordionDetails>
    </Accordion>
   </ThemeProvider>

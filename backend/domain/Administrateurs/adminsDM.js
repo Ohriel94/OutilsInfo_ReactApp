@@ -1,25 +1,28 @@
 import adminsDB from '../../database/adminsDB.js';
 
-const creerAdmin = async (prenom, nom, email, password) => {
+const creerAdmin = async (prenom, nom, email, password, flags) => {
  const newAdmin = {
   prenom: prenom,
   nom: nom,
   email: email.toLowerCase(),
   username: formaterUsername(prenom, nom),
   password: password,
-  dateCreation: new Date(),
-  status: {
-   actif: true,
-   admin: true,
-  },
+  dateCreation: '2020-01-01',
+  flags: flags,
  };
+ const trouver = await trouverAdminParUsername(newAdmin.username);
  try {
-  const trouve = await adminsDB.findByEmail(newAdmin.email);
-  if (trouve === undefined) await adminsDB.addOne(newAdmin);
-  else throw new Error('This user has already been added');
+  if (trouver === undefined) {
+   await adminsDB.addOne(newAdmin);
+  } else throw new Error('Already exist');
  } catch (e) {
   throw e;
  }
+};
+
+const supprimerAdmin = async (id) => {
+ const response = await adminsDB.deleteOne(id);
+ return response;
 };
 
 const recupererAdministrateurs = async () => {
@@ -88,18 +91,16 @@ const formaterUsername = (prenom, nom) => {
  else if (prenom.includes('-'))
   username =
    prenom.substring(0, 1).toUpperCase() +
-   prenom
-    .split('-')[1]
-    .substring(0, 1)
-    .toUpperCase() +
+   prenom.split('-')[1].substring(0, 1).toUpperCase() +
    nom.toUpperCase();
  else username = prenom.substring(0, 1).toUpperCase() + nom.toUpperCase();
  return username;
 };
 
 export default {
- creerAdmin,
  recupererAdministrateurs,
+ creerAdmin,
+ supprimerAdmin,
  trouverAdminParId,
  trouverAdminParEmail,
  trouverAdminParUsername,

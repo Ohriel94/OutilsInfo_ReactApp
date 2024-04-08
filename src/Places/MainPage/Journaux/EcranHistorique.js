@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-import AdminAccordeon from '../../Components/Administrateurs/AdminAccordeon';
+import HistoriqueAccordeon from '../../../Components/Historique/HistoriqueAccordeon';
 
-const EcranAdmin = (props) => {
- const [admins, setAdmins] = React.useState([]);
+const Usagers = (props) => {
+ const [historiques, setHistoriques] = React.useState([]);
+ const { token } = props;
 
  const paperTheme = {
   color: 'success',
@@ -22,19 +23,16 @@ const EcranAdmin = (props) => {
  };
 
  React.useEffect(() => {
-  getAdmins();
+  getHistoriques();
  }, []);
 
- const getAdmins = () => {
+ const getHistoriques = () => {
   const f = async () => {
    try {
-    const getAdminsRequest = await axios({
-     method: 'get',
-     url: 'http://localhost:3001/administrateurs',
+    const getHistoriquesRequest = await axios.get('http://localhost:3001/historiques').then((response) => {
+     console.log(response.data);
+     setHistoriques(response.data);
     });
-    console.log(getAdminsRequest.data);
-    setAdmins(getAdminsRequest.data);
-    return getAdminsRequest.data;
    } catch (e) {
     console.log('Failed to connect ' + e);
    }
@@ -49,23 +47,20 @@ const EcranAdmin = (props) => {
   return couleur;
  };
 
- console.log(admins);
-
  return (
   <React.Fragment>
-   {admins.map((administrateur, administrateurKey) => (
+   {historiques.map((historique, historiqueKey) => (
     <Grid
      container
-     key={administrateurKey}
+     key={historiqueKey}
      style={{
       flexDirection: 'column',
-     }}
-    >
-     <AdminAccordeon administrateur={administrateur} key={administrateurKey} />
+     }}>
+     <HistoriqueAccordeon historique={historique} key={historiqueKey} />
     </Grid>
    ))}
   </React.Fragment>
  );
 };
 
-export default EcranAdmin;
+export default Usagers;

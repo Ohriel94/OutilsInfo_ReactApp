@@ -13,28 +13,21 @@ const getCollection = async () => {
 };
 
 const closeConnection = async () => {
- client.close();
+ await client.close();
 };
 
 const getAll = async () => {
- try {
-  const collection = await getCollection();
-  const res = await collection.find({});
-  const administrateur = await res.toArray();
-  await closeConnection();
-  return administrateur;
- } catch (e) {
-  throw e;
- } finally {
-  await closeConnection();
- }
+ const collection = await getCollection();
+ const admins = await collection.find({}).toArray();
+ await closeConnection();
+ return admins;
 };
 
 const findById = async (id) => {
  try {
   const collection = await getCollection();
   const trouve = await collection.findOne({ _id: ObjectId(id) });
-  if (trouve === null) throw new Error('Administrator not found');
+  if (trouve === null) throw new Error('Administrateur pas trouvé');
   return trouve;
  } catch (e) {
   throw e;
@@ -48,7 +41,7 @@ const findByEmail = async (email) => {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
   const trouves = res.filter((admin) => admin.email === email);
-  if (trouves === undefined) throw new Error('Administrator not found');
+  if (trouves === undefined) throw new Error('Administrateur pas trouvé');
   return trouves[0];
  } catch (e) {
   throw e;
@@ -62,7 +55,7 @@ const findByUsername = async (username) => {
   const collection = await getCollection();
   const res = await collection.find({}).toArray();
   const trouves = res.filter((admin) => admin.username === username);
-  if (trouves === undefined) throw new Error('Administrator not found');
+  if (trouves === undefined) throw new Error('Administrateur pas trouvé');
   return trouves[0];
  } catch (e) {
   throw e;
@@ -77,15 +70,24 @@ const addOne = async (administrateur) => {
   await collection.insertOne(administrateur);
   await closeConnection();
  } catch (e) {
+  throw e;
+ } finally {
   await closeConnection();
  }
+};
+
+const deleteOne = async (id) => {
+ const collection = await getCollection();
+ let deletedItem = await collection.deleteOne({ _id: ObjectId(id) });
+ await closeConnection();
+ return deletedItem;
 };
 
 const updateById = async (id, administrateur) => {
  try {
   const collection = await getCollection();
   let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: administrateur });
-  if (updatedItems.matchedCount == 0) throw new Error('Administrators not found');
+  if (updatedItems.matchedCount == 0) throw new Error('Administrateur pas trouvé');
  } catch (e) {
   throw e;
  } finally {
@@ -99,5 +101,6 @@ export default {
  findByEmail,
  findByUsername,
  addOne,
+ deleteOne,
  updateById,
 };

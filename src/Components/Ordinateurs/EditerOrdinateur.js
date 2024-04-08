@@ -1,23 +1,13 @@
 import * as React from 'react';
 import Axios from 'axios';
-import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import Theme from '../../Ressources/Theme';
-import { ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import { NoMeetingRoomIcon } from '@mui/icons-material/NoMeetingRoom';
 
 const customStyles = {
  content: {
@@ -32,6 +22,7 @@ const customStyles = {
   justifyContent: 'center',
   alignItems: 'center',
   textAlign: 'center',
+  zIndex: 99,
  },
  padding: (0, 2),
  border: 'lightgray solid 1px',
@@ -39,9 +30,54 @@ const customStyles = {
 };
 
 const EditerOrdinateur = (props) => {
- const { ordinateur, handleSubmit, notifier } = props;
+ const { ordinateur, notifier } = props;
  let subtitle = { style: { color: 'ffffff' } };
  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+ const handleSubmit = async (event) => {
+  console.log('Submit');
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+
+  const serialNumber = data.get('serialNumber');
+  const marque = data.get('marque');
+  const modele = data.get('modele');
+  const processeur = data.get('processeur');
+  const systeme = data.get('systeme');
+  const memoire = data.get('memoire');
+  const disque = data.get('disque');
+  const dateAcqu = data.get('dateAcquisition');
+  const notes = data.get('notes');
+
+  console.log(serialNumber, marque, modele, processeur, systeme, memoire, disque, dateAcqu, notes);
+
+  console.log(`editerAppareil()`);
+
+  const f = async () => {
+   try {
+    const editDeviceRequest = await Axios({
+     method: 'post',
+     url: 'http://localhost:3001/editerAppareil',
+     data: {
+      id: ordinateur._id,
+      serialNumber: serialNumber,
+      marque: marque,
+      modele: modele,
+      processeur: processeur,
+      systeme: systeme,
+      memoire: memoire,
+      disque: disque,
+      dateAcquisition: dateAcqu,
+      notes: notes,
+     },
+    });
+    notifier.success();
+   } catch (e) {
+    console.log('Failed to connect ' + e);
+   }
+  };
+  f();
+ };
 
  const openModal = () => {
   setIsOpen(true);
@@ -66,11 +102,15 @@ const EditerOrdinateur = (props) => {
     onAfterOpen={afterOpenModal}
     onRequestClose={closeModal}
     style={customStyles}
-    contentLabel='Example Modal'
-   >
+    ariaHideApp={false}
+    contentLabel='EditerOrdinateur'>
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-     <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
-      <Typography variant='h4'>Mode édition</Typography>
+     <Grid container style={{ flexDirection: 'column' }} sx={{ width: '80vh', margin: '1vh' }}>
+      <Grid container style={{ flexDirection: 'row' }}>
+       <Typography variant='h4'>Mode édition</Typography>
+       <Typography variant='h4'> | </Typography>
+       <Typography variant='subtitle2'>{ordinateur._id}</Typography>
+      </Grid>
       <br />
       <Typography variant='h6' sx={customStyles.margin}>
        Informations génerales
@@ -78,89 +118,113 @@ const EditerOrdinateur = (props) => {
       <Grid container style={{ flexDirection: 'row' }}>
        <Grid item xs={2}>
         <TextField
+         size='small'
          InputLabelProps={{ shrink: true }}
-         margin='normal'
+         margin='dense'
          fullWidth
          required
-         label='S/N'
-         name='S/N'
-         id='S/N'
+         label='Serial Number'
+         name='serialNumber'
+         id='serialNumber'
          defaultValue={ordinateur.serialNumber}
         />
        </Grid>
        <Grid item xs={4}>
         <TextField
+         size='small'
          InputLabelProps={{ shrink: true }}
-         margin='normal'
+         margin='dense'
          fullWidth
          required
          label='Marque'
-         name='Marque'
-         id='Marque'
+         name='marque'
+         id='marque'
          defaultValue={ordinateur.details.marque}
         />
        </Grid>
        <Grid item xs={6}>
         <TextField
+         size='small'
          InputLabelProps={{ shrink: true }}
-         margin='normal'
+         margin='dense'
          fullWidth
          required
          label='Modele'
-         name='Modele'
-         id='Modele'
+         name='modele'
+         id='modele'
          defaultValue={ordinateur.details.modele}
         />
        </Grid>
+       <Grid item xs={4}>
+        <TextField
+         size='small'
+         InputLabelProps={{ shrink: true }}
+         margin='dense'
+         fullWidth
+         required
+         label="Date d'aquisition"
+         name='dateAcquisition'
+         id='dateAqui'
+         type='date'
+         min='2001-01-01'
+         value={ordinateur.details.dateAcquisition}
+        />
+       </Grid>
+      </Grid>
+      <Grid container style={{ flexDirection: 'row' }}>
        <Typography variant='h6' sx={customStyles.margin}>
         Spécifications
        </Typography>
        <Grid container style={{ flexDirection: 'row' }}>
         <Grid item xs={6}>
          <TextField
+          size='small'
           InputLabelProps={{ shrink: true }}
-          margin='normal'
+          margin='dense'
           fullWidth
           required
           label='Processeur'
-          name='Processeur'
-          id='Processeur'
+          name='processeur'
+          id='processeur'
           defaultValue={ordinateur.details.configuration.processeur}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          size='small'
           InputLabelProps={{ shrink: true }}
-          margin='normal'
+          margin='dense'
           fullWidth
           required
-          name='Systeme'
           label='Système'
-          id='Systeme'
+          name='systeme'
+          id='systeme'
           defaultValue={ordinateur.details.configuration.systeme}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          size='small'
           InputLabelProps={{ shrink: true }}
-          margin='normal'
+          margin='dense'
           fullWidth
           required
-          name='Memoire'
           label='Memoire'
-          id='Memoire'
+          name='memoire'
+          id='memoire'
           defaultValue={ordinateur.details.configuration.memoire}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          size='small'
           InputLabelProps={{ shrink: true }}
-          margin='normal'
+          margin='dense'
           fullWidth
           required
-          name='Disque'
           label='Disque'
-          id='Disque'
+          name='disque'
+          id='disque'
           defaultValue={ordinateur.details.configuration.disque}
          />
         </Grid>
@@ -171,13 +235,14 @@ const EditerOrdinateur = (props) => {
         </Typography>
         <Grid item xs={12}>
          <TextField
+          size='small'
           InputLabelProps={{ shrink: true }}
           margin='dense'
           fullWidth
           multiline
           required
-          name='Notes'
-          id='Notes'
+          name='notes'
+          id='notes'
           defaultValue={ordinateur.details.notes}
          />
         </Grid>

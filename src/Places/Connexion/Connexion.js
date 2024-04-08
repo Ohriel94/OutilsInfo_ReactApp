@@ -5,18 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import axios from 'axios';
+import Axios from 'axios';
 
 const Connexion = (props) => {
  const navigate = useNavigate();
- const { setToken } = props;
+ const AuthContext = React.createContext();
+
+ const { setToken, setAdmin } = props;
 
  const handleSubmit = async (event) => {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
+  console.log(data.get('email'), data.get('password'));
   const f = async () => {
    try {
-    await axios({
+    await Axios({
      method: 'post',
      url: 'http://localhost:3001/connexion',
      data: {
@@ -24,11 +27,12 @@ const Connexion = (props) => {
       password: data.get('password'),
      },
     }).then((response) => {
-     setToken(response.data);
+     setToken(response.data.token);
+     setAdmin(response.data.userInfo);
      navigate('/mainpage');
     });
 
-    // const connexionRequest = await axios.get('http://localhost:3001/connexion', {
+    // const connexionRequest = await Axios.get('http://localhost:3001/connexion', {
     //  data: {
     //   email: data.get('email'),
     //   password: data.get('password'),
@@ -49,8 +53,7 @@ const Connexion = (props) => {
      display: 'flex',
      flexDirection: 'column',
      alignItems: 'center',
-    }}
-   >
+    }}>
     <Typography component='h1' variant='h5'>
      Connexion
     </Typography>

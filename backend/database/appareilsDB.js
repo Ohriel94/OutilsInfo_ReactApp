@@ -3,7 +3,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const dbName = 'OutilInventaire';
-const collectionName = 'Ordinateurs';
+const collectionName = 'Appareils';
 
 const getCollection = async () => {
  client.connect();
@@ -19,15 +19,15 @@ const closeConnection = async () => {
 
 const getAll = async () => {
  const collection = await getCollection();
- const ordinateurs = await collection.find({}).toArray();
+ const appareils = await collection.find({}).toArray();
  await closeConnection();
- return ordinateurs;
+ return appareils;
 };
 
-const addOne = async (ordinateur) => {
+const addOne = async (appareil) => {
  try {
   const collection = await getCollection();
-  await collection.insertOne(ordinateur);
+  await collection.insertOne(appareil);
  } catch (e) {
   throw e;
  } finally {
@@ -35,11 +35,24 @@ const addOne = async (ordinateur) => {
  }
 };
 
-const addMany = async (ordinateurs) => {
+const addMany = async (appareils) => {
  try {
   const collection = await getCollection();
-  const res = await collection.insertMany([...ordinateurs]);
+  const res = await collection.insertMany([...appareils]);
   return res;
+ } catch (e) {
+  throw e;
+ } finally {
+  await closeConnection();
+ }
+};
+
+const findByType = async (type) => {
+ try {
+  const collection = await getCollection();
+  const appareils = await collection.find({ type: type }).toArray();
+  if (appareils === undefined) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
+  else return appareils;
  } catch (e) {
   throw e;
  } finally {
@@ -50,9 +63,9 @@ const addMany = async (ordinateurs) => {
 const findBySerialNumber = async (serNum) => {
  try {
   const collection = await getCollection();
-  const ordinateur = await collection.find({ serialNumber: serNum }).toArray();
-  if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  else return ordinateur[0];
+  const appareils = await collection.find({ serialNumber: parseInt(serNum) }).toArray();
+  if (appareils === undefined) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
+  else return appareils[0];
  } catch (e) {
   throw e;
  } finally {
@@ -63,9 +76,9 @@ const findBySerialNumber = async (serNum) => {
 const findById = async (id) => {
  try {
   const collection = await getCollection();
-  const ordinateur = await collection.find({ _id: ObjectId(id) }).toArray();
-  if (ordinateur === undefined) throw new Error('Ordinateur pas trouvé...');
-  else return ordinateur[0];
+  const appareils = await collection.find({ _id: ObjectId(id) }).toArray();
+  if (appareils === undefined) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
+  else return appareils[0];
  } catch (e) {
   throw e;
  } finally {
@@ -73,11 +86,11 @@ const findById = async (id) => {
  }
 };
 
-const updateById = async (id, ordinateur) => {
+const updateById = async (id, appareil) => {
  const collection = await getCollection();
  try {
-  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: ordinateur });
-  if (updatedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
+  let updatedItems = await collection.updateOne({ _id: ObjectId(id) }, { $set: appareil });
+  if (updatedItems.matchedCount == 0) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
  } catch (e) {
   throw e;
  } finally {
@@ -89,7 +102,7 @@ const deleteOne = async (id) => {
  const collection = await getCollection();
  try {
   let deletedItems = await collection.deleteOne({ _id: ObjectId(id) });
-  if (deletedItems.matchedCount == 0) throw new Error('Ordinateur pas trouvé...');
+  if (deletedItems.matchedCount == 0) throw new Error("Le ou les Appareil(s) n'ont pas trouvé...");
  } catch (e) {
   throw e;
  } finally {
@@ -99,6 +112,7 @@ const deleteOne = async (id) => {
 
 export default {
  getAll,
+ findByType,
  findBySerialNumber,
  findById,
  addOne,

@@ -19,8 +19,9 @@ describe('creerAdmin', () => {
    nom: 'Bastien-Charles',
    email: 'abc@testmail.com',
    password: 'UnMotDePasse',
+   flags: [],
   };
-  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
+  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password, expected.flags);
   expect(adminsDB.addOne).toHaveBeenCalledTimes(1);
  });
 
@@ -31,13 +32,10 @@ describe('creerAdmin', () => {
    email: 'abc@testmail.com',
    username: 'ACHARLES',
    password: 'UnMotDePasse',
-   dateCreation: new Date(),
-   status: {
-    actif: true,
-    admin: true,
-   },
+   dateCreation: '2020-01-01',
+   flags: [],
   };
-  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password);
+  await adminsDM.creerAdmin(expected.prenom, expected.nom, expected.email, expected.password, expected.flags);
   expect(adminsDB.addOne).toHaveBeenCalledWith(expected);
  });
 

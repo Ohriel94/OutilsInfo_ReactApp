@@ -1,10 +1,13 @@
 import * as React from 'react';
+import axios from 'axios';
+import AWN from 'awesome-notifications';
 import Modal from 'react-modal';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 
 const customStyles = {
@@ -16,11 +19,20 @@ const customStyles = {
   marginRight: '-50%',
   transform: 'translate(-50%, -50%)',
  },
+ style: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  textAlign: 'center',
+  zIndex: 99,
+ },
+ padding: (0, 2),
+ border: 'lightgray solid 1px',
+ margin: { mt: '3vh' },
 };
 
-const CreerOrdinateur = (props) => {
- const { handleSubmit, notifier } = props;
- let subtitle;
+const EditerOrdinateur = (props) => {
+ const { ordinateur, handleSubmit, notifier } = props;
+ let subtitle = { style: { color: 'ffffff' } };
  const [modalIsOpen, setIsOpen] = React.useState(false);
 
  const openModal = () => {
@@ -38,115 +50,140 @@ const CreerOrdinateur = (props) => {
 
  return (
   <div>
-   <Button variant='outlined' color='primary' size='small' onClick={openModal}>
+   <IconButton variant='outlined' color='primary' size='small' onClick={openModal}>
     <EditIcon />
-   </Button>
+   </IconButton>
    <Modal
     isOpen={modalIsOpen}
     onAfterOpen={afterOpenModal}
     onRequestClose={closeModal}
     style={customStyles}
-    contentLabel='Example Modal'
-   >
+    contentLabel='Example Modal'>
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
      <Grid container style={{ flexDirection: 'column' }} sx={{ width: '100vh', my: '5vh' }}>
       <Typography variant='h4'>Mode édition</Typography>
       <br />
-      <Typography variant='h6'>Informations génerales</Typography>
+      <Typography variant='h6' sx={customStyles.margin}>
+       Informations génerales
+      </Typography>
       <Grid container style={{ flexDirection: 'row' }}>
        <Grid item xs={2}>
-        <TextField margin='normal' fullWidth required id='S/N' label='S/N' name='S/N' autoComplete='S/N' />
-       </Grid>
-       <Grid item xs={4}>
         <TextField
+         InputLabelProps={{ shrink: true }}
          margin='normal'
          fullWidth
          required
-         id='Marque'
+         label='S/N'
+         name='S/N'
+         id='S/N'
+         defaultValue={ordinateur.serialNumber}
+        />
+       </Grid>
+       <Grid item xs={4}>
+        <TextField
+         InputLabelProps={{ shrink: true }}
+         margin='normal'
+         fullWidth
+         required
          label='Marque'
          name='Marque'
-         autoComplete='Marque'
+         id='Marque'
+         defaultValue={ordinateur.details.marque}
         />
        </Grid>
        <Grid item xs={6}>
         <TextField
+         InputLabelProps={{ shrink: true }}
          margin='normal'
          fullWidth
          required
-         id='Modele'
          label='Modele'
          name='Modele'
-         autoComplete='Modele'
+         id='Modele'
+         defaultValue={ordinateur.details.modele}
         />
        </Grid>
-       <Typography variant='h6'>Spécifications</Typography>
+       <Typography variant='h6' sx={customStyles.margin}>
+        Spécifications
+       </Typography>
        <Grid container style={{ flexDirection: 'row' }}>
         <Grid item xs={6}>
          <TextField
+          InputLabelProps={{ shrink: true }}
           margin='normal'
           fullWidth
           required
-          id='Processeur'
           label='Processeur'
           name='Processeur'
-          autoComplete='Processeur'
+          id='Processeur'
+          defaultValue={ordinateur.details.configuration.processeur}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          InputLabelProps={{ shrink: true }}
           margin='normal'
           fullWidth
           required
           name='Systeme'
           label='Système'
-          type='Systeme'
           id='Systeme'
-          autoComplete='Systeme'
+          defaultValue={ordinateur.details.configuration.systeme}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          InputLabelProps={{ shrink: true }}
           margin='normal'
           fullWidth
           required
           name='Memoire'
           label='Memoire'
-          type='Mémoire'
           id='Memoire'
+          defaultValue={ordinateur.details.configuration.memoire}
          />
         </Grid>
         <Grid item xs={6}>
          <TextField
+          InputLabelProps={{ shrink: true }}
           margin='normal'
           fullWidth
           required
           name='Disque'
           label='Disque'
-          type='Disque'
           id='Disque'
+          defaultValue={ordinateur.details.configuration.disque}
          />
         </Grid>
        </Grid>
        <Grid container>
-        <Grid item xs={6}>
+        <Typography variant='h6' sx={customStyles.margin}>
+         Notes
+        </Typography>
+        <Grid item xs={12}>
          <TextField
-          margin='normal'
+          InputLabelProps={{ shrink: true }}
+          margin='dense'
           fullWidth
+          multiline
           required
-          name='Quantite'
-          label='Quantité'
-          type='Quantite'
-          id='Quantite'
+          name='Notes'
+          id='Notes'
+          defaultValue={ordinateur.details.notes}
          />
         </Grid>
        </Grid>
        <Grid container>
-        <Button variant='contained' color='success' type='submit' size='small'>
-         Soumettre
-        </Button>
-        <Button variant='contained' color='error' size='small' onClick={closeModal}>
-         close
-        </Button>
+        <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
+         <Button variant='contained' color='success' type='submit' size='small'>
+          Soumettre
+         </Button>
+        </Grid>
+        <Grid item xs={6} style={customStyles.style} sx={customStyles.margin}>
+         <Button variant='contained' color='error' size='small' onClick={closeModal}>
+          Quitter
+         </Button>
+        </Grid>
        </Grid>
       </Grid>
      </Grid>
@@ -156,4 +193,4 @@ const CreerOrdinateur = (props) => {
  );
 };
 
-export default CreerOrdinateur;
+export default EditerOrdinateur;

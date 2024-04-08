@@ -15,7 +15,7 @@ const EcranOrdinateurs = (props) => {
 
 	const componentStyle = {
 		style: {
-			background: '0971f1',
+			background: '#0971f1',
 		},
 		sx: { padding: 1, marginBottom: 0.5, zIndex: 1 },
 	};
@@ -33,15 +33,19 @@ const EcranOrdinateurs = (props) => {
 			<Box sx={componentStyle.sx}>
 				<Button
 					onClick={() => navigate('/gestion/ordinateurs/ajouter')}
-					variant='contained'
-					color='primary'
-					size='small'>
+					variant="contained"
+					color="primary"
+					size="small">
 					Ajouter
 				</Button>
 			</Box>
 			<Box sx={{ marginTop: 2 }}>
 				{ordinateurs.map((ordinateur, ordinateurKey) => (
-					<OrdinateurAccordeon ordinateur={ordinateur} key={ordinateurKey} notifier={notifier} />
+					<OrdinateurAccordeon
+						ordinateur={ordinateur}
+						key={ordinateurKey}
+						notifier={notifier}
+					/>
 				))}
 			</Box>
 		</React.Fragment>

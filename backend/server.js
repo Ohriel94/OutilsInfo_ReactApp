@@ -14,24 +14,8 @@ import usagersDM from './domain/Usagers/usagersDM.js';
 
 const app = express();
 app.use(express.json());
-const whitelist = [
-	'http://localhost:9494/',
-	'https://localhost:9494/',
-	'http://localhost:3001/',
-	'https://localhost:3001/',
-	'http://localhost:3000/',
-	'https://localhost:3000/',
-];
-const corsOptions = {
-	origin: (origin, callback) => {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
-		}
-	},
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 const jwtSecret =
 	'000b5f770df78872ce78360654ac3248ad896b0361b1f8065f2fdae6e5333a7d35ba9ef2954999c8ced06ba1b50f59c3d8581a2ee8b2a09495b74833a4222bc0';
